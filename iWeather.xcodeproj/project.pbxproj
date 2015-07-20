@@ -8,11 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		857FB11F1B5C902D000C107A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB11E1B5C902D000C107A /* AppDelegate.swift */; };
-		857FB1211B5C902D000C107A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1201B5C902D000C107A /* ViewController.swift */; };
 		857FB1241B5C902D000C107A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 857FB1221B5C902D000C107A /* Main.storyboard */; };
 		857FB1261B5C902D000C107A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 857FB1251B5C902D000C107A /* Images.xcassets */; };
 		857FB1291B5C902D000C107A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 857FB1271B5C902D000C107A /* LaunchScreen.xib */; };
 		857FB1351B5C902D000C107A /* iWeatherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1341B5C902D000C107A /* iWeatherTests.swift */; };
+		857FB1451B5C9090000C107A /* APIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB13E1B5C9090000C107A /* APIController.swift */; };
+		857FB1461B5C9090000C107A /* CurrentWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB13F1B5C9090000C107A /* CurrentWeather.swift */; };
+		857FB1471B5C9090000C107A /* DailyWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1401B5C9090000C107A /* DailyWeather.swift */; };
+		857FB1481B5C9090000C107A /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1411B5C9090000C107A /* HomeViewController.swift */; };
+		857FB1491B5C9090000C107A /* HourlyWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1421B5C9090000C107A /* HourlyWeather.swift */; };
+		857FB14A1B5C9090000C107A /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1431B5C9090000C107A /* Location.swift */; };
+		857FB14B1B5C9090000C107A /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1441B5C9090000C107A /* Weather.swift */; };
+		857FB14D1B5D9040000C107A /* AddLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB14C1B5D9040000C107A /* AddLocationViewController.swift */; };
+		857FB14F1B5D9391000C107A /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB14E1B5D9391000C107A /* DataModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,13 +37,21 @@
 		857FB1191B5C902D000C107A /* iWeather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iWeather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		857FB11D1B5C902D000C107A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		857FB11E1B5C902D000C107A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		857FB1201B5C902D000C107A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		857FB1231B5C902D000C107A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		857FB1251B5C902D000C107A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		857FB1281B5C902D000C107A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		857FB12E1B5C902D000C107A /* iWeatherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iWeatherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		857FB1331B5C902D000C107A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		857FB1341B5C902D000C107A /* iWeatherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iWeatherTests.swift; sourceTree = "<group>"; };
+		857FB13E1B5C9090000C107A /* APIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIController.swift; sourceTree = "<group>"; };
+		857FB13F1B5C9090000C107A /* CurrentWeather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentWeather.swift; sourceTree = "<group>"; };
+		857FB1401B5C9090000C107A /* DailyWeather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DailyWeather.swift; sourceTree = "<group>"; };
+		857FB1411B5C9090000C107A /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		857FB1421B5C9090000C107A /* HourlyWeather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HourlyWeather.swift; sourceTree = "<group>"; };
+		857FB1431B5C9090000C107A /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		857FB1441B5C9090000C107A /* Weather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
+		857FB14C1B5D9040000C107A /* AddLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddLocationViewController.swift; sourceTree = "<group>"; };
+		857FB14E1B5D9391000C107A /* DataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,8 +93,16 @@
 		857FB11B1B5C902D000C107A /* iWeather */ = {
 			isa = PBXGroup;
 			children = (
+				857FB13E1B5C9090000C107A /* APIController.swift */,
+				857FB13F1B5C9090000C107A /* CurrentWeather.swift */,
+				857FB1401B5C9090000C107A /* DailyWeather.swift */,
+				857FB1411B5C9090000C107A /* HomeViewController.swift */,
+				857FB14C1B5D9040000C107A /* AddLocationViewController.swift */,
+				857FB14E1B5D9391000C107A /* DataModel.swift */,
+				857FB1421B5C9090000C107A /* HourlyWeather.swift */,
+				857FB1431B5C9090000C107A /* Location.swift */,
+				857FB1441B5C9090000C107A /* Weather.swift */,
 				857FB11E1B5C902D000C107A /* AppDelegate.swift */,
-				857FB1201B5C902D000C107A /* ViewController.swift */,
 				857FB1221B5C902D000C107A /* Main.storyboard */,
 				857FB1251B5C902D000C107A /* Images.xcassets */,
 				857FB1271B5C902D000C107A /* LaunchScreen.xib */,
@@ -212,8 +236,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				857FB1211B5C902D000C107A /* ViewController.swift in Sources */,
+				857FB1471B5C9090000C107A /* DailyWeather.swift in Sources */,
+				857FB14A1B5C9090000C107A /* Location.swift in Sources */,
 				857FB11F1B5C902D000C107A /* AppDelegate.swift in Sources */,
+				857FB14B1B5C9090000C107A /* Weather.swift in Sources */,
+				857FB14D1B5D9040000C107A /* AddLocationViewController.swift in Sources */,
+				857FB14F1B5D9391000C107A /* DataModel.swift in Sources */,
+				857FB1461B5C9090000C107A /* CurrentWeather.swift in Sources */,
+				857FB1451B5C9090000C107A /* APIController.swift in Sources */,
+				857FB1481B5C9090000C107A /* HomeViewController.swift in Sources */,
+				857FB1491B5C9090000C107A /* HourlyWeather.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,6 +441,7 @@
 				857FB13A1B5C902D000C107A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		857FB13B1B5C902D000C107A /* Build configuration list for PBXNativeTarget "iWeatherTests" */ = {
 			isa = XCConfigurationList;
@@ -417,6 +450,7 @@
 				857FB13D1B5C902D000C107A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
