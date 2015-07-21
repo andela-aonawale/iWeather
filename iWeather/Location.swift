@@ -7,30 +7,36 @@
 //
 
 import Foundation
-
-struct WeatherType {
-    private static let Current = "currently"
-    private static let Hourly = "hourly"
-    private static let Daily = "daily"
-    private static let Summary = "summary"
-    private static let Data = "data"
-}
+import CoreLocation
 
 class Location {
     
     var name: String?
-    var latitude: Double?
-    var coordinate: String?
+    var coordinate: (latitude: Double, longitude: Double)?
     var dayWeatherSummary: String?
     var weekWeatherSummary: String?
     var currentWeather: CurrentWeather!
-    var hourlyWeather: [HourlyWeather]!
-    var dailyWeather: [DailyWeathear]!
+    var hourlyWeather: [HourlyWeather]
+    var dailyWeather: [DailyWeathear]
     
-    var longitude: Double? {
+    var weatherObject: NSDictionary! {
         didSet {
-            coordinate = ("\(latitude!.description),\(longitude!.description)")
+            instantiateCurrentWeather()
+            instantiateHourlyWeather()
+            instantiateDailyWeather()
         }
+    }
+    
+    struct WeatherType {
+        private static let Current = "currently"
+        private static let Hourly = "hourly"
+        private static let Daily = "daily"
+        private static let Summary = "summary"
+        private static let Data = "data"
+    }
+    
+    func getCoordinate() -> String{
+        return "\(coordinate!.latitude),\(coordinate!.longitude)"
     }
     
     func instantiateCurrentWeather() {
@@ -61,17 +67,11 @@ class Location {
         }
     }
     
-    var weatherObject: NSDictionary! {
-        didSet {
-            instantiateCurrentWeather()
-            instantiateHourlyWeather()
-            instantiateDailyWeather()
-        }
-    }
-    
-    init() {
+    init(name: String, coordinate: (latitude: Double, longitude: Double)) {
         hourlyWeather = [HourlyWeather]()
         dailyWeather = [DailyWeathear]()
+        self.name = name
+        self.coordinate = coordinate
     }
     
 }

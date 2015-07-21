@@ -16,9 +16,9 @@ enum Storyboard {
 
 class HomeViewController: UIViewController, CLLocationManagerDelegate, APIControllerDelegate {
     
-    private let locationManager = CLLocationManager()
-    private let currentLocation = Location()
-    private let api = APIController()
+    private let locationManager: CLLocationManager
+    private var dataModel: DataModel!
+    private let api: APIController
     
     func initLocationManager() {
         locationManager.delegate = self
@@ -27,7 +27,7 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate, APIContro
     }
     
     func didReceiveWeatherResult(weatherObject: NSDictionary) {
-        currentLocation.weatherObject = weatherObject
+        dataModel.currentLocation?.weatherObject = weatherObject
     }
     
     func openLocationSettings(alert: UIAlertAction!) {
@@ -71,11 +71,10 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate, APIContro
         }
     }
     
-    func setCurrentLocationData(manager: CLLocationManager!, placemark: CLPlacemark) {
-        currentLocation.latitude = manager.location.coordinate.latitude
-        currentLocation.longitude = manager.location.coordinate.longitude
-        currentLocation.name = placemark.name
-        api.getWeatherData(currentLocation.coordinate!)
+    func instantiateCurrentLocation(manager: CLLocationManager!, placemark: CLPlacemark) {
+        let coordinate = (latitude: manager.location.coordinate.latitude, longitude: manager.location.coordinate.longitude)
+        dataModel.currentLocation = Location(name: placemark.name, coordinate: coordinate)
+        api.getWeatherData(dataModel.currentLocation!.getCoordinate())
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
@@ -84,8 +83,8 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate, APIContro
             if error != nil {
                 println(error.localizedDescription)
             }
-            if let placemark = placemarks[0] as? CLPlacemark {
-                self.setCurrentLocationData(manager, placemark: placemark)
+            if let placemark = placemarks?.first as? CLPlacemark {
+                self.instantiateCurrentLocation(manager, placemark: placemark)
             }
         }
     }
@@ -106,9 +105,11 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate, APIContro
     }
 
     required init(coder aDecoder: NSCoder) {
+        locationManager = CLLocationManager()
+        api = APIController()
         super.init(coder: aDecoder)
-        api.delegate = self
         initLocationManager()
+        api.delegate = self
     }
     
     // MARK: - VC life cycle

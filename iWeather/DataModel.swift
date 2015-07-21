@@ -10,4 +10,5 @@ import Foundation
 
 class DataModel {
     var locations = [Location]()
+    var currentLocation: Location?
 }

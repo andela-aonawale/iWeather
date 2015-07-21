@@ -20,16 +20,25 @@ class Weather {
     var summary: String
 //    var icon: UIImage?
     
+    struct WeatherType {
+        private static let Temperature = "temperature"
+        private static let Humidity = "humidity"
+        private static let PrecipProbability = "precipProbability"
+        private static let Summary = "summary"
+        private static let Time = "time"
+        private static let Icon = "icon"
+    }
+    
     init(weatherDictionary: NSDictionary) {
-        temperature = weatherDictionary.valueForKey("temperature") as? Int
-        humidity = weatherDictionary.valueForKey("humidity") as! Double
-        precipProbability = weatherDictionary.valueForKey("precipProbability") as! Double
-        summary = weatherDictionary.valueForKey("summary") as! String
+        temperature = weatherDictionary.valueForKey(WeatherType.Temperature) as? Int
+        humidity = weatherDictionary.valueForKey(WeatherType.Humidity) as! Double
+        precipProbability = weatherDictionary.valueForKey(WeatherType.PrecipProbability) as! Double
+        summary = weatherDictionary.valueForKey(WeatherType.Summary) as! String
         
-        let currentTimeIntValue = weatherDictionary.valueForKey("time") as! Int
+        let currentTimeIntValue = weatherDictionary.valueForKey(WeatherType.Time) as! Int
         currentTime = Weather.dateStringFromUnixTime(currentTimeIntValue)
         
-        let iconString = weatherDictionary["icon"] as! String
+        let iconString = weatherDictionary[WeatherType.Icon] as! String
 //        icon = weatherIconFromString(iconString)
     }
     
@@ -41,6 +50,20 @@ class Weather {
         dateFormatter.timeStyle = .ShortStyle
         
         return dateFormatter.stringFromDate(weatherDate)
+    }
+    
+    struct Icon {
+        private static let ClearDay = "clear-day"
+        private static let ClearNight = "clear-night"
+        private static let Rain = "rain"
+        private static let Snow = "snow"
+        private static let Sleet = "sleet"
+        private static let Wind = "wind"
+        private static let Fog = "fog"
+        private static let Clody = "cloudy"
+        private static let PartlyCloudyDay = "partly-cloudy-day"
+        private static let PartlyCloudyNight = "partly-cloudy-night"
+        private static let Default = "default"
     }
     
     func weatherIconFromString(stringIcon: String) -> UIImage {

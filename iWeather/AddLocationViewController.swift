@@ -9,57 +9,113 @@
 import UIKit
 import CoreLocation
 
-class AddLocationViewController: UITableViewController, UISearchResultsUpdating {
+class AddLocationViewController: UITableViewController, UISearchResultsUpdating, APIControllerDelegate {
     
-    var suggestedLocations = [String]()
-    var dataModel = DataModel()
-    var searchController: UISearchController!
-    let geocoder = CLGeocoder()
+    private var dataModel = DataModel()
+    private let api = APIController()
+    typealias address = (name: String, coordinate: (latitude: Double, longitude: Double))
+    private var suggestedLocations: [address]
+    private var searchController: UISearchController!
+    
+    private var predictions = [String]()
+    private var newLocation: Location?
+    
+    struct Cell {
+        static let ReuseIdentifier = "AddressCell"
+    }
+    
+    struct Places {
+        static let Predictions = "predictions"
+        static let Description = "description"
+        static let Empty = "No results found."
+    }
+    
+    required init!(coder aDecoder: NSCoder!) {
+        suggestedLocations = []
+        super.init(coder: aDecoder)
+    }
+    
+    func configureTableView() {
+        tableView.rowHeight = 35
+        tableView.tableHeaderView = searchController.searchBar
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.None
+    }
     
     func configureSearchController() {
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
-        searchController.dimsBackgroundDuringPresentation = true
+        searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.sizeToFit()
-        tableView.tableHeaderView = searchController.searchBar
         definesPresentationContext = true
     }
     
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
-        geocoder.cancelGeocode()
-        let searchText = searchController.searchBar.text
-        getLocation(searchText)
-//        
-//        suggestedLocations = searchText.isEmpty ? suggestedLocations : suggestedLocations.filter({(dataString: String) -> Bool in
-//            return dataString.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
-//        })
-//        tableView.reloadData()
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        cell.backgroundColor = UIColor.clearColor()
+        cell.backgroundView?.backgroundColor = UIColor.clearColor()
     }
     
-    let session = NSURLSession.sharedSession()
-    let baseURL = NSURL(string: "https://maps.googleapis.com/maps/api/geocode/json?address=")
+    func didReceiveLocationResult(locationObject: NSDictionary) {
+        suggestedLocations.removeAll(keepCapacity: false)
+        predictions.removeAll(keepCapacity: false)
+        if let places = locationObject.valueForKey(Places.Predictions) as? NSArray {
+            for place in places {
+                predictions.append((place.valueForKey(Places.Description) as? String)!)
+            }
+            if predictions.isEmpty {
+                predictions.append(Places.Empty)
+            }
+            dispatch_async(dispatch_get_main_queue()) {
+                self.tableView.reloadData()
+            }
+        }
+    }
     
-    func getLocation(text: String) {
-        let forecastURL = NSURL(string: text, relativeToURL: baseURL)
-        let task = session.dataTaskWithURL(forecastURL!) { data, response, error in
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        let searchText = searchController.searchBar.text
+        count(searchText) > 0 ? api.suggestLocation(searchText) : println("")
+    }
+    
+    func instantiateNewLocation(placemark: CLPlacemark) {
+        let coordinate = (latitude: placemark.location.coordinate.latitude, longitude: placemark.location.coordinate.longitude)
+        newLocation = Location(name: placemark.name, coordinate: coordinate)
+        api.getWeatherData(newLocation!.getCoordinate())
+        dataModel.locations.append(newLocation!)
+    }
+    
+    func didReceiveWeatherResult(weatherObject: NSDictionary) {
+        newLocation?.weatherObject = weatherObject
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let location = predictions[indexPath.row]
+        CLGeocoder().geocodeAddressString(location) { (placemarks, error) in
             if error != nil {
                 println(error.localizedDescription)
             }
-            var err: NSError?
-            if let locationObject = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers, error: &err) as? NSDictionary {
-                if err != nil {
-                    println("JSON Error \(err!.localizedDescription)")
-                } else {
-                   println(locationObject["results"])
-                }
+            if let placemark = placemarks?.first as? CLPlacemark {
+                self.instantiateNewLocation(placemark)
             }
         }
-        task.resume()
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    }
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        var cell = tableView.dequeueReusableCellWithIdentifier(Cell.ReuseIdentifier) as! UITableViewCell!
+        if cell == nil {
+            cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: Cell.ReuseIdentifier)
+        }
+        if let place = predictions[indexPath.row] as String? {
+            cell.textLabel?.text = place ?? ""
+        }
+        
+        return cell
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        api.delegate = self
         configureSearchController()
+        configureTableView()
     }
 
     override func didReceiveMemoryWarning() {
@@ -76,9 +132,7 @@ class AddLocationViewController: UITableViewController, UISearchResultsUpdating 
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
-        // Return the number of rows in the section.
-        return suggestedLocations.count
+        return predictions.count
     }
 
 }
