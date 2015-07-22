@@ -9,12 +9,11 @@
 import UIKit
 import CoreLocation
 
-class AddLocationViewController: UITableViewController, UISearchResultsUpdating, APIControllerDelegate {
+class AddLocationViewController: UITableViewController, UISearchResultsUpdating, UISearchBarDelegate, APIControllerDelegate {
     
     private var dataModel = DataModel()
     private let api = APIController()
     typealias address = (name: String, coordinate: (latitude: Double, longitude: Double))
-    private var suggestedLocations: [address]
     private var searchController: UISearchController!
     
     private var predictions = [String]()
@@ -31,7 +30,6 @@ class AddLocationViewController: UITableViewController, UISearchResultsUpdating,
     }
     
     required init!(coder aDecoder: NSCoder!) {
-        suggestedLocations = []
         super.init(coder: aDecoder)
     }
     
@@ -45,8 +43,24 @@ class AddLocationViewController: UITableViewController, UISearchResultsUpdating,
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
+        searchController.searchBar.delegate = self
         searchController.searchBar.sizeToFit()
         definesPresentationContext = true
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+        searchController.searchBar.becomeFirstResponder()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(true)
+        searchController.searchBar.resignFirstResponder()
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        predictions.removeAll(keepCapacity: false)
+        tableView.reloadData()
     }
     
     override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -55,7 +69,6 @@ class AddLocationViewController: UITableViewController, UISearchResultsUpdating,
     }
     
     func didReceiveLocationResult(locationObject: NSDictionary) {
-        suggestedLocations.removeAll(keepCapacity: false)
         predictions.removeAll(keepCapacity: false)
         if let places = locationObject.valueForKey(Places.Predictions) as? NSArray {
             for place in places {
