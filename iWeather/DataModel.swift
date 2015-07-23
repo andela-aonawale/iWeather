@@ -7,8 +7,13 @@
 //
 
 import Foundation
+import CoreLocation
 
 class DataModel {
-    var locations = [Location]()
-    var currentLocation: Location?
+    var locations = [Location]() {
+        didSet { println(locations) }
+    }
+    var currentLocation: Location? {
+        didSet { println("auto get currentLocation:  \(currentLocation)") }
+    }
 }

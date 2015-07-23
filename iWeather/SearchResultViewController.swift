@@ -7,17 +7,72 @@
 //
 
 import UIKit
+import CoreLocation
 
-class SearchResultViewController: UITableViewController {
+protocol SearchResultViewControllerDelegate: class {
+    func didSelectLocation(placemark: CLPlacemark)
+}
 
+class SearchResultViewController: UITableViewController, UISearchResultsUpdating, APIControllerDelegate {
+    
+    private let api = APIController()
+    private var predictions = [String]()
+    weak var delegate: SearchResultViewControllerDelegate?
+    
+    func configureTableView() {
+        tableView.rowHeight = 35
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.None
+    }
+    
+    struct Cell {
+        static let ReuseIdentifier = "AddressCell"
+    }
+    
+    struct Places {
+        static let Predictions = "predictions"
+        static let Description = "description"
+        static let Empty = "No results found."
+    }
+    
+    // MARK: - UISearchResultsUpdating Delegate methods
+    
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        let searchText = searchController.searchBar.text
+        count(searchText) > 0 ? api.suggestLocation(searchText) : println("")
+    }
+    
+    // MARK: - API Controller Delegate Methods
+    
+    func didReceiveLocationResult(locationObject: NSDictionary) {
+        predictions.removeAll(keepCapacity: false)
+        if let places = locationObject.valueForKey(Places.Predictions) as? NSArray {
+            for place in places {
+                predictions.append((place.valueForKey(Places.Description) as? String)!)
+            }
+            if predictions.isEmpty {
+                predictions.append(Places.Empty)
+            }
+            dispatch_async(dispatch_get_main_queue()) {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    // MARK: - View Controller Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        api.delegate = self
+        configureTableView()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(true)
+        predictions.removeAll(keepCapacity: false)
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -25,73 +80,43 @@ class SearchResultViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    // MARK: - Table view data source
+    // MARK: - Table view DataSource and Delegate methods
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
-        // Return the number of sections.
-        return 0
+        return 1
     }
-
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
-        // Return the number of rows in the section.
-        return 0
+        return predictions.count
     }
-
-    /*
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let location = predictions[indexPath.row]
+        CLGeocoder().geocodeAddressString(location) { (placemarks, error) in
+            if error != nil {
+                println(error.localizedDescription)
+            } else if let placemark = placemarks?.first as? CLPlacemark {
+                self.delegate?.didSelectLocation(placemark)
+            }
+        }
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    }
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as! UITableViewCell
-
-        // Configure the cell...
-
+        var cell = tableView.dequeueReusableCellWithIdentifier(Cell.ReuseIdentifier) as! UITableViewCell!
+        if cell == nil {
+            cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: Cell.ReuseIdentifier)
+        }
+        if let place = predictions[indexPath.row] as String? {
+            cell.textLabel?.text = place ?? ""
+        }
+        
         return cell
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the specified item to be editable.
-        return true
+    
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        cell.backgroundColor = UIColor.clearColor()
+        cell.backgroundView?.backgroundColor = UIColor.clearColor()
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

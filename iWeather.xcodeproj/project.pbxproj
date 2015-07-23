@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8554FC7B1B5F928E00FC6530 /* TravelToLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8554FC7A1B5F928E00FC6530 /* TravelToLocationViewController.swift */; };
+		8554FC7D1B5F971700FC6530 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8554FC7C1B5F971700FC6530 /* SearchResultViewController.swift */; };
 		857FB11F1B5C902D000C107A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB11E1B5C902D000C107A /* AppDelegate.swift */; };
 		857FB1241B5C902D000C107A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 857FB1221B5C902D000C107A /* Main.storyboard */; };
 		857FB1261B5C902D000C107A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 857FB1251B5C902D000C107A /* Images.xcassets */; };
@@ -34,6 +36,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8554FC7A1B5F928E00FC6530 /* TravelToLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TravelToLocationViewController.swift; sourceTree = "<group>"; };
+		8554FC7C1B5F971700FC6530 /* SearchResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
 		857FB1191B5C902D000C107A /* iWeather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iWeather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		857FB11D1B5C902D000C107A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		857FB11E1B5C902D000C107A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -98,6 +102,8 @@
 				857FB1401B5C9090000C107A /* DailyWeather.swift */,
 				857FB1411B5C9090000C107A /* HomeViewController.swift */,
 				857FB14C1B5D9040000C107A /* AddLocationViewController.swift */,
+				8554FC7A1B5F928E00FC6530 /* TravelToLocationViewController.swift */,
+				8554FC7C1B5F971700FC6530 /* SearchResultViewController.swift */,
 				857FB14E1B5D9391000C107A /* DataModel.swift */,
 				857FB1421B5C9090000C107A /* HourlyWeather.swift */,
 				857FB1431B5C9090000C107A /* Location.swift */,
@@ -243,8 +249,10 @@
 				857FB14D1B5D9040000C107A /* AddLocationViewController.swift in Sources */,
 				857FB14F1B5D9391000C107A /* DataModel.swift in Sources */,
 				857FB1461B5C9090000C107A /* CurrentWeather.swift in Sources */,
+				8554FC7B1B5F928E00FC6530 /* TravelToLocationViewController.swift in Sources */,
 				857FB1451B5C9090000C107A /* APIController.swift in Sources */,
 				857FB1481B5C9090000C107A /* HomeViewController.swift in Sources */,
+				8554FC7D1B5F971700FC6530 /* SearchResultViewController.swift in Sources */,
 				857FB1491B5C9090000C107A /* HourlyWeather.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -71,9 +71,9 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate, APIContro
         }
     }
     
-    func instantiateCurrentLocation(manager: CLLocationManager!, placemark: CLPlacemark) {
-        let coordinate = (latitude: manager.location.coordinate.latitude, longitude: manager.location.coordinate.longitude)
-        dataModel.currentLocation = Location(name: placemark.name, coordinate: coordinate)
+    func instantiateCurrentLocation(placemark: CLPlacemark) {
+        let coordinate = (latitude: placemark.location.coordinate.latitude, longitude: placemark.location.coordinate.longitude)
+        dataModel.currentLocation = Location(placemark: placemark)
         api.getWeatherData(dataModel.currentLocation!.getCoordinate())
     }
     
@@ -82,9 +82,8 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate, APIContro
         CLGeocoder().reverseGeocodeLocation(manager.location) { (placemarks, error) in
             if error != nil {
                 println(error.localizedDescription)
-            }
-            if let placemark = placemarks?.first as? CLPlacemark {
-                self.instantiateCurrentLocation(manager, placemark: placemark)
+            } else if let placemark = placemarks?.first as? CLPlacemark {
+                self.instantiateCurrentLocation(placemark)
             }
         }
     }
@@ -105,16 +104,17 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate, APIContro
     }
 
     required init(coder aDecoder: NSCoder) {
-        locationManager = CLLocationManager()
         api = APIController()
+        dataModel = DataModel()
+        locationManager = CLLocationManager()
         super.init(coder: aDecoder)
-        initLocationManager()
-        api.delegate = self
     }
     
     // MARK: - VC life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        api.delegate = self
+        initLocationManager()
     }
 
     override func didReceiveMemoryWarning() {

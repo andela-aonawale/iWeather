@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 class Location {
     
@@ -18,11 +19,13 @@ class Location {
     var hourlyWeather: [HourlyWeather]
     var dailyWeather: [DailyWeathear]
     
+    var placemark: CLPlacemark
+    
     var weatherObject: NSDictionary! {
         didSet {
-            instantiateCurrentWeather()
-            instantiateHourlyWeather()
-            instantiateDailyWeather()
+            self.instantiateCurrentWeather()
+            self.instantiateHourlyWeather()
+            self.instantiateDailyWeather()
         }
     }
     
@@ -34,8 +37,12 @@ class Location {
         private static let Data = "data"
     }
     
+    func getCLLocation() -> CLLocation {
+        return CLLocation(latitude: self.coordinate!.latitude, longitude: self.coordinate!.longitude)
+    }
+    
     func getCoordinate() -> String{
-        return "\(coordinate!.latitude),\(coordinate!.longitude)"
+        return "\(self.coordinate!.latitude),\(self.coordinate!.longitude)"
     }
     
     func instantiateCurrentWeather() {
@@ -66,11 +73,17 @@ class Location {
         }
     }
     
-    init(name: String, coordinate: (latitude: Double, longitude: Double)) {
-        hourlyWeather = [HourlyWeather]()
-        dailyWeather = [DailyWeathear]()
-        self.name = name
+    convenience init(placemark: CLPlacemark) {
+        let coordinate = (latitude: placemark.location.coordinate.latitude, longitude: placemark.location.coordinate.longitude)
+        self.init(placemark: placemark, coordinate: coordinate)
+    }
+    
+    init(placemark: CLPlacemark, coordinate: (latitude: Double, longitude: Double)) {
+        self.name = placemark.name
+        self.placemark = placemark
         self.coordinate = coordinate
+        self.hourlyWeather = [HourlyWeather]()
+        self.dailyWeather = [DailyWeathear]()
     }
     
 }

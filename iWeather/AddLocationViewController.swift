@@ -9,44 +9,68 @@
 import UIKit
 import CoreLocation
 
-class AddLocationViewController: UITableViewController, UISearchResultsUpdating, UISearchBarDelegate, APIControllerDelegate {
+class AddLocationViewController: UIViewController, UISearchBarDelegate, UISearchControllerDelegate, SearchResultViewControllerDelegate, APIControllerDelegate {
     
-    private var dataModel = DataModel()
-    private let api = APIController()
-    typealias address = (name: String, coordinate: (latitude: Double, longitude: Double))
-    private var searchController: UISearchController!
-    
-    private var predictions = [String]()
+    private let api: APIController
     private var newLocation: Location?
+    private var dataModel: DataModel
+    private var searchController: UISearchController!
+    private let searchResultViewController: SearchResultViewController
+    typealias address = (name: String, coordinate: (latitude: Double, longitude: Double))
     
-    struct Cell {
-        static let ReuseIdentifier = "AddressCell"
-    }
-    
-    struct Places {
-        static let Predictions = "predictions"
-        static let Description = "description"
-        static let Empty = "No results found."
-    }
-    
-    required init!(coder aDecoder: NSCoder!) {
+    required init(coder aDecoder: NSCoder) {
+        api = APIController()
+        dataModel = DataModel()
+        searchResultViewController = SearchResultViewController()
+        searchController = UISearchController(searchResultsController: searchResultViewController)
         super.init(coder: aDecoder)
     }
     
-    func configureTableView() {
-        tableView.rowHeight = 35
-        tableView.tableHeaderView = searchController.searchBar
-        tableView.separatorStyle = UITableViewCellSeparatorStyle.None
+    func configureSearchController() {
+        searchController.delegate = self
+        definesPresentationContext = true
+        searchController.searchBar.sizeToFit()
+        searchController.searchBar.delegate = self
+        navigationItem.titleView = searchController.searchBar
+        searchController.dimsBackgroundDuringPresentation = true
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchResultsUpdater = searchResultViewController
     }
     
-    func configureSearchController() {
-        searchController = UISearchController(searchResultsController: nil)
-        searchController.searchResultsUpdater = self
-        searchController.dimsBackgroundDuringPresentation = false
-        searchController.searchBar.delegate = self
-        searchController.searchBar.sizeToFit()
-        definesPresentationContext = true
+    func didReceiveWeatherResult(weatherObject: NSDictionary) {
+        newLocation?.weatherObject = weatherObject
     }
+    
+    func didSelectLocation(placemark: CLPlacemark) {
+        let coordinate = (latitude: placemark.location.coordinate.latitude, longitude: placemark.location.coordinate.longitude)
+        newLocation = Location(placemark: placemark)
+        api.getWeatherData(newLocation!.getCoordinate())
+        dataModel.locations.append(newLocation!)
+        dismissViewControllerAnimated(true, completion: nil)
+        println("Add location VC: \(dataModel.locations)")
+    }
+    
+    // MARK: - UISearchBar Delegate methods
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    // MARK: - UISearchControllerDelegate Methods
+    
+    func willPresentSearchController(searchController: UISearchController) {
+        let controller = searchController.searchResultsController as! SearchResultViewController
+        controller.delegate = self
+        dispatch_async(dispatch_get_main_queue()) {
+            searchController.searchResultsController.view.hidden = false
+        }
+    }
+    
+    func didPresentSearchController(searchController: UISearchController) {
+        searchController.searchResultsController.view.hidden = false
+    }
+    
+    // MARK: - View Controller Life Cycle
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
@@ -57,95 +81,15 @@ class AddLocationViewController: UITableViewController, UISearchResultsUpdating,
         super.viewWillDisappear(true)
         searchController.searchBar.resignFirstResponder()
     }
-    
-    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
-        predictions.removeAll(keepCapacity: false)
-        tableView.reloadData()
-    }
-    
-    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        cell.backgroundColor = UIColor.clearColor()
-        cell.backgroundView?.backgroundColor = UIColor.clearColor()
-    }
-    
-    func didReceiveLocationResult(locationObject: NSDictionary) {
-        predictions.removeAll(keepCapacity: false)
-        if let places = locationObject.valueForKey(Places.Predictions) as? NSArray {
-            for place in places {
-                predictions.append((place.valueForKey(Places.Description) as? String)!)
-            }
-            if predictions.isEmpty {
-                predictions.append(Places.Empty)
-            }
-            dispatch_async(dispatch_get_main_queue()) {
-                self.tableView.reloadData()
-            }
-        }
-    }
-    
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
-        let searchText = searchController.searchBar.text
-        count(searchText) > 0 ? api.suggestLocation(searchText) : println("")
-    }
-    
-    func instantiateNewLocation(placemark: CLPlacemark) {
-        let coordinate = (latitude: placemark.location.coordinate.latitude, longitude: placemark.location.coordinate.longitude)
-        newLocation = Location(name: placemark.name, coordinate: coordinate)
-        api.getWeatherData(newLocation!.getCoordinate())
-        dataModel.locations.append(newLocation!)
-    }
-    
-    func didReceiveWeatherResult(weatherObject: NSDictionary) {
-        newLocation?.weatherObject = weatherObject
-    }
-    
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let location = predictions[indexPath.row]
-        CLGeocoder().geocodeAddressString(location) { (placemarks, error) in
-            if error != nil {
-                println(error.localizedDescription)
-            }
-            if let placemark = placemarks?.first as? CLPlacemark {
-                self.instantiateNewLocation(placemark)
-            }
-        }
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-    }
-    
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier(Cell.ReuseIdentifier) as! UITableViewCell!
-        if cell == nil {
-            cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: Cell.ReuseIdentifier)
-        }
-        if let place = predictions[indexPath.row] as String? {
-            cell.textLabel?.text = place ?? ""
-        }
-        
-        return cell
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         api.delegate = self
         configureSearchController()
-        configureTableView()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    // MARK: - Table view data source
-
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
-        // Return the number of sections.
-        return 1
-    }
-
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return predictions.count
     }
 
 }
