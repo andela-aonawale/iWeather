@@ -92,6 +92,7 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let location = predictions[indexPath.row]
+        dismissViewControllerAnimated(true, completion: nil)
         CLGeocoder().geocodeAddressString(location) { (placemarks, error) in
             if error != nil {
                 println(error.localizedDescription)

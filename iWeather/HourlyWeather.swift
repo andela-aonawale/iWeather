@@ -9,5 +9,11 @@
 import Foundation
 
 class HourlyWeather: Weather {
-    //
+    
+    var unixTime: Int
+    
+    override init(weatherDictionary: NSDictionary) {
+        unixTime = weatherDictionary.valueForKey("time") as! Int
+        super.init(weatherDictionary: weatherDictionary)
+    }
 }

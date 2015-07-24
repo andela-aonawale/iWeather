@@ -17,7 +17,7 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UIS
         }
     }
     
-    func configureMapView() {
+    private func configureMapView() {
         mapView.delegate = self
         mapView.pitchEnabled = true
         mapView.mapType = .Standard
@@ -25,7 +25,7 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UIS
         mapView.showsBuildings = true
     }
     
-    func getDirections(placemark: CLPlacemark) {
+    private func getDirections(placemark: CLPlacemark) {
         let mapPlacemark = MKPlacemark(placemark: placemark)
         let destination = MKMapItem(placemark: mapPlacemark)
         let request = MKDirectionsRequest()
@@ -49,15 +49,32 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UIS
         if mapView?.annotations != nil { mapView.removeOverlays(mapView.overlays as? [MKOverlay]) }
     }
     
-    func showRoutes(response: MKDirectionsResponse!) {
-        for route in (response.routes as! [MKRoute]) {
+    private func showRoutes(response: MKDirectionsResponse!) {
+        if let route = response.routes.first as? MKRoute {
             mapView.addOverlay(route.polyline, level: MKOverlayLevel.AboveRoads)
             println("route name: \(route.name)")
             println("distance: \(route.distance)")
-            println("eta: \(route.expectedTravelTime)")
+            println("eta: \(route.expectedTravelTime/60)")
             println("transport type: \(route.transportType.rawValue)")
+            var eta = NSDate().dateByAddingTimeInterval(route.expectedTravelTime)
+            
+            var etaWeather = getWeatherOnArrival(eta)
+            println(etaWeather?.summary)
+            println(etaWeather?.unixTime)
+            
         }
-        
+    }
+    
+    private func getWeatherOnArrival(eta: NSDate) -> HourlyWeather? {
+        if let hourlyWeather = travelLocation?.hourlyWeather {
+            for weather in hourlyWeather {
+                let weatherDate = NSDate(timeIntervalSince1970: NSTimeInterval(weather.unixTime))
+                if eta.compare(weatherDate) == .OrderedAscending {
+                    return weather
+                }
+            }
+        }
+        return nil
     }
     
     func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
@@ -67,7 +84,7 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UIS
         return renderer
     }
     
-    func addAnnotation(placemark: CLPlacemark) {
+    private func addAnnotation(placemark: CLPlacemark) {
         clearRoutes()
         let point = MKPointAnnotation()
         point.coordinate = placemark.location.coordinate
@@ -75,13 +92,19 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UIS
         point.subtitle = formattedAddress
         mapView.addAnnotation(point)
         zoomOut()
+        zoomIn(point.coordinate)
     }
     
-    func zoomOut() {
+    private func zoomIn(coordinate : CLLocationCoordinate2D) {
+        let region = MKCoordinateRegionMakeWithDistance(coordinate, 2000, 2000)
+        mapView.setRegion(region, animated: true)
+    }
+    
+    private func zoomOut() {
         var region = mapView.region
         var span = mapView.region.span
-        span.latitudeDelta *= 10
-        span.longitudeDelta *= 10
+        span.latitudeDelta *= 15
+        span.longitudeDelta *= 15
         region.span = span
         mapView.setRegion(region, animated: true)
     }
@@ -92,32 +115,37 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UIS
     }
     
     func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
-        if let point = mapView.annotations.first as? MKAnnotation {
-            let region = MKCoordinateRegionMakeWithDistance(point.coordinate, 2000, 2000)
-            if (mapView.region.center.latitude != region.center.latitude) && (mapView.region.center.longitude != region.center.longitude) {
-                mapView.setRegion(region, animated: true)
-            } else {
-                mapView.setRegion(mapView.region, animated: true)
-            }
-            
-        }
+
+    }
+    
+    private struct Constants {
+        static let LeftCalloutFrame = CGRect(x: 0, y: 0, width: 59, height: 59)
+        static let AnnotationViewReuseIdentifier = "CustomPinAnnotationView"
     }
     
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
         if annotation.isKindOfClass(MKUserLocation) {
             return nil
         }
+        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(Constants.AnnotationViewReuseIdentifier)
         if annotation.isKindOfClass(MKPointAnnotation) {
-            var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier("CustomPinAnnotationView")
             if pinView == nil {
-                pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "CustomPinAnnotationView")
+                pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: Constants.AnnotationViewReuseIdentifier)
                 pinView.canShowCallout = true
             } else {
                 pinView.annotation = annotation
-                return pinView
+                
             }
+            pinView.leftCalloutAccessoryView = UIImageView(frame: Constants.LeftCalloutFrame)
         }
-        return nil
+        
+        return pinView
+    }
+    
+    func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
+        if let weatherIcon = view.leftCalloutAccessoryView as? UIImageView {
+            weatherIcon.image = travelLocation?.currentWeather.icon
+        }
     }
     
     private var formattedAddress: String?
@@ -140,7 +168,7 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UIS
         super.init(coder: aDecoder)
     }
     
-    func configureSearchController() {
+    private func configureSearchController() {
         searchController.delegate = self
         definesPresentationContext = true
         searchController.searchBar.sizeToFit()
@@ -156,10 +184,8 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UIS
     }
     
     func didSelectLocationFromSearchResult(placemark: CLPlacemark, selectedAddress: String) {
-        formattedAddress = selectedAddress
-        travelLocation = Location(placemark: placemark)
-        println(selectedAddress)
-        dismissViewControllerAnimated(true, completion: nil)
+        self.formattedAddress = selectedAddress
+        self.travelLocation = Location(placemark: placemark)
     }
     
     // MARK: - UISearchControllerDelegate Methods
@@ -198,7 +224,7 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UIS
         super.didReceiveMemoryWarning()
     }
     
-    func openLocationSettings(alert: UIAlertAction!) {
+    private func openLocationSettings(alert: UIAlertAction!) {
         if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
             UIApplication.sharedApplication().openURL(url)
         }

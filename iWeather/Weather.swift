@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class Weather {
-    var currentTime: String?
+    var time: String?
     var temperature: Int?
     var humidity: Double
     var precipProbability: Double
@@ -18,7 +18,7 @@ class Weather {
     var windSpeed: Double?
     var pressure: Double?
     var summary: String
-//    var icon: UIImage?
+    var icon: UIImage?
     
     struct WeatherType {
         private static let Temperature = "temperature"
@@ -36,10 +36,10 @@ class Weather {
         summary = weatherDictionary.valueForKey(WeatherType.Summary) as! String
         
         let currentTimeIntValue = weatherDictionary.valueForKey(WeatherType.Time) as! Int
-        currentTime = Weather.dateStringFromUnixTime(currentTimeIntValue)
+        time = Weather.dateStringFromUnixTime(currentTimeIntValue)
         
         let iconString = weatherDictionary[WeatherType.Icon] as! String
-//        icon = weatherIconFromString(iconString)
+        icon = weatherIconFromString(iconString)
     }
     
     class func dateStringFromUnixTime(unixTime: Int) -> String {
@@ -94,8 +94,8 @@ class Weather {
             imageName = "default"
         }
         
-        let iconName = UIImage(named: imageName)
-        return iconName!
+        let weatherIcon = UIImage(named: imageName)
+        return weatherIcon!
     }
 
 }
