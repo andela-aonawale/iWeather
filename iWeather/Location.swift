@@ -19,7 +19,7 @@ class Location {
     var hourlyWeather: [HourlyWeather]
     var dailyWeather: [DailyWeathear]
     
-    var placemark: CLPlacemark
+    var placemark: CLPlacemark!
     
     var weatherObject: NSDictionary! {
         didSet {
@@ -29,7 +29,7 @@ class Location {
         }
     }
     
-    struct WeatherType {
+     private struct WeatherType {
         private static let Current = "currently"
         private static let Hourly = "hourly"
         private static let Daily = "daily"
@@ -45,13 +45,13 @@ class Location {
         return "\(self.coordinate!.latitude),\(self.coordinate!.longitude)"
     }
     
-    func instantiateCurrentWeather() {
+    private func instantiateCurrentWeather() {
         if let currently = weatherObject.valueForKey(WeatherType.Current) as? NSDictionary {
             currentWeather = CurrentWeather(weatherDictionary: currently)
         }
     }
     
-    func instantiateHourlyWeather() {
+    private func instantiateHourlyWeather() {
         if let hourly = weatherObject.valueForKey(WeatherType.Hourly) as? NSDictionary {
             dayWeatherSummary = hourly.valueForKey(WeatherType.Summary) as? String
             let hourlyData = hourly.valueForKey(WeatherType.Data) as! NSArray
@@ -62,7 +62,7 @@ class Location {
         }
     }
     
-    func instantiateDailyWeather() {
+    private func instantiateDailyWeather() {
         if let daily = weatherObject.valueForKey(WeatherType.Daily) as? NSDictionary {
             weekWeatherSummary = daily.valueForKey(WeatherType.Summary) as? String
             let dailyData = daily.valueForKey(WeatherType.Data) as! NSArray

@@ -11,22 +11,30 @@ import MapKit
 
 class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UISearchControllerDelegate, MKMapViewDelegate, SearchResultViewControllerDelegate, APIControllerDelegate {
 
-    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var mapView: MKMapView! {
+        didSet {
+            configureMapView()
+        }
+    }
     
     func configureMapView() {
         mapView.delegate = self
+        mapView.pitchEnabled = true
+        mapView.mapType = .Standard
         mapView.showsUserLocation = true
+        mapView.showsBuildings = true
     }
     
-    func getDirections() {
-        let mapPlacemark = MKPlacemark(placemark: travelLocation?.placemark)
+    func getDirections(placemark: CLPlacemark) {
+        let mapPlacemark = MKPlacemark(placemark: placemark)
         let destination = MKMapItem(placemark: mapPlacemark)
         let request = MKDirectionsRequest()
         request.setSource(MKMapItem.mapItemForCurrentLocation())
         request.setDestination(destination!)
-        request.requestsAlternateRoutes = true
+        request.requestsAlternateRoutes = false
         
         let directions = MKDirections(request: request)
+        if directions.calculating { directions.cancel() }
         directions.calculateDirectionsWithCompletionHandler { (response, error) in
             if error != nil {
                 println("map error: \(error.localizedDescription)")
@@ -36,34 +44,89 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UIS
         }
     }
     
+    private func clearRoutes() {
+        if mapView?.annotations != nil { mapView.removeAnnotations(mapView.annotations as? [MKAnnotation]) }
+        if mapView?.annotations != nil { mapView.removeOverlays(mapView.overlays as? [MKOverlay]) }
+    }
+    
     func showRoutes(response: MKDirectionsResponse!) {
         for route in (response.routes as! [MKRoute]) {
             mapView.addOverlay(route.polyline, level: MKOverlayLevel.AboveRoads)
             println("route name: \(route.name)")
             println("distance: \(route.distance)")
-            println("eta: \(route.expectedTravelTime/60)")
-            println("weather now: \(travelLocation?.currentWeather.summary)")
-            println("weather for next 24 hours: \(travelLocation?.dayWeatherSummary)")
-            for step in route.steps {
-                println(step.instructions)
-            }
+            println("eta: \(route.expectedTravelTime)")
+            println("transport type: \(route.transportType.rawValue)")
         }
-        let region = MKCoordinateRegionMakeWithDistance(mapView.userLocation.location.coordinate, 2000, 2000)
-        mapView.setRegion(region, animated: true)
+        
     }
     
     func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
         let renderer = MKPolylineRenderer(overlay: overlay)
         renderer.strokeColor = UIColor.blueColor()
-        renderer.lineWidth = 5.0
+        renderer.lineWidth = 3.0
         return renderer
     }
     
+    func addAnnotation(placemark: CLPlacemark) {
+        clearRoutes()
+        let point = MKPointAnnotation()
+        point.coordinate = placemark.location.coordinate
+        point.title = placemark.name
+        point.subtitle = formattedAddress
+        mapView.addAnnotation(point)
+        zoomOut()
+    }
+    
+    func zoomOut() {
+        var region = mapView.region
+        var span = mapView.region.span
+        span.latitudeDelta *= 10
+        span.longitudeDelta *= 10
+        region.span = span
+        mapView.setRegion(region, animated: true)
+    }
+    
+    func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
+        let region = MKCoordinateRegionMakeWithDistance(userLocation.location.coordinate, 2000, 2000)
+        mapView.setRegion(region, animated: true)
+    }
+    
+    func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
+        if let point = mapView.annotations.first as? MKAnnotation {
+            let region = MKCoordinateRegionMakeWithDistance(point.coordinate, 2000, 2000)
+            if (mapView.region.center.latitude != region.center.latitude) && (mapView.region.center.longitude != region.center.longitude) {
+                mapView.setRegion(region, animated: true)
+            } else {
+                mapView.setRegion(mapView.region, animated: true)
+            }
+            
+        }
+    }
+    
+    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+        if annotation.isKindOfClass(MKUserLocation) {
+            return nil
+        }
+        if annotation.isKindOfClass(MKPointAnnotation) {
+            var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier("CustomPinAnnotationView")
+            if pinView == nil {
+                pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "CustomPinAnnotationView")
+                pinView.canShowCallout = true
+            } else {
+                pinView.annotation = annotation
+                return pinView
+            }
+        }
+        return nil
+    }
+    
+    private var formattedAddress: String?
     private let api: APIController
     private var travelLocation: Location? {
         didSet {
             api.getWeatherData(travelLocation!.getCoordinate())
-            getDirections()
+            getDirections(travelLocation!.placemark)
+            addAnnotation(travelLocation!.placemark)
         }
     }
     private var searchController: UISearchController!
@@ -92,14 +155,11 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UIS
         travelLocation?.weatherObject = weatherObject
     }
     
-    func didSelectLocation(placemark: CLPlacemark) {
-        let coordinate = (latitude: placemark.location.coordinate.latitude, longitude: placemark.location.coordinate.longitude)
+    func didSelectLocationFromSearchResult(placemark: CLPlacemark, selectedAddress: String) {
+        formattedAddress = selectedAddress
         travelLocation = Location(placemark: placemark)
+        println(selectedAddress)
         dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func getDistanceBetweenLocations(currentlocation: CLLocation, destination: CLLocation) -> Double{
-        return currentlocation.distanceFromLocation(destination)
     }
     
     // MARK: - UISearchControllerDelegate Methods
@@ -118,7 +178,7 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UIS
     
     // MARK: - View Controller Life Cycle
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewDidAppear(animated: Bool) {
         super.viewWillAppear(true)
         searchController.searchBar.becomeFirstResponder()
     }
@@ -131,7 +191,6 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UIS
     override func viewDidLoad() {
         super.viewDidLoad()
         api.delegate = self
-        configureMapView()
         configureSearchController()
     }
     

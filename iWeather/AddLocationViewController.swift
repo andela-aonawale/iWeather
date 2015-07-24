@@ -12,7 +12,12 @@ import CoreLocation
 class AddLocationViewController: UIViewController, UISearchBarDelegate, UISearchControllerDelegate, SearchResultViewControllerDelegate, APIControllerDelegate {
     
     private let api: APIController
-    private var newLocation: Location?
+    private var newLocation: Location? {
+        didSet {
+            api.getWeatherData(newLocation!.getCoordinate())
+            dataModel.locations.append(newLocation!)
+        }
+    }
     private var dataModel: DataModel
     private var searchController: UISearchController!
     private let searchResultViewController: SearchResultViewController
@@ -41,13 +46,9 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate, UISearch
         newLocation?.weatherObject = weatherObject
     }
     
-    func didSelectLocation(placemark: CLPlacemark) {
-        let coordinate = (latitude: placemark.location.coordinate.latitude, longitude: placemark.location.coordinate.longitude)
+    func didSelectLocationFromSearchResult(placemark: CLPlacemark, selectedAddress: String) {
         newLocation = Location(placemark: placemark)
-        api.getWeatherData(newLocation!.getCoordinate())
-        dataModel.locations.append(newLocation!)
         dismissViewControllerAnimated(true, completion: nil)
-        println("Add location VC: \(dataModel.locations)")
     }
     
     // MARK: - UISearchBar Delegate methods

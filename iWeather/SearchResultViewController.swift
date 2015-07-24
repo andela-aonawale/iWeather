@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 
 protocol SearchResultViewControllerDelegate: class {
-    func didSelectLocation(placemark: CLPlacemark)
+    func didSelectLocationFromSearchResult(placemark: CLPlacemark, selectedAddress: String)
 }
 
 class SearchResultViewController: UITableViewController, UISearchResultsUpdating, APIControllerDelegate {
@@ -96,7 +96,8 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
             if error != nil {
                 println(error.localizedDescription)
             } else if let placemark = placemarks?.first as? CLPlacemark {
-                self.delegate?.didSelectLocation(placemark)
+                let formattedAddress = self.predictions[indexPath.row]
+                self.delegate?.didSelectLocationFromSearchResult(placemark, selectedAddress: formattedAddress)
             }
         }
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
