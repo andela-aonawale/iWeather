@@ -14,10 +14,33 @@ enum Storyboard {
     
 }
 
-class HomeViewController: UIViewController, CLLocationManagerDelegate, APIControllerDelegate {
+class HomeViewController: UIViewController, CLLocationManagerDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, APIControllerDelegate {
     
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CVCell", forIndexPath: indexPath) as! WeatherCollectionViewCell
+        cell.hourWeather = dataModel.currentLocation?.hourlyWeather[indexPath.row]
+        
+        return cell
+    }
+    
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if let count = dataModel.currentLocation?.hourlyWeather.count {
+            return count
+        }
+        return 0
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        return CGSizeMake(view.frame.size.width / 6 , collectionView.frame.size.height)
+    }
+    
+    @IBOutlet weak var temp: UILabel!
+    @IBOutlet weak var weatherDesc: UILabel!
+    @IBOutlet weak var locationName: UILabel!
+    @IBOutlet weak var collectionView: UICollectionView!
     private let locationManager: CLLocationManager
-    private var dataModel: DataModel!
+    private var dataModel = DataModel()
     private let api: APIController
     
     func initLocationManager() {
@@ -28,6 +51,10 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate, APIContro
     
     func didReceiveWeatherResult(weatherObject: NSDictionary) {
         dataModel.currentLocation?.weatherObject = weatherObject
+        collectionView.reloadData()
+        locationName.text = dataModel.currentLocation.name
+        weatherDesc.text = dataModel.currentLocation.currentWeather.summary
+        temp.text = dataModel.currentLocation.currentWeather.temperature?.description
     }
     
     func openLocationSettings(alert: UIAlertAction!) {
@@ -105,7 +132,7 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate, APIContro
 
     required init(coder aDecoder: NSCoder) {
         api = APIController()
-        dataModel = DataModel()
+//        dataModel = DataModel()
         locationManager = CLLocationManager()
         super.init(coder: aDecoder)
     }
@@ -132,4 +159,14 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate, APIContro
     }
     */
 
+}
+
+extension Weather {
+    var weatherImage: UIImage? {
+        if let image = UIImage(named: imageName!) {
+            return image
+        } else {
+            return nil
+        }
+    }
 }

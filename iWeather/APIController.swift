@@ -15,20 +15,21 @@ import Foundation
 
 class APIController {
     
-    struct API {
+    private struct API {
         private static let ForcastKEY = "e9f75045f39337c8df914eb723c4832b"
         private static let ForecastURL = "https://api.forecast.io/forecast/"
         private static let GeocodeURL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?"
         private static let GeocodeKey = "AIzaSyDo3xtVe5TuRDZ8PFrdLeuu14VCvM9ZILg"
+        private static let ForecastQuery = "units=auto&exclude=minutely,alerts,flags"
     }
     
     weak var delegate: APIControllerDelegate?
     private let session = NSURLSession.sharedSession()
     
-    func getWeatherData(coordinate: String) {        
-        let baseURL = NSURL(string: "\(API.ForecastURL)\(API.ForcastKEY)/")
-        let forecastURL = NSURL(string: coordinate, relativeToURL: baseURL)
-        let task = session.dataTaskWithURL(forecastURL!) { data, response, error in
+    func getWeatherData(coordinate: String) {
+        let forecastURL = NSURLComponents(string: "\(API.ForecastURL)\(API.ForcastKEY)/\(coordinate)?")
+        forecastURL?.query = API.ForecastQuery
+        let task = session.dataTaskWithURL(forecastURL!.URL!) { data, response, error in
             if error != nil {
                 println(error.localizedDescription)
             }
@@ -51,6 +52,7 @@ class APIController {
     func suggestLocation(location: String) {
         let geocodeURL = NSURLComponents(string: API.GeocodeURL)
         geocodeURL?.query = "input=\(location)&key=\(API.GeocodeKey)"
+        println(geocodeURL!)
         let task = session.dataTaskWithURL(geocodeURL!.URL!) { data, response, error in
             if error != nil {
                 println(error.localizedDescription)

@@ -144,7 +144,7 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UIS
     
     func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
         if let weatherIcon = view.leftCalloutAccessoryView as? UIImageView {
-            weatherIcon.image = travelLocation?.currentWeather.icon
+            weatherIcon.image = travelLocation?.currentWeather.weatherImage
         }
     }
     
