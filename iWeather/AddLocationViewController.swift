@@ -9,13 +9,33 @@
 import UIKit
 import CoreLocation
 
-class AddLocationViewController: UIViewController, UISearchBarDelegate, UISearchControllerDelegate, SearchResultViewControllerDelegate, APIControllerDelegate {
+class AddLocationViewController: UIViewController, UISearchBarDelegate, UISearchControllerDelegate, UITableViewDelegate, UITableViewDataSource, SearchResultViewControllerDelegate, APIControllerDelegate {
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return dataModel.locations.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("LocationCell", forIndexPath: indexPath) as! LocationTableViewCell
+        cell.location = dataModel.locations[indexPath.row]
+        
+        return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+    }
+    
+    @IBOutlet weak var tableView: UITableView!
     
     private let api: APIController
     private var newLocation: Location? {
         didSet {
             api.getWeatherData(newLocation!.getCoordinate())
-            dataModel.locations.append(newLocation!)
         }
     }
     private var dataModel: DataModel
@@ -25,30 +45,23 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate, UISearch
     
     required init(coder aDecoder: NSCoder) {
         api = APIController()
-        dataModel = DataModel()
+        dataModel = DataModel.sharedInstance
         searchResultViewController = SearchResultViewController()
         searchController = UISearchController(searchResultsController: searchResultViewController)
         super.init(coder: aDecoder)
     }
     
-    func configureSearchController() {
-        searchController.delegate = self
-        definesPresentationContext = true
-        searchController.searchBar.sizeToFit()
-        searchController.searchBar.delegate = self
-        navigationItem.titleView = searchController.searchBar
-        searchController.dimsBackgroundDuringPresentation = true
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.searchResultsUpdater = searchResultViewController
-    }
-    
     func didReceiveWeatherResult(weatherObject: NSDictionary) {
         newLocation?.weatherObject = weatherObject
+        dataModel.locations.append(newLocation!)
+        dispatch_async(dispatch_get_main_queue()) {
+            self.tableView.reloadData()
+        }
     }
     
     func didSelectLocationFromSearchResult(placemark: CLPlacemark, selectedAddress: String) {
         newLocation = Location(placemark: placemark)
-        dismissViewControllerAnimated(true, completion: nil)
+        searchController.searchBar.resignFirstResponder()
     }
     
     // MARK: - UISearchBar Delegate methods
@@ -75,7 +88,6 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate, UISearch
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
-        searchController.searchBar.becomeFirstResponder()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -91,6 +103,17 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate, UISearch
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func configureSearchController() {
+        searchController.delegate = self
+        definesPresentationContext = true
+        searchController.searchBar.sizeToFit()
+        searchController.searchBar.delegate = self
+        navigationItem.titleView = searchController.searchBar
+        searchController.dimsBackgroundDuringPresentation = true
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchResultsUpdater = searchResultViewController
     }
 
 }

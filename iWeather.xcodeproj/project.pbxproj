@@ -18,12 +18,15 @@
 		857FB1451B5C9090000C107A /* APIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB13E1B5C9090000C107A /* APIController.swift */; };
 		857FB1461B5C9090000C107A /* CurrentWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB13F1B5C9090000C107A /* CurrentWeather.swift */; };
 		857FB1471B5C9090000C107A /* DailyWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1401B5C9090000C107A /* DailyWeather.swift */; };
-		857FB1481B5C9090000C107A /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1411B5C9090000C107A /* HomeViewController.swift */; };
+		857FB1481B5C9090000C107A /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1411B5C9090000C107A /* LocationViewController.swift */; };
 		857FB1491B5C9090000C107A /* HourlyWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1421B5C9090000C107A /* HourlyWeather.swift */; };
 		857FB14A1B5C9090000C107A /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1431B5C9090000C107A /* Location.swift */; };
 		857FB14B1B5C9090000C107A /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1441B5C9090000C107A /* Weather.swift */; };
 		857FB14D1B5D9040000C107A /* AddLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB14C1B5D9040000C107A /* AddLocationViewController.swift */; };
 		857FB14F1B5D9391000C107A /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB14E1B5D9391000C107A /* DataModel.swift */; };
+		85E40B751B64D2E100263851 /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E40B741B64D2E100263851 /* PageViewController.swift */; };
+		85E40B791B653A4C00263851 /* LocationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E40B781B653A4C00263851 /* LocationTableViewCell.swift */; };
+		85E40B7B1B663E7400263851 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E40B7A1B663E7400263851 /* LocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,12 +55,15 @@
 		857FB13E1B5C9090000C107A /* APIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIController.swift; sourceTree = "<group>"; };
 		857FB13F1B5C9090000C107A /* CurrentWeather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentWeather.swift; sourceTree = "<group>"; };
 		857FB1401B5C9090000C107A /* DailyWeather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DailyWeather.swift; sourceTree = "<group>"; };
-		857FB1411B5C9090000C107A /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		857FB1411B5C9090000C107A /* LocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
 		857FB1421B5C9090000C107A /* HourlyWeather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HourlyWeather.swift; sourceTree = "<group>"; };
 		857FB1431B5C9090000C107A /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		857FB1441B5C9090000C107A /* Weather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		857FB14C1B5D9040000C107A /* AddLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddLocationViewController.swift; sourceTree = "<group>"; };
 		857FB14E1B5D9391000C107A /* DataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
+		85E40B741B64D2E100263851 /* PageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
+		85E40B781B653A4C00263851 /* LocationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTableViewCell.swift; sourceTree = "<group>"; };
+		85E40B7A1B663E7400263851 /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,20 +105,27 @@
 		857FB11B1B5C902D000C107A /* iWeather */ = {
 			isa = PBXGroup;
 			children = (
+				85EE37181B666B2100BC584D /* Model */,
+				85EE37171B666B1600BC584D /* Controller */,
+				85EE37161B666B0700BC584D /* LocationManager */,
+				85EE37151B666AF900BC584D /* API */,
 				857FB13E1B5C9090000C107A /* APIController.swift */,
-				857FB1401B5C9090000C107A /* DailyWeather.swift */,
-				857FB1411B5C9090000C107A /* HomeViewController.swift */,
+				857FB11E1B5C902D000C107A /* AppDelegate.swift */,
+				857FB14E1B5D9391000C107A /* DataModel.swift */,
+				85E40B7A1B663E7400263851 /* LocationManager.swift */,
+				857FB1411B5C9090000C107A /* LocationViewController.swift */,
 				857FB13F1B5C9090000C107A /* CurrentWeather.swift */,
+				857FB1431B5C9090000C107A /* Location.swift */,
 				8554FCDE1B63E26F00FC6530 /* WeatherCollectionViewCell.swift */,
 				857FB14C1B5D9040000C107A /* AddLocationViewController.swift */,
 				8554FC7A1B5F928E00FC6530 /* TravelToLocationViewController.swift */,
 				8554FC7C1B5F971700FC6530 /* SearchResultViewController.swift */,
-				857FB14E1B5D9391000C107A /* DataModel.swift */,
 				857FB1421B5C9090000C107A /* HourlyWeather.swift */,
-				857FB1431B5C9090000C107A /* Location.swift */,
+				857FB1401B5C9090000C107A /* DailyWeather.swift */,
 				857FB1441B5C9090000C107A /* Weather.swift */,
-				857FB11E1B5C902D000C107A /* AppDelegate.swift */,
 				857FB1221B5C902D000C107A /* Main.storyboard */,
+				85E40B781B653A4C00263851 /* LocationTableViewCell.swift */,
+				85E40B741B64D2E100263851 /* PageViewController.swift */,
 				857FB1251B5C902D000C107A /* Images.xcassets */,
 				857FB1271B5C902D000C107A /* LaunchScreen.xib */,
 				857FB11C1B5C902D000C107A /* Supporting Files */,
@@ -143,6 +156,34 @@
 				857FB1331B5C902D000C107A /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		85EE37151B666AF900BC584D /* API */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = API;
+			sourceTree = "<group>";
+		};
+		85EE37161B666B0700BC584D /* LocationManager */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = LocationManager;
+			sourceTree = "<group>";
+		};
+		85EE37171B666B1600BC584D /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		85EE37181B666B2100BC584D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -247,14 +288,17 @@
 			files = (
 				857FB1471B5C9090000C107A /* DailyWeather.swift in Sources */,
 				857FB14A1B5C9090000C107A /* Location.swift in Sources */,
+				85E40B791B653A4C00263851 /* LocationTableViewCell.swift in Sources */,
 				857FB11F1B5C902D000C107A /* AppDelegate.swift in Sources */,
+				85E40B7B1B663E7400263851 /* LocationManager.swift in Sources */,
+				85E40B751B64D2E100263851 /* PageViewController.swift in Sources */,
 				857FB14B1B5C9090000C107A /* Weather.swift in Sources */,
 				857FB14D1B5D9040000C107A /* AddLocationViewController.swift in Sources */,
 				857FB14F1B5D9391000C107A /* DataModel.swift in Sources */,
 				857FB1461B5C9090000C107A /* CurrentWeather.swift in Sources */,
 				8554FC7B1B5F928E00FC6530 /* TravelToLocationViewController.swift in Sources */,
 				857FB1451B5C9090000C107A /* APIController.swift in Sources */,
-				857FB1481B5C9090000C107A /* HomeViewController.swift in Sources */,
+				857FB1481B5C9090000C107A /* LocationViewController.swift in Sources */,
 				8554FC7D1B5F971700FC6530 /* SearchResultViewController.swift in Sources */,
 				8554FCDF1B63E26F00FC6530 /* WeatherCollectionViewCell.swift in Sources */,
 				857FB1491B5C9090000C107A /* HourlyWeather.swift in Sources */,

@@ -202,11 +202,14 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UIS
         searchController.searchResultsController.view.hidden = false
     }
     
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
     // MARK: - View Controller Life Cycle
     
     override func viewDidAppear(animated: Bool) {
         super.viewWillAppear(true)
-        searchController.searchBar.becomeFirstResponder()
     }
     
     override func viewWillDisappear(animated: Bool) {

@@ -15,7 +15,7 @@ protocol SearchResultViewControllerDelegate: class {
 
 class SearchResultViewController: UITableViewController, UISearchResultsUpdating, APIControllerDelegate {
     
-    private let api = APIController()
+    private let api = APIController.sharedInstance
     private var predictions = [String]()
     weak var delegate: SearchResultViewControllerDelegate?
     
@@ -68,7 +68,7 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(true)
-        predictions.removeAll(keepCapacity: false)
+//        predictions.removeAll(keepCapacity: false)
     }
     
     override func viewWillAppear(animated: Bool) {

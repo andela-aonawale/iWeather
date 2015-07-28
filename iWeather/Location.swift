@@ -16,7 +16,7 @@ class Location {
     var dayWeatherSummary: String?
     var weekWeatherSummary: String?
     var currentWeather: CurrentWeather!
-    var hourlyWeather = [HourlyWeather]()
+    var hourlyWeather: [HourlyWeather]!
     var dailyWeather: [DailyWeathear]!
     
     var placemark: CLPlacemark!
@@ -82,6 +82,7 @@ class Location {
         self.name = placemark.name
         self.placemark = placemark
         self.coordinate = coordinate
+        self.hourlyWeather = [HourlyWeather]()
         self.dailyWeather = [DailyWeathear]()
     }
     

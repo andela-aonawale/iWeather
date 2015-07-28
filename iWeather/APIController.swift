@@ -23,6 +23,17 @@ class APIController {
         private static let ForecastQuery = "units=auto&exclude=minutely,alerts,flags"
     }
     
+    class var sharedInstance : APIController {
+        struct Static {
+            static var onceToken : dispatch_once_t = 0
+            static var instance : APIController? = nil
+        }
+        dispatch_once(&Static.onceToken) {
+            Static.instance = APIController()
+        }
+        return Static.instance!
+    }
+    
     weak var delegate: APIControllerDelegate?
     private let session = NSURLSession.sharedSession()
     
@@ -52,7 +63,6 @@ class APIController {
     func suggestLocation(location: String) {
         let geocodeURL = NSURLComponents(string: API.GeocodeURL)
         geocodeURL?.query = "input=\(location)&key=\(API.GeocodeKey)"
-        println(geocodeURL!)
         let task = session.dataTaskWithURL(geocodeURL!.URL!) { data, response, error in
             if error != nil {
                 println(error.localizedDescription)
@@ -71,6 +81,10 @@ class APIController {
             }
         }
         task.resume()
+    }
+    
+    init() {
+        println("api cont")
     }
     
 }
