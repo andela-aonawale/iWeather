@@ -24,7 +24,7 @@ class WeatherCollectionViewCell: UICollectionViewCell {
         if let weather = hourWeather {
             time?.text = hourWeather?.time
             icon?.image = hourWeather?.weatherImage
-            degree?.text = hourWeather?.temperature?.description
+            degree?.text = hourWeather?.temperature
         }
     }
     

@@ -23,7 +23,7 @@ class LocationTableViewCell: UITableViewCell {
         if let location = self.location {
             locationName?.text = location.name
             locationTime?.text = location.currentWeather.time
-            locationTemperatureDegree?.text = location.currentWeather.temperature?.description
+            locationTemperatureDegree?.text = location.currentWeather.temperature
         }
     }
 

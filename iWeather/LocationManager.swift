@@ -35,16 +35,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
     }
-    
-    func sharedManager() -> LocationManager {
-        var pred = dispatch_once_t()
-        var sharedManager: LocationManager!
-        dispatch_once(&pred) {
-            sharedManager = LocationManager()
-        }
-        return sharedManager
-    }
-    
+
     func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         switch status {
         case CLAuthorizationStatus.AuthorizedWhenInUse:

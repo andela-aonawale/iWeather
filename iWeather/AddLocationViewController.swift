@@ -9,7 +9,7 @@
 import UIKit
 import CoreLocation
 
-class AddLocationViewController: UIViewController, UISearchBarDelegate, UISearchControllerDelegate, UITableViewDelegate, UITableViewDataSource, SearchResultViewControllerDelegate, APIControllerDelegate {
+class AddLocationViewController: UIViewController, UISearchBarDelegate, UISearchControllerDelegate, UITableViewDelegate, UITableViewDataSource, SearchResultViewControllerDelegate, APIControllerDelegate, UITabBarControllerDelegate {
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
@@ -26,8 +26,25 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate, UISearch
         return cell
     }
     
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.Delete {
+            dataModel.locations.removeAtIndex(indexPath.row)
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Left)
+            if let pageViewController = tabBarController?.viewControllers?.first as? PageViewController {
+                pageViewController.moveToPage(indexPath.row - 1)
+            }
+        }
+    }
+    
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
+        tabBarController?.selectedIndex = 0
+        if let pageViewController = tabBarController?.selectedViewController as? PageViewController {
+            pageViewController.moveToPage(indexPath.row)
+        }
     }
     
     @IBOutlet weak var tableView: UITableView!
@@ -61,13 +78,7 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate, UISearch
     
     func didSelectLocationFromSearchResult(placemark: CLPlacemark, selectedAddress: String) {
         newLocation = Location(placemark: placemark)
-        searchController.searchBar.resignFirstResponder()
-    }
-    
-    // MARK: - UISearchBar Delegate methods
-    
-    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
-        dismissViewControllerAnimated(true, completion: nil)
+        hideSearchBar()
     }
     
     // MARK: - UISearchControllerDelegate Methods
@@ -86,10 +97,6 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate, UISearch
     
     // MARK: - View Controller Life Cycle
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(true)
-    }
-    
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(true)
         searchController.searchBar.resignFirstResponder()
@@ -99,6 +106,7 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate, UISearch
         super.viewDidLoad()
         api.delegate = self
         configureSearchController()
+        tableView.tableHeaderView = UIView(frame: CGRectZero)
     }
 
     override func didReceiveMemoryWarning() {
@@ -110,10 +118,38 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate, UISearch
         definesPresentationContext = true
         searchController.searchBar.sizeToFit()
         searchController.searchBar.delegate = self
-        navigationItem.titleView = searchController.searchBar
         searchController.dimsBackgroundDuringPresentation = true
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchResultsUpdater = searchResultViewController
+        searchController.searchBar.searchBarStyle = UISearchBarStyle.Minimal
+        hiddenAddBarButtonItem = navigationItem.rightBarButtonItem
+    }
+    
+    var hiddenAddBarButtonItem: UIBarButtonItem?
+    
+    @IBAction func addLocationBarButtonPressed(sender: AnyObject) {
+        showSearchBar()
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        dismissViewControllerAnimated(true, completion: nil)
+        hideSearchBar()
+    }
+    
+    func showSearchBar() {
+        navigationItem.setRightBarButtonItem(nil, animated: true)
+        UIView.animateWithDuration(0.5, animations: {
+            self.navigationItem.titleView = self.searchController.searchBar }) {Void in
+            self.searchController.searchBar.becomeFirstResponder()
+        }
+    }
+    
+    func hideSearchBar() {
+        navigationItem.setRightBarButtonItem(hiddenAddBarButtonItem, animated: true)
+        UIView.animateWithDuration(0.3, animations: { self.navigationItem.titleView = nil
+            self.navigationItem.title = "Places" }) { Void in
+            self.searchController.searchBar.resignFirstResponder()
+        }
     }
 
 }

@@ -33,7 +33,7 @@ class LocationViewController: UIViewController, UICollectionViewDelegateFlowLayo
     
     @IBOutlet weak var temp: UILabel! {
         didSet {
-            temp.text = location?.currentWeather.temperature?.description
+            temp.text = location?.currentWeather.temperature
         }
     }
     @IBOutlet weak var weatherDesc: UILabel! {
@@ -81,7 +81,7 @@ class LocationViewController: UIViewController, UICollectionViewDelegateFlowLayo
                     self.location = newLocation
                     self.locationName.text = newLocation.name
                     self.weatherDesc.text = newLocation.currentWeather.summary
-                    self.temp.text = newLocation.currentWeather.temperature?.description
+                    self.temp.text = newLocation.currentWeather.temperature
                     self.collectionView.reloadData()
                 }
             }
