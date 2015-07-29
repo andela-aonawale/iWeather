@@ -18,8 +18,8 @@ class Location {
     var currentWeather: CurrentWeather!
     var hourlyWeather: [HourlyWeather]!
     var dailyWeather: [DailyWeathear]!
-    
     var placemark: CLPlacemark!
+    var localTime: String?
     
     var weatherObject: NSDictionary! {
         didSet {
@@ -84,6 +84,7 @@ class Location {
         self.coordinate = coordinate
         self.hourlyWeather = [HourlyWeather]()
         self.dailyWeather = [DailyWeathear]()
+        self.localTime = NSDate().localTimeForLocationFromAddressString(placemark.description)
     }
     
 }

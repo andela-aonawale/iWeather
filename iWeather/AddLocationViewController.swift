@@ -21,8 +21,9 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate, UISearch
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("LocationCell", forIndexPath: indexPath) as! LocationTableViewCell
-        cell.location = dataModel.locations[indexPath.row]
-        
+        if let location: Location? = dataModel.locations[indexPath.row] as Location? {
+            cell.location = location
+        }
         return cell
     }
     
@@ -104,9 +105,10 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate, UISearch
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.tableHeaderView = UIView(frame: CGRectZero)
         api.delegate = self
         configureSearchController()
-        tableView.tableHeaderView = UIView(frame: CGRectZero)
+        tableView.contentInset = UIEdgeInsets(top: -140, left: 0, bottom: 0, right: 0)
     }
 
     override func didReceiveMemoryWarning() {

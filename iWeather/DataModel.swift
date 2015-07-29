@@ -52,7 +52,7 @@ class DataModel: NSObject, APIControllerDelegate {
     }
     
     override init() {
-        api = APIController.sharedInstance
+        api = APIController()
         super.init()
         api.delegate = self
         methodOfReceivedNotification()

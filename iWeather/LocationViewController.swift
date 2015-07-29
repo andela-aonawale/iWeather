@@ -16,6 +16,12 @@ class LocationViewController: UIViewController, UICollectionViewDelegateFlowLayo
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CVCell", forIndexPath: indexPath) as! WeatherCollectionViewCell
         cell.hourWeather = location!.hourlyWeather[indexPath.row]
+        if let hourWeather: HourlyWeather? = location!.hourlyWeather[indexPath.row] as HourlyWeather? {
+            cell.hourWeather = hourWeather
+            if indexPath.row == 0 {
+                cell.time?.text = "Now"
+            }
+        }
         
         return cell
     }

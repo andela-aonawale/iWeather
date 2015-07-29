@@ -22,7 +22,7 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     private func updateUI() {
         if let weather = hourWeather {
-            time?.text = hourWeather?.time
+            time?.text = hourWeather?.hour
             icon?.image = hourWeather?.weatherImage
             degree?.text = hourWeather?.temperature
         }

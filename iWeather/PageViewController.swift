@@ -53,13 +53,12 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
     }
     
     override func viewDidDisappear(animated: Bool) {
-        super.viewDidAppear(true)
+        super.viewDidDisappear(true)
         dataSource = nil
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        dataSource = self
         if let currentLocationViewController = self.viewControllerAtIndex(0) {
             setViewControllers([currentLocationViewController], direction: .Forward, animated: true, completion: nil)
         }
@@ -68,20 +67,5 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(true)
-    }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

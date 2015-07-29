@@ -26,8 +26,8 @@ class DailyWeathear: Weather {
     override init(weatherDictionary: NSDictionary) {
         temperatureMin = weatherDictionary.valueForKey(DayWeather.TemperatureMin) as! Int
         temperatureMax = weatherDictionary.valueForKey(DayWeather.TemperatureMax) as! Int
-        sunriseTime = Weather.dateStringFromUnixTime(weatherDictionary.valueForKey(DayWeather.SunriseTime) as! Int)
-        sunsetTime = Weather.dateStringFromUnixTime(weatherDictionary.valueForKey(DayWeather.SunsetTime) as! Int)
+        sunriseTime = NSDate().dateStringFromUnixTime(weatherDictionary.valueForKey(DayWeather.SunriseTime) as! Int)
+        sunsetTime = NSDate().dateStringFromUnixTime(weatherDictionary.valueForKey(DayWeather.SunsetTime) as! Int)
         var mutableWeatherDictionary: NSMutableDictionary = weatherDictionary.mutableCopy() as! NSMutableDictionary
         mutableWeatherDictionary.removeObjectForKey(DayWeather.Temperature)
         super.init(weatherDictionary: mutableWeatherDictionary)

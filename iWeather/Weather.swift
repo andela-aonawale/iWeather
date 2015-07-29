@@ -9,6 +9,7 @@
 import Foundation
 
 class Weather {
+    
     var time: String?
     var temperature: String?
     var humidity: String?
@@ -52,20 +53,10 @@ class Weather {
         }
         
         let currentTimeIntValue = weatherDictionary.valueForKey(WeatherType.Time) as! Int
-        time = Weather.dateStringFromUnixTime(currentTimeIntValue)
+        time = NSDate().dateStringFromUnixTime(currentTimeIntValue)
         
         summary = weatherDictionary.valueForKey(WeatherType.Summary) as? String
         imageName = weatherDictionary[WeatherType.Icon] as? String
-    }
-    
-    class func dateStringFromUnixTime(unixTime: Int) -> String {
-        let timeInSeconds = NSTimeInterval(unixTime)
-        let weatherDate = NSDate(timeIntervalSince1970: timeInSeconds)
-        
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.timeStyle = .ShortStyle
-        
-        return dateFormatter.stringFromDate(weatherDate)
     }
     
     private struct IconName {
