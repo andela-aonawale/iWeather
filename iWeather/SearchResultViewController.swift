@@ -91,6 +91,7 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
         let location = predictions[indexPath.row]
         dismissViewControllerAnimated(true, completion: nil)
         CLGeocoder().geocodeAddressString(location) { (placemarks, error) in
@@ -101,7 +102,6 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
                 self.delegate?.didSelectLocationFromSearchResult(placemark, selectedAddress: formattedAddress)
             }
         }
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

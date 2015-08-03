@@ -73,7 +73,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
         locationManager.stopUpdatingLocation()
-        CLGeocoder().reverseGeocodeLocation(manager.location) { (placemarks, error) in
+        CLGeocoder().reverseGeocodeLocation(manager.location) { [unowned self] (placemarks, error) in
             if error != nil {
                 println(error.localizedDescription)
             } else if let placemark = placemarks?.first as? CLPlacemark {

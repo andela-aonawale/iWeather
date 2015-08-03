@@ -8,6 +8,6 @@
 
 import Foundation
 
-class CurrentWeather: Weather {
+final class CurrentWeather: Weather {
     //
 }

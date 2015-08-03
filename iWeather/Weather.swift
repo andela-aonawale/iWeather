@@ -53,55 +53,29 @@ class Weather {
         }
         
         let currentTimeIntValue = weatherDictionary.valueForKey(WeatherType.Time) as! Int
-        time = NSDate().dateStringFromUnixTime(currentTimeIntValue)
+        time = NSDate.dateStringFromUnixTime(currentTimeIntValue)
         
         summary = weatherDictionary.valueForKey(WeatherType.Summary) as? String
         imageName = weatherDictionary[WeatherType.Icon] as? String
     }
     
-    private struct IconName {
-        private static let ClearDay = "clear-day"
-        private static let ClearNight = "clear-night"
-        private static let Rain = "rain"
-        private static let Snow = "snow"
-        private static let Sleet = "sleet"
-        private static let Wind = "wind"
-        private static let Fog = "fog"
-        private static let Clody = "cloudy"
-        private static let PartlyCloudyDay = "partly-cloudy-day"
-        private static let PartlyCloudyNight = "partly-cloudy-night"
-        private static let Default = "default"
-    }
-    
     func weatherIconFromString(stringIcon: String) -> String {
-        var imageName: String!
         
-        switch stringIcon {
-        case "clear-day":
-            imageName = "clear-day"
-        case "clear-night":
-            imageName = "clear-night"
-        case "rain":
-            imageName = "rain"
-        case "snow":
-            imageName = "snow"
-        case "sleet":
-            imageName = "sleet"
-        case "wind":
-            imageName = "wind"
-        case "fog":
-            imageName = "fog"
-        case "cloudy":
-            imageName = "cloudy"
-        case "partly-cloudy-day":
-            imageName = "partly-cloudy"
-        case "partly-cloudy-night":
-            imageName = "cloudy-night"
-        default:
-            imageName = "default"
+        enum IconName: String {
+            case ClearDay = "clear-day"
+            case ClearNight = "clear-night"
+            case Rain = "rain"
+            case Snow = "snow"
+            case Sleet = "sleet"
+            case Wind = "wind"
+            case Fog = "fog"
+            case Clody = "cloudy"
+            case PartlyCloudyDay = "partly-cloudy-day"
+            case PartlyCloudyNight = "partly-cloudy-night"
+            case Default = "default"
         }
         
-        return imageName
+        return IconName(rawValue: stringIcon)?.rawValue as String!
     }
 
 }

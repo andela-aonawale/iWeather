@@ -9,13 +9,27 @@
 import UIKit
 import MapKit
 
-class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UISearchControllerDelegate, MKMapViewDelegate, SearchResultViewControllerDelegate, APIControllerDelegate {
-
-    @IBOutlet weak var mapView: MKMapView! {
+class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
+    
+    // MARK: - Variables and Outlets
+    
+    @IBOutlet weak var mapView: MKMapView!
+    
+    private var formattedAddress: String?
+    private let api: APIController
+    private var searchController: UISearchController!
+    private let searchResultViewController: SearchResultViewController
+    typealias address = (name: String, coordinate: (latitude: Double, longitude: Double))
+    
+    private var travelLocation: Location? {
         didSet {
-            configureMapView()
+            api.getWeatherData(travelLocation!.getCoordinate())
+            getDirections(travelLocation!.placemark)
+            addAnnotation(travelLocation!.placemark)
         }
     }
+    
+    // MARK: - MapView Methods
     
     private func configureMapView() {
         mapView.delegate = self
@@ -77,13 +91,6 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UIS
         return nil
     }
     
-    func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
-        let renderer = MKPolylineRenderer(overlay: overlay)
-        renderer.strokeColor = UIColor.blueColor()
-        renderer.lineWidth = 3.0
-        return renderer
-    }
-    
     private func addAnnotation(placemark: CLPlacemark) {
         clearRoutes()
         let point = MKPointAnnotation()
@@ -109,18 +116,125 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UIS
         mapView.setRegion(region, animated: true)
     }
     
-    func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
-        let region = MKCoordinateRegionMakeWithDistance(userLocation.location.coordinate, 2000, 2000)
-        mapView.setRegion(region, animated: true)
+    // MARK: - UISearchBar Methods
+    
+    private func configureSearchController() {
+        searchController.delegate = self
+        definesPresentationContext = true
+        searchController.searchBar.sizeToFit()
+        searchController.searchBar.delegate = self
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchResultsUpdater = searchResultViewController
+        hiddenSearchBarButtonItem = navigationItem.rightBarButtonItem
     }
     
-    func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
+    @IBOutlet weak var searchButton: UIBarButtonItem!
 
+    var hiddenSearchBarButtonItem: UIBarButtonItem?
+
+    @IBAction func searchBarButtonPressed(sender: UIBarButtonItem) {
+        showSearchBar()
+    }
+
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        dismissViewControllerAnimated(true, completion: nil)
+        hideSearchBar()
+    }
+
+    func showSearchBar() {
+        navigationItem.setRightBarButtonItem(nil, animated: true)
+        UIView.animateWithDuration(0.5, animations: {
+            self.navigationItem.titleView = self.searchController.searchBar }) {finished in
+                self.searchController.searchBar.becomeFirstResponder()
+        }
     }
     
-    private struct Constants {
-        static let LeftCalloutFrame = CGRect(x: 0, y: 0, width: 59, height: 59)
-        static let AnnotationViewReuseIdentifier = "CustomPinAnnotationView"
+    func hideSearchBar() {
+        searchController.searchBar.resignFirstResponder()
+        UIView.animateWithDuration(0.3, animations: { self.navigationItem.titleView = nil }) { finished in
+            self.navigationItem.setRightBarButtonItem(self.hiddenSearchBarButtonItem, animated: true)
+        }
+    }
+    
+    // MARK: - Initialization
+    
+    required init(coder aDecoder: NSCoder) {
+        api = APIController()
+        searchResultViewController = SearchResultViewController()
+        searchController = UISearchController(searchResultsController: searchResultViewController)
+        super.init(coder: aDecoder)
+    }
+    
+    // MARK: - View Controller Life Cycle
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewWillAppear(true)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(true)
+        searchController.searchBar.resignFirstResponder()
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        api.delegate = self
+        configureMapView()
+        configureSearchController()
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+
+}
+
+
+extension TravelToLocationViewController: SearchResultViewControllerDelegate, APIControllerDelegate {
+    
+    // MARK: - API Controller & Search ResultView Controller Delegate Methods
+    
+    func didReceiveWeatherResult(weatherObject: NSDictionary) {
+        travelLocation?.weatherObject = weatherObject
+    }
+    
+    func didSelectLocationFromSearchResult(placemark: CLPlacemark, selectedAddress: String) {
+        self.formattedAddress = selectedAddress
+        self.travelLocation = Location(placemark: placemark)
+    }
+    
+}
+
+
+extension TravelToLocationViewController: UISearchControllerDelegate {
+    
+    // MARK: - UISearch Controller Delegate Methods
+    
+    func willPresentSearchController(searchController: UISearchController) {
+        let controller = searchController.searchResultsController as! SearchResultViewController
+        controller.delegate = self
+        dispatch_async(dispatch_get_main_queue()) {
+            searchController.searchResultsController.view.hidden = false
+        }
+    }
+    
+    func didPresentSearchController(searchController: UISearchController) {
+        searchController.searchResultsController.view.hidden = false
+    }
+    
+}
+
+
+extension TravelToLocationViewController: MKMapViewDelegate {
+    
+    // MARK: - MKMapView Delegate Methods
+    
+    func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
+        let renderer = MKPolylineRenderer(overlay: overlay)
+        renderer.strokeColor = UIColor.blueColor()
+        renderer.lineWidth = 3.0
+        return renderer
     }
     
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
@@ -148,101 +262,18 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, UIS
         }
     }
     
-    private var formattedAddress: String?
-    private let api: APIController
-    private var travelLocation: Location? {
-        didSet {
-            api.getWeatherData(travelLocation!.getCoordinate())
-            getDirections(travelLocation!.placemark)
-            addAnnotation(travelLocation!.placemark)
-        }
-    }
-    private var searchController: UISearchController!
-    private let searchResultViewController: SearchResultViewController
-    typealias address = (name: String, coordinate: (latitude: Double, longitude: Double))
-    
-    required init(coder aDecoder: NSCoder) {
-        api = APIController()
-        searchResultViewController = SearchResultViewController()
-        searchController = UISearchController(searchResultsController: searchResultViewController)
-        super.init(coder: aDecoder)
+    func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
+        let region = MKCoordinateRegionMakeWithDistance(userLocation.location.coordinate, 2000, 2000)
+        mapView.setRegion(region, animated: true)
     }
     
-    private func configureSearchController() {
-        searchController.delegate = self
-        definesPresentationContext = true
-        searchController.searchBar.sizeToFit()
-        searchController.searchBar.delegate = self
-        navigationItem.titleView = searchController.searchBar
-        searchController.dimsBackgroundDuringPresentation = true
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.searchResultsUpdater = searchResultViewController
+    func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
+        
     }
     
-    func didReceiveWeatherResult(weatherObject: NSDictionary) {
-        travelLocation?.weatherObject = weatherObject
+    private struct Constants {
+        static let LeftCalloutFrame = CGRect(x: 0, y: 0, width: 59, height: 59)
+        static let AnnotationViewReuseIdentifier = "CustomPinAnnotationView"
     }
     
-    func didSelectLocationFromSearchResult(placemark: CLPlacemark, selectedAddress: String) {
-        self.formattedAddress = selectedAddress
-        self.travelLocation = Location(placemark: placemark)
-    }
-    
-    // MARK: - UISearchControllerDelegate Methods
-    
-    func willPresentSearchController(searchController: UISearchController) {
-        let controller = searchController.searchResultsController as! SearchResultViewController
-        controller.delegate = self
-        dispatch_async(dispatch_get_main_queue()) {
-            searchController.searchResultsController.view.hidden = false
-        }
-    }
-    
-    func didPresentSearchController(searchController: UISearchController) {
-        searchController.searchResultsController.view.hidden = false
-    }
-    
-    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    // MARK: - View Controller Life Cycle
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewWillAppear(true)
-    }
-    
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(true)
-        searchController.searchBar.resignFirstResponder()
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        api.delegate = self
-        configureSearchController()
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
-    private func openLocationSettings(alert: UIAlertAction!) {
-        if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
-            UIApplication.sharedApplication().openURL(url)
-        }
-    }
-    
-    func enableLocationAccess() {
-        let alertController = UIAlertController(
-            title: "Location Access Disabled",
-            message: "In order get your location, please open this app's settings and enable location access.",
-            preferredStyle: .Alert)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-        let openAction = UIAlertAction(title: "Open Settings", style: .Default, handler: openLocationSettings)
-        alertController.addAction(cancelAction)
-        alertController.addAction(openAction)
-        presentViewController(alertController, animated: true, completion: nil)
-    }
-
 }

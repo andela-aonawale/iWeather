@@ -47,17 +47,17 @@ class Location {
     
     private func instantiateCurrentWeather() {
         if let currently = weatherObject.valueForKey(WeatherType.Current) as? NSDictionary {
-            currentWeather = CurrentWeather(weatherDictionary: currently)
+            self.currentWeather = CurrentWeather(weatherDictionary: currently)
         }
     }
     
     private func instantiateHourlyWeather() {
         if let hourly = weatherObject.valueForKey(WeatherType.Hourly) as? NSDictionary {
-            dayWeatherSummary = hourly.valueForKey(WeatherType.Summary) as? String
+            self.dayWeatherSummary = hourly.valueForKey(WeatherType.Summary) as? String
             let hourlyData = hourly.valueForKey(WeatherType.Data) as! NSArray
             for hour in hourlyData {
                 let hourWeather = HourlyWeather(weatherDictionary: hour as! NSDictionary)
-                hourlyWeather.append(hourWeather)
+                self.hourlyWeather.append(hourWeather)
             }
         }
     }
@@ -68,7 +68,7 @@ class Location {
             let dailyData = daily.valueForKey(WeatherType.Data) as! NSArray
             for day in dailyData {
                 let dayWeather = DailyWeathear(weatherDictionary: day as! NSDictionary)
-                dailyWeather.append(dayWeather)
+                self.dailyWeather.append(dayWeather)
             }
         }
     }
@@ -84,7 +84,7 @@ class Location {
         self.coordinate = coordinate
         self.hourlyWeather = [HourlyWeather]()
         self.dailyWeather = [DailyWeathear]()
-        self.localTime = NSDate().localTimeForLocationFromAddressString(placemark.description)
+        self.localTime = NSDate.localTimeForLocationFromAddressString(placemark.description)
     }
     
 }
