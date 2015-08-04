@@ -57,7 +57,7 @@ class LocationViewController: UIViewController {
         if self.index == 0 {
             let center = NSNotificationCenter.defaultCenter()
             let queue = NSOperationQueue.mainQueue()
-            center.addObserverForName("Received New Location", object: nil, queue: queue) { notification in
+            center.addObserverForName("Received New Location", object: nil, queue: queue) { [unowned self] notification in
                 if let newLocation = notification?.userInfo?["newLocation"] as? Location {
                     self.location = newLocation
                     self.locationName.text = newLocation.name

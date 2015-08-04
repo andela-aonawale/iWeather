@@ -53,15 +53,16 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate, UITabBar
     
     func showSearchBar() {
         navigationItem.setRightBarButtonItem(nil, animated: true)
-        UIView.animateWithDuration(0.5, animations: {
-            self.navigationItem.titleView = self.searchController.searchBar }) {finished in
+        UIView.animateWithDuration(0.5, animations: { [unowned self] in
+            self.navigationItem.titleView = self.searchController.searchBar }) {[unowned self] finished in
             self.searchController.searchBar.becomeFirstResponder()
         }
     }
     
     func hideSearchBar() {
         searchController.searchBar.resignFirstResponder()
-        UIView.animateWithDuration(0.3, animations: { self.navigationItem.titleView = nil }) { finished in
+        UIView.animateWithDuration(0.3, animations: { [unowned self] in
+            self.navigationItem.titleView = nil }) { [unowned self] finished in
             self.navigationItem.setRightBarButtonItem(self.hiddenAddBarButtonItem, animated: true)
         }
     }
@@ -105,7 +106,7 @@ extension AddLocationViewController: APIControllerDelegate, SearchResultViewCont
     func didReceiveWeatherResult(weatherObject: NSDictionary) {
         newLocation?.weatherObject = weatherObject
         dataModel.locations.append(newLocation!)
-        dispatch_async(dispatch_get_main_queue()) {
+        dispatch_async(dispatch_get_main_queue()) { [unowned self] in
             self.tableView.reloadData()
         }
     }

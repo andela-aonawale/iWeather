@@ -80,11 +80,23 @@ class Location {
     
     init(placemark: CLPlacemark, coordinate: (latitude: Double, longitude: Double)) {
         self.name = placemark.name
-        self.placemark = placemark
         self.coordinate = coordinate
         self.hourlyWeather = [HourlyWeather]()
         self.dailyWeather = [DailyWeathear]()
         self.localTime = NSDate.localTimeForLocationFromAddressString(placemark.description)
+    }
+    
+    convenience init(name: String, coordinate: CLLocationCoordinate2D) {
+        let coordinate = (latitude: coordinate.latitude, longitude: coordinate.longitude)
+        self.init(name: name, coordinate: coordinate)
+    }
+    
+    init(name: String, coordinate: (latitude: Double, longitude: Double)) {
+        self.name = name
+        self.coordinate = coordinate
+        self.hourlyWeather = [HourlyWeather]()
+        self.dailyWeather = [DailyWeathear]()
+//        self.localTime = NSDate.localTimeForLocationFromAddressString(placemark.description)
     }
     
 }

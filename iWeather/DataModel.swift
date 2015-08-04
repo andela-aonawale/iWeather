@@ -11,11 +11,17 @@ import Foundation
 class DataModel: NSObject, APIControllerDelegate {
     
     private let api: APIController!
-    let center = NSNotificationCenter.defaultCenter()
-    let queue = NSOperationQueue.mainQueue()
+    private let center = NSNotificationCenter.defaultCenter()
+    private let queue = NSOperationQueue.mainQueue()
     
     var locations = [Location]() {
         didSet { println(locations) }
+    }
+    
+    var events = [Event]() {
+        didSet {
+            println(events)
+        }
     }
     
     var currentLocation: Location? {

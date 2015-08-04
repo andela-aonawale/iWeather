@@ -37,6 +37,7 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
         mapView.mapType = .Standard
         mapView.showsUserLocation = true
         mapView.showsBuildings = true
+        mapView.userTrackingMode = .Follow
     }
     
     private func getDirections(placemark: CLPlacemark) {
@@ -49,7 +50,7 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
         
         let directions = MKDirections(request: request)
         if directions.calculating { directions.cancel() }
-        directions.calculateDirectionsWithCompletionHandler { (response, error) in
+        directions.calculateDirectionsWithCompletionHandler { [unowned self] response, error in
             if error != nil {
                 println("map error: \(error.localizedDescription)")
             } else {
@@ -144,15 +145,16 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
 
     func showSearchBar() {
         navigationItem.setRightBarButtonItem(nil, animated: true)
-        UIView.animateWithDuration(0.5, animations: {
-            self.navigationItem.titleView = self.searchController.searchBar }) {finished in
+        UIView.animateWithDuration(0.5, animations: { [unowned self] in
+            self.navigationItem.titleView = self.searchController.searchBar }) {[unowned self] finished in
                 self.searchController.searchBar.becomeFirstResponder()
         }
     }
     
     func hideSearchBar() {
         searchController.searchBar.resignFirstResponder()
-        UIView.animateWithDuration(0.3, animations: { self.navigationItem.titleView = nil }) { finished in
+        UIView.animateWithDuration(0.3, animations: { [unowned self] in
+            self.navigationItem.titleView = nil }) { [unowned self] finished in
             self.navigationItem.setRightBarButtonItem(self.hiddenSearchBarButtonItem, animated: true)
         }
     }

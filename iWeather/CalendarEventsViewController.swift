@@ -11,69 +11,113 @@ import EventKit
 
 class CalendarEventsViewController: UIViewController {
     
-    private let eventStore = EKEventStore()
-    private var calendars: [EKCalendar]?
     @IBOutlet weak var tableView: UITableView!
+
+    private let eventStore: EKEventStore
+    private var dataModel = DataModel.sharedInstance
+    private let locationManager = LocationManager.sharedInstance
     
     private func requestAccessToCalendar() {
-        eventStore.requestAccessToEntityType(EKEntityTypeEvent) { (accessGranted, error) in
-            if accessGranted {
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.loadCalendars()
-                    self.refreshTableView()
+        eventStore.requestAccessToEntityType(EKEntityTypeEvent) { [unowned self] in
+            ($0 == true && $1 == nil) ? self.fetchCalendars() : self.showNeedPermissionView()
+        }
+    }
+    
+    private func showNeedPermissionView() {
+        
+    }
+    
+    private func showRestrictedView() {
+        
+    }
+    
+    private func fetchCalendars() {
+        if let calendars = eventStore.calendarsForEntityType(EKEntityTypeEvent) as? [EKCalendar] {
+            fetchEventsFromCalendars(calendars) { [unowned self] Events in
+                for event in Events {
+                    self.createEvent(event)
                 }
-            } else {
                 dispatch_async(dispatch_get_main_queue()) {
-                    //needPermissionView.fadeIn()
+                    self.tableView.reloadData()
                 }
             }
         }
     }
     
-    private func refreshTableView() {
-        tableView.reloadData()
+    private func fetchEventsFromCalendars(calendars: [EKCalendar], completed: ([EKEvent]) -> Void) {
+        let startDate = NSDate()
+        let endDate = NSDate(timeIntervalSinceNow: 604800*10)
+        let predicate = eventStore.predicateForEventsWithStartDate(startDate, endDate: endDate, calendars: calendars)
+        completed(eventStore.eventsMatchingPredicate(predicate) as! [EKEvent])
     }
     
-    private func loadCalendars() {
-        calendars = eventStore.calendarsForEntityType(EKEntityTypeEvent) as? [EKCalendar]
+    private func createEvent(event: EKEvent) {
+        if let location = event.valueForKey("structuredLocation") as? EKStructuredLocation {
+            if let coordinate = location.geoLocation?.coordinate {
+                createEventWithCoordinate(coordinate, event: event)
+            } else {
+                getEventPlacemarkFromLocation(location.title) { [unowned self] placemark in
+                    self.createEventWithPlacemark(placemark, event: event)
+                }
+            }
+        }
+    }
+    
+    private func createEventWithCoordinate(coordinate: CLLocationCoordinate2D, event: EKEvent) {
+        let event = Event(title: event.title, startDate: event.startDate, endDate: event.endDate, coordinate: coordinate)
+        dataModel.events.append(event)
+    }
+    
+    private func createEventWithPlacemark(placemark: CLPlacemark, event: EKEvent) {
+        let event = Event(title: event.title, startDate: event.startDate, endDate: event.endDate, placemark: placemark)
+        dataModel.events.append(event)
+    }
+    
+    private func getEventPlacemarkFromLocation(location: String, completed: (placemark: CLPlacemark) -> Void) {
+        locationManager.geocodeAddressFromString(location) { [unowned self] placemarks, error in
+            if error != nil {
+                println(error.localizedDescription)
+            } else if let placemark = placemarks?.first as? CLPlacemark {
+                completed(placemark: placemark)
+            }
+        }
+    }
+    
+    private func enableCalendarAccess() {
+        let openSettingsUrl = NSURL(string: UIApplicationOpenSettingsURLString)
+        UIApplication.sharedApplication().openURL(openSettingsUrl!)
     }
     
     private func checkCalendarAuthorizationStatus() {
         let status = EKEventStore.authorizationStatusForEntityType(EKEntityTypeEvent)
-        
         switch status {
             case .NotDetermined:
                 requestAccessToCalendar()
             case .Authorized:
-                loadCalendars()
-                refreshTableView()
-            case .Restricted, .Denied:
-                println("")
-                //needPermissionView.fadeIn()
-            default:
-                let alert = UIAlertController(title: "Privacy Warning",
-                    message: "You have not granted permission for this app to access your Calendar", preferredStyle: UIAlertControllerStyle.Alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel, handler: nil))
-                presentViewController(alert, animated: true, completion: nil)
+                fetchCalendars()
+            case .Denied:
+                showNeedPermissionView()
+            case .Restricted:
+                showRestrictedView()
         }
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
-        checkCalendarAuthorizationStatus()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        checkCalendarAuthorizationStatus()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    func goToSettingsButtonTapped(sender: UIButton) {
-        let openSettingsUrl = NSURL(string: UIApplicationOpenSettingsURLString)
-        UIApplication.sharedApplication().openURL(openSettingsUrl!)
+    required init(coder aDecoder: NSCoder) {
+        eventStore = EKEventStore()
+        super.init(coder: aDecoder)
     }
 
 }
@@ -82,23 +126,15 @@ class CalendarEventsViewController: UIViewController {
 extension CalendarEventsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let calendars = self.calendars {
-            return calendars.count
-        }
-        
-        return 0
+        return dataModel.events.count
     }
-    
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("EventCell") as! UITableViewCell
         
-        if let calendars = self.calendars {
-            let calendarName = calendars[indexPath.row].title
-            println(calendarName)
-            cell.textLabel?.text = calendarName
-        } else {
-            cell.textLabel?.text = "Unknown Calendar Name"
+        if let event = dataModel.events[indexPath.row] as Event? {
+            cell.textLabel!.text = event.title
+            println(event.title)
         }
         
         return cell

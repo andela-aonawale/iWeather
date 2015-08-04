@@ -19,14 +19,11 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     private let locationManager = CLLocationManager()
     weak var delegate: LocationManagerDelegate?
     private var location: Location?
+    private let geocoder = CLGeocoder()
     
-    func geocodeAddressString(address: String) {
-        CLGeocoder().geocodeAddressString(address) { (placemarks, error) in
-            if error != nil {
-                println(error.localizedDescription)
-            } else if let placemark = placemarks?.first as? CLPlacemark {
-
-            }
+    func geocodeAddressFromString(address: String, completed: (placemarks: [AnyObject]!, error: NSError!) -> Void) {
+        geocoder.geocodeAddressString(address) { (placemarks, error) in
+            completed(placemarks: placemarks, error: error)
         }
     }
     
@@ -97,4 +94,5 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             }
         }
     }
+    
 }
