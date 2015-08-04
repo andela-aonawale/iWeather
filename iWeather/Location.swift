@@ -80,6 +80,7 @@ class Location {
     
     init(placemark: CLPlacemark, coordinate: (latitude: Double, longitude: Double)) {
         self.name = placemark.name
+        self.placemark = placemark
         self.coordinate = coordinate
         self.hourlyWeather = [HourlyWeather]()
         self.dailyWeather = [DailyWeathear]()

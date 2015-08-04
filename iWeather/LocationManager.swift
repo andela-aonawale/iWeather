@@ -35,10 +35,9 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
     func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         switch status {
-        case CLAuthorizationStatus.AuthorizedWhenInUse:
+        case .AuthorizedWhenInUse:
             locationManager.startUpdatingLocation()
-        case CLAuthorizationStatus.Denied:
-            println()
+        case .Denied:
             delegate?.informUserThatGPSWillNotWork!()
         default:
             break
@@ -70,7 +69,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
         locationManager.stopUpdatingLocation()
-        CLGeocoder().reverseGeocodeLocation(manager.location) { [unowned self] (placemarks, error) in
+        geocoder.reverseGeocodeLocation(manager.location) { [unowned self] (placemarks, error) in
             if error != nil {
                 println(error.localizedDescription)
             } else if let placemark = placemarks?.first as? CLPlacemark {

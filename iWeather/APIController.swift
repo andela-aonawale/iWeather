@@ -11,6 +11,7 @@ import Foundation
 @objc protocol APIControllerDelegate: class {
     optional func didReceiveWeatherResult(weatherObject: NSDictionary)
     optional func didReceiveLocationResult(locationObject: NSDictionary)
+    optional func didReceiveWeatherResultForTime(weatherObject: NSDictionary)
 }
 
 class APIController {
@@ -83,8 +84,31 @@ class APIController {
         task.resume()
     }
     
+    func getWeatherDataForTime(unixTime: Int, coordinate: String) {
+        let forecastURL = NSURLComponents(string: "\(API.ForecastURL)\(API.ForcastKEY)/\(coordinate),\(unixTime)?")
+        forecastURL?.query = API.ForecastQuery
+        let task = session.dataTaskWithURL(forecastURL!.URL!) { data, response, error in
+            if error != nil {
+                println(error.localizedDescription)
+            }
+            if let HTTPresponse = response as? NSHTTPURLResponse {
+                if HTTPresponse.statusCode == 200 {
+                    var err: NSError?
+                    if let weatherObject = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers, error: &err) as? NSDictionary {
+                        if err != nil {
+                            println("JSON Error \(err!.localizedDescription)")
+                        } else {
+                            self.delegate?.didReceiveWeatherResultForTime!(weatherObject as NSDictionary)
+                        }
+                    }
+                }
+            }
+        }
+        task.resume()
+    }
+    
     init() {
-        println("api cont")
+        println("api controller")
     }
     
 }

@@ -37,9 +37,6 @@ class CalendarEventsViewController: UIViewController {
                 for event in Events {
                     self.createEvent(event)
                 }
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.tableView.reloadData()
-                }
             }
         }
     }
@@ -79,6 +76,9 @@ class CalendarEventsViewController: UIViewController {
                 println(error.localizedDescription)
             } else if let placemark = placemarks?.first as? CLPlacemark {
                 completed(placemark: placemark)
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.tableView.reloadData()
+                }
             }
         }
     }
@@ -134,7 +134,6 @@ extension CalendarEventsViewController: UITableViewDelegate, UITableViewDataSour
         
         if let event = dataModel.events[indexPath.row] as Event? {
             cell.textLabel!.text = event.title
-            println(event.title)
         }
         
         return cell

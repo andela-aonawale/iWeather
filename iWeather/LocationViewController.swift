@@ -120,7 +120,7 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
            return 70
         }
         if indexPath.row == 8 {
-            return 180
+            return 220
         }
         return tableView.frame.size.height / 7
     }
