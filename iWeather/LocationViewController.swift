@@ -23,7 +23,7 @@ class LocationViewController: UIViewController {
     }
     @IBOutlet weak var locationName: UILabel! {
         didSet {
-            locationName.text = location?.name
+            locationName.text = location?.name ?? "Local Weather"
         }
     }
     

@@ -13,6 +13,42 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
     
     // MARK: - Variables and Outlets
     
+    @IBOutlet weak var firstView: UIView!
+    @IBOutlet weak var secondView: UIView!
+    
+    @IBOutlet weak var currentTemperature: UILabel!
+    @IBOutlet weak var currentWeatherImage: UIImageView!
+    @IBOutlet weak var currentTime: UILabel!
+    @IBOutlet weak var currentSummary: UILabel!
+    @IBOutlet weak var currentAddress: UILabel!
+    
+    @IBAction func showETAView(sender: UIButton) {
+        UIView.transitionFromView(firstView, toView: secondView, duration: 0.3, options: .TransitionFlipFromRight | .ShowHideTransitionViews | .AllowAnimatedContent) { finished in
+            
+        }
+    }
+    
+    @IBAction func showCurrentWeatherView(sender: UIButton) {
+        UIView.transitionFromView(secondView, toView: firstView, duration: 0.3, options: .TransitionFlipFromLeft | .ShowHideTransitionViews | .AllowAnimatedContent) { finished in
+            
+        }
+    }
+    
+    func updateFirstViewUI() {
+        if let weather = travelLocation?.currentWeather {
+            currentTemperature.text = weather.temperature
+            currentWeatherImage.image = weather.weatherImage
+            currentSummary.text = weather.summary
+        }
+        if let location = travelLocation {
+            currentTime.text = location.localTime
+            currentAddress.text = location.name
+        }
+    }
+    
+    
+    
+    
     @IBOutlet weak var mapView: MKMapView!
     
     private var formattedAddress: String?
@@ -46,7 +82,7 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
         let request = MKDirectionsRequest()
         request.setSource(MKMapItem.mapItemForCurrentLocation())
         request.setDestination(destination!)
-        request.requestsAlternateRoutes = false
+        request.transportType = .Automobile
         
         let directions = MKDirections(request: request)
         if directions.calculating { directions.cancel() }
@@ -67,10 +103,8 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
     private func showRoutes(response: MKDirectionsResponse!) {
         if let route = response.routes.first as? MKRoute {
             mapView.addOverlay(route.polyline, level: MKOverlayLevel.AboveRoads)
-            println("route name: \(route.name)")
-            println("distance: \(route.distance)")
-            println("eta: \(route.expectedTravelTime/60)")
-            println("transport type: \(route.transportType.rawValue)")
+            println("distance in km: \(route.distance/1000)")
+            println("eta in minutes: \(route.expectedTravelTime/60)")
             var eta = NSDate().dateByAddingTimeInterval(route.expectedTravelTime)
             
             var etaWeather = getWeatherOnArrival(eta)
@@ -199,6 +233,9 @@ extension TravelToLocationViewController: SearchResultViewControllerDelegate, AP
     
     func didReceiveWeatherResult(weatherObject: NSDictionary) {
         travelLocation?.weatherObject = weatherObject
+        dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+            self.updateFirstViewUI()
+        }
     }
     
     func didSelectLocationFromSearchResult(placemark: CLPlacemark, selectedAddress: String) {
