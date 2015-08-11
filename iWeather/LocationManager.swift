@@ -10,8 +10,9 @@ import Foundation
 import CoreLocation
 
 @objc protocol LocationManagerDelegate: class {
-    optional func informUserThatGPSWillNotWork()
-    optional func enableLocationAccess()
+    optional func locationAccessDenied()
+    optional func locationAccessRestricted()
+    optional func networkUnavailable()
 }
 
 class LocationManager: NSObject, CLLocationManagerDelegate {
@@ -30,30 +31,33 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     func start() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestWhenInUseAuthorization()
     }
 
     func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         switch status {
+        case .NotDetermined:
+            locationManager.requestWhenInUseAuthorization()
         case .AuthorizedWhenInUse:
             locationManager.startUpdatingLocation()
         case .Denied:
-            delegate?.informUserThatGPSWillNotWork!()
+            delegate?.locationAccessDenied!()
+        case .Restricted:
+            delegate?.locationAccessRestricted!()
         default:
             break
         }
     }
     
-    func postNotification(location: Location) {
+    func postNewLocation(location: Location) {
         let center = NSNotificationCenter.defaultCenter()
         let notification = NSNotification(name: "Received Current Location", object: nil, userInfo: ["currentLocation" : location])
         center.postNotification(notification)
     }
     
-    func instantiateCurrentLocation(placemark: CLPlacemark) {
+    func createCurrentLocationWithPlacemark(placemark: CLPlacemark) {
         let coordinate = (latitude: placemark.location.coordinate.latitude, longitude: placemark.location.coordinate.longitude)
         location = Location(placemark: placemark)
-        postNotification(location!)
+        postNewLocation(location!)
     }
     
     class var sharedInstance : LocationManager {
@@ -73,20 +77,21 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             if error != nil {
                 println(error.localizedDescription)
             } else if let placemark = placemarks?.first as? CLPlacemark {
-                self.instantiateCurrentLocation(placemark)
+                self.createCurrentLocationWithPlacemark(placemark)
             }
         }
     }
     
     func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
         if error.domain == kCLErrorDomain {
-            switch error.code {
+            switch error {
             case CLError.LocationUnknown.rawValue:
                 println("The location manager was unable to obtain a location value right now.")
             case CLError.Denied.rawValue:
-                println()
-                //enableLocationAccess()
+                locationManager.stopUpdatingLocation()
+                delegate?.locationAccessDenied!()
             case CLError.Network.rawValue:
+                delegate?.networkUnavailable!()
                 println("The network was unavailable or a network error occurred")
             default:
                 break

@@ -9,7 +9,7 @@
 import UIKit
 import CoreLocation
 
-class AddLocationViewController: UIViewController, UISearchBarDelegate, UITabBarControllerDelegate {
+class AddLocationViewController: UIViewController, UISearchBarDelegate {
     
     // MARK: - Variables and Outlets
     

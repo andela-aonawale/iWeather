@@ -51,22 +51,20 @@ class CalendarEventsViewController: UIViewController {
     private func createEvent(event: EKEvent) {
         if let location = event.valueForKey("structuredLocation") as? EKStructuredLocation {
             if let coordinate = location.geoLocation?.coordinate {
-                createEventWithCoordinate(coordinate, event: event)
+                createEvent(event, withCoordinate: coordinate)
             } else {
-                getEventPlacemarkFromLocation(location.title) { [unowned self] placemark in
-                    self.createEventWithPlacemark(placemark, event: event)
-                }
+                createEvent(event: event)
             }
         }
     }
     
-    private func createEventWithCoordinate(coordinate: CLLocationCoordinate2D, event: EKEvent) {
-        let event = Event(title: event.title, startDate: event.startDate, endDate: event.endDate, coordinate: coordinate)
+    private func createEvent(event: EKEvent, withCoordinate: CLLocationCoordinate2D) {
+        let event = Event(title: event.title, startDate: event.startDate, endDate: event.endDate, location: event.location, coordinate: withCoordinate)
         dataModel.events.append(event)
     }
     
-    private func createEventWithPlacemark(placemark: CLPlacemark, event: EKEvent) {
-        let event = Event(title: event.title, startDate: event.startDate, endDate: event.endDate, placemark: placemark)
+    private func createEvent(#event: EKEvent) {
+        let event = Event(title: event.title, startDate: event.startDate, endDate: event.endDate, location: event.location)
         dataModel.events.append(event)
     }
     
@@ -109,6 +107,10 @@ class CalendarEventsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         checkCalendarAuthorizationStatus()
+        tableView.estimatedRowHeight = tableView.rowHeight
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.tableFooterView = UIView(frame: CGRectZero)
+        tableView.contentInset = UIEdgeInsets(top: -65, left: 0, bottom: 0, right: 0)
     }
 
     override func didReceiveMemoryWarning() {
@@ -130,12 +132,10 @@ extension CalendarEventsViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("EventCell") as! UITableViewCell
-        
+        let cell = tableView.dequeueReusableCellWithIdentifier("EventCell") as! EventTableViewCell
         if let event = dataModel.events[indexPath.row] as Event? {
-            cell.textLabel!.text = event.title
+            cell.event = event
         }
-        
         return cell
     }
     

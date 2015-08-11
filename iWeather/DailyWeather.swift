@@ -10,10 +10,11 @@ import Foundation
 
 final class DailyWeathear: Weather {
     
-    var sunriseTime: String
-    var sunsetTime: String
-    var temperatureMin: Int
-    var temperatureMax: Int
+    var sunriseTime: String?
+    var sunsetTime: String?
+    var temperatureMin: Int?
+    var temperatureMax: Int?
+    var day: String?
     
     struct DayWeather {
         private static let TemperatureMin = "temperatureMin"
@@ -24,12 +25,18 @@ final class DailyWeathear: Weather {
     }
     
     override init(weatherDictionary: NSDictionary) {
-        temperatureMin = weatherDictionary.valueForKey(DayWeather.TemperatureMin) as! Int
-        temperatureMax = weatherDictionary.valueForKey(DayWeather.TemperatureMax) as! Int
-        sunriseTime = NSDate.dateStringFromUnixTime(weatherDictionary.valueForKey(DayWeather.SunriseTime) as! Int)
-        sunsetTime = NSDate.dateStringFromUnixTime(weatherDictionary.valueForKey(DayWeather.SunsetTime) as! Int)
-        var mutableWeatherDictionary: NSMutableDictionary = weatherDictionary.mutableCopy() as! NSMutableDictionary
-        mutableWeatherDictionary.removeObjectForKey(DayWeather.Temperature)
-        super.init(weatherDictionary: mutableWeatherDictionary)
+        self.temperatureMin = weatherDictionary.valueForKey(DayWeather.TemperatureMin) as? Int
+        self.temperatureMax = weatherDictionary.valueForKey(DayWeather.TemperatureMax) as? Int
+        
+        let sunriseUnixTime = weatherDictionary.valueForKey(DayWeather.SunriseTime) as? Int
+        self.sunriseTime = NSDate.dateStringFromUnixTime(sunriseUnixTime!, dateStyle: .NoStyle, timeStyle: .ShortStyle)
+            
+        let sunsetUnixTime = weatherDictionary.valueForKey(DayWeather.SunsetTime) as? Int
+        self.sunsetTime = NSDate.dateStringFromUnixTime(sunsetUnixTime!, dateStyle: .NoStyle, timeStyle: .ShortStyle)
+            
+        let dayUnixTime = weatherDictionary.valueForKey("time") as? Int
+        self.day = NSDate.dateFormatFromUnixTime(dayUnixTime!, format: "EEEE")
+            
+        super.init(weatherDictionary: weatherDictionary)
     }
 }

@@ -34,7 +34,6 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
             } else {
                 locationViewController.location = dataModel.currentLocation
             }
-            
             locationViewController.index = index
             return locationViewController
         }

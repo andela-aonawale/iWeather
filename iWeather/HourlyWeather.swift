@@ -10,12 +10,12 @@ import Foundation
 
 final class HourlyWeather: Weather {
     
-    var unixTime: Int
     var hour: String
+    var unixTime: Int
     
     override init(weatherDictionary: NSDictionary) {
-        unixTime = weatherDictionary.valueForKey("time") as! Int
-        hour = NSDate.hourFromUnixTime(unixTime)
+        self.unixTime = weatherDictionary.valueForKey("time") as! Int
+        self.hour = NSDate.dateFormatFromUnixTime(unixTime, format: "Ka")
         super.init(weatherDictionary: weatherDictionary)
     }
 }

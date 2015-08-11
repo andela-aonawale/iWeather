@@ -115,10 +115,5 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
         
         return cell
     }
-    
-    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        cell.backgroundColor = UIColor.clearColor()
-        cell.backgroundView?.backgroundColor = UIColor.clearColor()
-    }
 
 }

@@ -3,17 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "add_location.png"
+      "filename" : "calendar.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "add_location@2x.png"
+      "filename" : "calendar@2x.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "add_location@3x.png"
+      "filename" : "calendar@3x.png"
     }
   ],
   "info" : {

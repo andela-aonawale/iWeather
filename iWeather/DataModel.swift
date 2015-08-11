@@ -14,15 +14,8 @@ class DataModel: NSObject, APIControllerDelegate {
     private let center = NSNotificationCenter.defaultCenter()
     private let queue = NSOperationQueue.mainQueue()
     
-    var locations = [Location]() {
-        didSet { println(locations) }
-    }
-    
-    var events = [Event]() {
-        didSet {
-            println(events)
-        }
-    }
+    var locations = [Location]() { didSet { println(locations) } }
+    var events = [Event]() { didSet { println(events) } }
     
     var currentLocation: Location? {
         didSet {
@@ -33,12 +26,11 @@ class DataModel: NSObject, APIControllerDelegate {
 
     func didReceiveWeatherResult(weatherObject: NSDictionary) {
         currentLocation?.weatherObject = weatherObject
-        let center = NSNotificationCenter.defaultCenter()
         let notification = NSNotification(name: "Received New Location", object: nil, userInfo: ["newLocation" : currentLocation!])
         center.postNotification(notification)
     }
     
-    func methodOfReceivedNotification(){
+    func listenForNewLocation(){
         center.addObserverForName("Received Current Location", object: nil, queue: queue) { notification in
             if let location = notification?.userInfo?["currentLocation"] as? Location {
                 self.currentLocation = location
@@ -61,7 +53,7 @@ class DataModel: NSObject, APIControllerDelegate {
         api = APIController()
         super.init()
         api.delegate = self
-        methodOfReceivedNotification()
+        listenForNewLocation()
     }
     
     deinit {

@@ -11,45 +11,55 @@ import MapKit
 
 class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
     
-    // MARK: - Variables and Outlets
+    // MARK: - IB Outlets
     
-    @IBOutlet weak var firstView: UIView!
-    @IBOutlet weak var secondView: UIView!
+    @IBOutlet weak var mapView: MKMapView!
+    
+    @IBOutlet weak var currentWeatherView: UIView!
+    @IBOutlet weak var arrivalWeatherView: UIView!
     
     @IBOutlet weak var currentTemperature: UILabel!
     @IBOutlet weak var currentWeatherImage: UIImageView!
     @IBOutlet weak var currentTime: UILabel!
     @IBOutlet weak var currentSummary: UILabel!
-    @IBOutlet weak var currentAddress: UILabel!
+    @IBOutlet weak var currentETA: UILabel!
+    @IBOutlet weak var currentDistance: UILabel!
     
-    @IBAction func showETAView(sender: UIButton) {
-        UIView.transitionFromView(firstView, toView: secondView, duration: 0.3, options: .TransitionFlipFromRight | .ShowHideTransitionViews | .AllowAnimatedContent) { finished in
-            
-        }
+    @IBOutlet weak var arrivalTemperature: UILabel!
+    @IBOutlet weak var arrivalTime: UILabel!
+    @IBOutlet weak var arrivalWeatherImage: UIImageView!
+    @IBOutlet weak var arrivalSummary: UILabel!
+    @IBOutlet weak var arrivalETA: UILabel!
+    @IBOutlet weak var arrivalDistance: UILabel!
+    
+    
+    @IBAction func showArrivalWeatherView(sender: UIButton) {
+        UIView.transitionFromView(currentWeatherView, toView: arrivalWeatherView, duration: 0.3, options: .TransitionFlipFromRight | .ShowHideTransitionViews | .AllowAnimatedContent, completion: nil)
     }
     
     @IBAction func showCurrentWeatherView(sender: UIButton) {
-        UIView.transitionFromView(secondView, toView: firstView, duration: 0.3, options: .TransitionFlipFromLeft | .ShowHideTransitionViews | .AllowAnimatedContent) { finished in
-            
-        }
+        UIView.transitionFromView(arrivalWeatherView, toView: currentWeatherView, duration: 0.3, options: .TransitionFlipFromLeft | .ShowHideTransitionViews | .AllowAnimatedContent, completion: nil)
     }
     
-    func updateFirstViewUI() {
+    func updateCurrentWeatherViewUI() {
         if let weather = travelLocation?.currentWeather {
             currentTemperature.text = weather.temperature
             currentWeatherImage.image = weather.weatherImage
             currentSummary.text = weather.summary
-        }
-        if let location = travelLocation {
-            currentTime.text = location.localTime
-            currentAddress.text = location.name
+            currentTime.text = travelLocation?.localDateTime
         }
     }
     
+    func updateArrivalWeatherViewUI(weather: HourlyWeather) {
+        arrivalTemperature?.text = weather.temperature
+        arrivalWeatherImage?.image = weather.weatherImage
+        arrivalSummary?.text = weather.summary
+        arrivalETA?.text = currentETA.text
+        arrivalDistance?.text = currentDistance.text
+//        arrivalTime?.text = NSDate.dateStringFromUnixTime(weather.unixTime)
+    }
     
-    
-    
-    @IBOutlet weak var mapView: MKMapView!
+    // MARK: - Variables
     
     private var formattedAddress: String?
     private let api: APIController
@@ -103,14 +113,28 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
     private func showRoutes(response: MKDirectionsResponse!) {
         if let route = response.routes.first as? MKRoute {
             mapView.addOverlay(route.polyline, level: MKOverlayLevel.AboveRoads)
-            println("distance in km: \(route.distance/1000)")
-            println("eta in minutes: \(route.expectedTravelTime/60)")
-            var eta = NSDate().dateByAddingTimeInterval(route.expectedTravelTime)
+            let eta = NSDate().dateByAddingTimeInterval(route.expectedTravelTime)
+            let etaWeather = getWeatherOnArrival(eta)
+            dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+                self.currentETA.text = self.formatTimeInSec(Int(route.expectedTravelTime))
+                self.currentDistance.text = String(format: "%.1f km", (route.distance / 1000) )
+                if let etaWeather = self.getWeatherOnArrival(eta) {
+                    self.updateArrivalWeatherViewUI(etaWeather)
+                }
+            }
             
-            var etaWeather = getWeatherOnArrival(eta)
-            println(etaWeather?.summary)
-            println(etaWeather?.unixTime)
-            
+        }
+    }
+    
+    private func formatTimeInSec(totalSeconds: Int) -> String {
+        let minutes = (totalSeconds / 60) % 60
+        let hours = totalSeconds / 3600
+        let strHours = hours > 9 ? String(hours) : String(format: "0%d", hours)
+        let strMinutes = minutes > 9 ? String(minutes) : String(format: "0%d", minutes)
+        if hours > 0 {
+            return "\(strHours) h \(strMinutes) min"
+        } else {
+            return "\(strMinutes) min"
         }
     }
     
@@ -226,7 +250,6 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
 
 }
 
-
 extension TravelToLocationViewController: SearchResultViewControllerDelegate, APIControllerDelegate {
     
     // MARK: - API Controller & Search ResultView Controller Delegate Methods
@@ -234,7 +257,7 @@ extension TravelToLocationViewController: SearchResultViewControllerDelegate, AP
     func didReceiveWeatherResult(weatherObject: NSDictionary) {
         travelLocation?.weatherObject = weatherObject
         dispatch_async(dispatch_get_main_queue()) { [unowned self] in
-            self.updateFirstViewUI()
+            self.updateCurrentWeatherViewUI()
         }
     }
     
@@ -244,7 +267,6 @@ extension TravelToLocationViewController: SearchResultViewControllerDelegate, AP
     }
     
 }
-
 
 extension TravelToLocationViewController: UISearchControllerDelegate {
     
@@ -263,7 +285,6 @@ extension TravelToLocationViewController: UISearchControllerDelegate {
     }
     
 }
-
 
 extension TravelToLocationViewController: MKMapViewDelegate {
     

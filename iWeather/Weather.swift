@@ -10,7 +10,6 @@ import Foundation
 
 class Weather {
     
-    var time: String?
     var temperature: String?
     var humidity: String?
     var precipProbability: String?
@@ -19,6 +18,7 @@ class Weather {
     var pressure: String?
     var summary: String?
     var imageName: String?
+    var visibility: String?
     
     struct WeatherType {
         private static let Temperature = "temperature"
@@ -30,6 +30,7 @@ class Weather {
         private static let Time = "time"
         private static let Icon = "icon"
         private static let Pressure = "pressure"
+        private static let Visibility = "visibility"
     }
     
     init(weatherDictionary: NSDictionary) {
@@ -37,29 +38,31 @@ class Weather {
             self.temperature = ("\(temperature.description)\u{00B0}")
         }
         if let humidity = weatherDictionary.valueForKey(WeatherType.Humidity) as? Double {
-            self.humidity = humidity.description
+            self.humidity = String(format: "%d%%", Int(humidity * 100))
         }
         if let precipProbability = weatherDictionary.valueForKey(WeatherType.PrecipProbability) as? Double {
-            self.precipProbability = precipProbability.description
+            self.precipProbability = String(format: "%d%%", Int(precipProbability * 100))
         }
         if let precipIntensity =  weatherDictionary.valueForKey(WeatherType.PrecipIntensity) as? Double {
             self.precipIntensity = precipIntensity.description
         }
         if let windSpeed =  weatherDictionary.valueForKey(WeatherType.WindSpeed) as? Double {
-            self.windSpeed = windSpeed.description
+            self.windSpeed = String(format: "%d km/h", Int(windSpeed * 1.60934))
         }
         if let pressure =  weatherDictionary.valueForKey(WeatherType.Pressure) as? Double {
-            self.pressure = pressure.description
+            let formattedPressure = NSNumberFormatter.localizedStringFromNumber(Int(pressure), numberStyle: .DecimalStyle)
+            self.pressure = String(format: "%@ mb", formattedPressure)
         }
-        
-        let currentTimeIntValue = weatherDictionary.valueForKey(WeatherType.Time) as! Int
-        time = NSDate.dateStringFromUnixTime(currentTimeIntValue)
-        
-        summary = weatherDictionary.valueForKey(WeatherType.Summary) as? String
-        imageName = weatherDictionary[WeatherType.Icon] as? String
+        if let iconName = weatherDictionary[WeatherType.Icon] as? String {
+            self.imageName = weatherImageName(iconName)
+        }
+        if let visibility =  weatherDictionary.valueForKey(WeatherType.Visibility) as? Double {
+            self.visibility = String(format: "%d km", Int(visibility * 1.60934))
+        }
+        self.summary = weatherDictionary.valueForKey(WeatherType.Summary) as? String
     }
     
-    func weatherIconFromString(stringIcon: String) -> String {
+    func weatherImageName(iconName: String) -> String {
         
         enum IconName: String {
             case ClearDay = "clear-day"
@@ -75,7 +78,7 @@ class Weather {
             case Default = "default"
         }
         
-        return IconName(rawValue: stringIcon)?.rawValue as String!
+        return IconName(rawValue: iconName)?.rawValue as String!
     }
 
 }

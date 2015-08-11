@@ -14,39 +14,40 @@ class Event {
     var title: String?
     var location: Location? {
         didSet {
-            api.getWeatherDataForTime(self.startDate!, coordinate: location!.getCoordinate())
+            api.getWeatherDataForTime(self.getStartDate(), coordinate: location!.getCoordinate())
         }
     }
-    var startDate: Int?
+    var eventLocationCoordinate: CLLocationCoordinate2D?
+    var eventLocationName: String?
+    var startDate: NSDate?
     var endDate: NSDate?
     var startTimeZone: String?
     
     let api = APIController.sharedInstance
     
-    convenience init(title: String, startDate: NSDate, endDate: NSDate, placemark: CLPlacemark) {
-        let start = Int(startDate.timeIntervalSince1970)
-        self.init(title: title, startDate: start, endDate: endDate, placemark: placemark)
+    func getStartDate() -> Int {
+        return Int(startDate!.timeIntervalSince1970)
     }
     
-    init(title: String, startDate: Int, endDate: NSDate, placemark: CLPlacemark) {
+    func getEventDate() -> String {
+        return NSDate.dateStringFromUnixTime(self.getStartDate(), dateStyle: .LongStyle, timeStyle: .ShortStyle)
+    }
+    
+    init(title: String, startDate: NSDate, endDate: NSDate, location: String) {
         api.delegate = self
         self.title = title
         self.startDate = startDate
         self.endDate = endDate
-        ({Void in self.location = Location(placemark: placemark)})()
+        self.eventLocationName = location
     }
     
-    convenience init(title: String, startDate: NSDate, endDate: NSDate, coordinate: CLLocationCoordinate2D) {
-        let start = Int(startDate.timeIntervalSince1970)
-        self.init(title: title, startDate: start, endDate: endDate, coordinate: coordinate)
-    }
-    
-    init(title: String, startDate: Int, endDate: NSDate, coordinate: CLLocationCoordinate2D) {
+    init(title: String, startDate: NSDate, endDate: NSDate, location: String, coordinate: CLLocationCoordinate2D) {
         api.delegate = self
         self.title = title
         self.startDate = startDate
         self.endDate = endDate
-        ({Void in self.location = Location(name: title, coordinate: coordinate)})()
+        self.eventLocationCoordinate = coordinate
+        self.eventLocationName = location
     }
     
 }

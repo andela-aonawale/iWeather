@@ -11,62 +11,54 @@ import Foundation
 
 class LocationViewController: UIViewController {
     
-    @IBOutlet weak var temp: UILabel! {
-        didSet {
-            temp.text = location?.currentWeather.temperature
-        }
-    }
-    @IBOutlet weak var weatherDesc: UILabel! {
-        didSet {
-            weatherDesc.text = location?.currentWeather.summary
-        }
-    }
-    @IBOutlet weak var locationName: UILabel! {
-        didSet {
-            locationName.text = location?.name ?? "Local Weather"
+    @IBOutlet weak var temperature: UILabel!
+    @IBOutlet weak var weatherDescripion: UILabel!
+    @IBOutlet weak var locationName: UILabel!
+    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var collectionViewParentView: UIView!
+    
+    private func updateUIWithLocation(newLocation: Location?) {
+        if let location = newLocation {
+            self.temperature.text = location.currentWeather.temperature
+            self.weatherDescripion.text = location.currentWeather.summary
+            self.locationName.text = location.name
+            self.collectionView.reloadData()
+            self.tableView.reloadData()
         }
     }
     
-    @IBOutlet weak var collectionView: UICollectionView! {
-        didSet {
-            collectionView.reloadData()
-        }
-    }
-    @IBOutlet weak var tableView: UITableView! {
-        didSet {
-            tableView.reloadData()
-        }
-    }
-    
-    var location: Location?
     var index = 0
+    var location: Location?
+    let whiteColor = UIColor.whiteColor()
     
-    func openLocationSettings(alert: UIAlertAction!) {
+    private func openLocationSettings(alert: UIAlertAction!) {
         if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
             UIApplication.sharedApplication().openURL(url)
         }
     }
     
-    required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    private func listenForLocationChange() {
+        let center = NSNotificationCenter.defaultCenter()
+        let queue = NSOperationQueue.mainQueue()
+        center.addObserverForName("Received New Location", object: nil, queue: queue) { [unowned self] notification in
+            if let newLocation = notification?.userInfo?["newLocation"] as? Location {
+                self.location = newLocation
+                self.updateUIWithLocation(newLocation)
+            }
+        }
     }
     
     // MARK: - VC life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.allowsSelection = false
+        collectionView.backgroundColor = .clearColor()
+        collectionViewParentView.addTopBorderWithColor(whiteColor, width: 0.5)
+        collectionViewParentView.addBottomBorderWithColor(whiteColor, width: 0.5)
+        updateUIWithLocation(self.location)
         if self.index == 0 {
-            let center = NSNotificationCenter.defaultCenter()
-            let queue = NSOperationQueue.mainQueue()
-            center.addObserverForName("Received New Location", object: nil, queue: queue) { [unowned self] notification in
-                if let newLocation = notification?.userInfo?["newLocation"] as? Location {
-                    self.location = newLocation
-                    self.locationName.text = newLocation.name
-                    self.weatherDesc.text = newLocation.currentWeather.summary
-                    self.temp.text = newLocation.currentWeather.temperature
-                    self.collectionView.reloadData()
-                    self.tableView.reloadData()
-                }
-            }
+            listenForLocationChange()
         }
     }
     
@@ -91,12 +83,11 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
         if indexPath.row == 7 {
             let cell = tableView.dequeueReusableCellWithIdentifier("SummaryCell") as! UITableViewCell
             if let daySummary = location?.dayWeatherSummary {
                 var label = cell.viewWithTag(10) as! UILabel
-                label.text = daySummary
+                label.text = "Today: \(daySummary)"
             }
             return cell
         } else if indexPath.row == 8 {
@@ -105,29 +96,31 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.dayWeather = currentDay
             }
             return cell
-        } else if indexPath.row < 7 {
-            let cell = tableView.dequeueReusableCellWithIdentifier("DaysCell") as! DailyWeatherTableViewCell
-            if let dayWeather = location?.dailyWeather[indexPath.row] {
-                cell.dayWeather = dayWeather
-            }
-            return cell
         }
-        return UITableViewCell()
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier("DaysCell") as! DailyWeatherTableViewCell
+        if let dayWeather = location?.dailyWeather[indexPath.row] {
+            cell.dayWeather = dayWeather
+        }
+        return cell
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        let tableHeight = tableView.frame.size.height
         if indexPath.row == 7 {
-           return 70
+           return tableHeight / 3
         }
         if indexPath.row == 8 {
-            return 220
+            return tableHeight * 1.3
         }
-        return tableView.frame.size.height / 7
+        return tableHeight / 7
     }
     
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.row != 7 && indexPath.row != 6 {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: cell.frame.size.width, bottom: 0, right: 0)
+        cell.backgroundColor = UIColor.clearColor()
+        if indexPath.row == 7 {
+            cell.contentView.addTopBorderWithColor(whiteColor, width: 0.5)
+            cell.contentView.addBottomBorderWithColor(whiteColor, width: 0.5)
         }
     }
     

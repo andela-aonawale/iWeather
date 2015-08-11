@@ -10,8 +10,6 @@ import UIKit
 
 class DailyWeatherTableViewCell: UITableViewCell {
     
-    
-    
     @IBOutlet weak var weatherImage: UIImageView!
     @IBOutlet weak var temperatureMax: UILabel!
     @IBOutlet weak var temperatureMin: UILabel!
@@ -25,8 +23,9 @@ class DailyWeatherTableViewCell: UITableViewCell {
     private func updateUI() {
         if let weather = dayWeather {
             weatherImage.image = weather.weatherImage
-            temperatureMax.text = weather.temperatureMax.description
-            temperatureMin.text = weather.temperatureMin.description
+            temperatureMax.text = weather.temperatureMax?.description
+            temperatureMin.text = weather.temperatureMin?.description
+            day.text = weather.day
         }
     }
 

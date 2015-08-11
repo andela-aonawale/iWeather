@@ -10,15 +10,17 @@ import UIKit
 
 class CurrentDayWeatherTableViewCell: UITableViewCell {
     
-    var sunSet: UILabel?
-    var sunRise: UILabel?
-    var chanceOfRain: UILabel?
-    var humidity: UILabel?
-    var wind: UILabel?
-    var feelsLike: UILabel?
-    var precepitation: UILabel?
-    var pressure: UILabel?
-    var visibility: UILabel?
+    
+    @IBOutlet weak var sunriseTime: UILabel!
+    @IBOutlet weak var sunsetTime: UILabel!
+    @IBOutlet weak var chanceOfRain: UILabel!
+    @IBOutlet weak var humidity: UILabel!
+    @IBOutlet weak var wind: UILabel!
+    @IBOutlet weak var feelsLike: UILabel!
+    @IBOutlet weak var precipitation: UILabel!
+    @IBOutlet weak var pressure: UILabel!
+    @IBOutlet weak var visibility: UILabel!
+    @IBOutlet weak var uvIndex: UILabel!
     
     var dayWeather: DailyWeathear? {
         didSet {
@@ -28,13 +30,13 @@ class CurrentDayWeatherTableViewCell: UITableViewCell {
     
     private func updateUI() {
         if let weather = dayWeather {
-            sunSet?.text = dayWeather?.sunsetTime
-            sunRise?.text = dayWeather?.sunriseTime
-            chanceOfRain?.text = dayWeather?.precipProbability
-            humidity?.text = dayWeather?.humidity
-            wind?.text = dayWeather?.windSpeed
-            precepitation?.text = dayWeather?.precipIntensity
-            pressure?.text = dayWeather?.pressure
+            sunriseTime?.text = weather.sunriseTime
+            sunsetTime?.text = weather.sunsetTime
+            chanceOfRain?.text = weather.precipProbability
+            humidity?.text = weather.humidity
+            wind?.text = weather.windSpeed
+            pressure?.text = weather.pressure
+            visibility?.text = weather.visibility
         }
     }
 
