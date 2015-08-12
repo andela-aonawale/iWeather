@@ -29,6 +29,7 @@
 		857FB14B1B5C9090000C107A /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1441B5C9090000C107A /* Weather.swift */; };
 		857FB14D1B5D9040000C107A /* AddLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB14C1B5D9040000C107A /* AddLocationViewController.swift */; };
 		857FB14F1B5D9391000C107A /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB14E1B5D9391000C107A /* DataModel.swift */; };
+		85D8B38E1B7ABCF70037725E /* EventWeatherPopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D8B38D1B7ABCF70037725E /* EventWeatherPopoverViewController.swift */; };
 		85E2F5361B6B96E1008B4824 /* CalendarEventsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2F5351B6B96E1008B4824 /* CalendarEventsViewController.swift */; };
 		85E40B751B64D2E100263851 /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E40B741B64D2E100263851 /* PageViewController.swift */; };
 		85E40B791B653A4C00263851 /* LocationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E40B781B653A4C00263851 /* LocationTableViewCell.swift */; };
@@ -73,6 +74,7 @@
 		857FB1441B5C9090000C107A /* Weather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		857FB14C1B5D9040000C107A /* AddLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddLocationViewController.swift; sourceTree = "<group>"; };
 		857FB14E1B5D9391000C107A /* DataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
+		85D8B38D1B7ABCF70037725E /* EventWeatherPopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventWeatherPopoverViewController.swift; sourceTree = "<group>"; };
 		85E2F5351B6B96E1008B4824 /* CalendarEventsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarEventsViewController.swift; sourceTree = "<group>"; };
 		85E40B741B64D2E100263851 /* PageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
 		85E40B781B653A4C00263851 /* LocationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTableViewCell.swift; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 				8554FC7C1B5F971700FC6530 /* SearchResultViewController.swift */,
 				85E40B741B64D2E100263851 /* PageViewController.swift */,
 				85E2F5351B6B96E1008B4824 /* CalendarEventsViewController.swift */,
+				85D8B38D1B7ABCF70037725E /* EventWeatherPopoverViewController.swift */,
 			);
 			name = ViewController;
 			sourceTree = "<group>";
@@ -329,6 +332,7 @@
 				85769FC71B6BCB64006495E5 /* DailyWeatherTableViewCell.swift in Sources */,
 				857FB14D1B5D9040000C107A /* AddLocationViewController.swift in Sources */,
 				85769FCD1B6FFDDA006495E5 /* Event.swift in Sources */,
+				85D8B38E1B7ABCF70037725E /* EventWeatherPopoverViewController.swift in Sources */,
 				857FB14F1B5D9391000C107A /* DataModel.swift in Sources */,
 				857FB1461B5C9090000C107A /* CurrentWeather.swift in Sources */,
 				855235A81B69002A0092AEEE /* NSDateExtension.swift in Sources */,

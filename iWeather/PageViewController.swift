@@ -53,7 +53,7 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
     
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(true)
-        dataSource = nil
+//        dataSource = nil
     }
 
     override func viewDidLoad() {

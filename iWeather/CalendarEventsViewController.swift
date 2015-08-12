@@ -124,7 +124,6 @@ class CalendarEventsViewController: UIViewController {
 
 }
 
-
 extension CalendarEventsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -133,10 +132,61 @@ extension CalendarEventsViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("EventCell") as! EventTableViewCell
+        cell.delegate = self
         if let event = dataModel.events[indexPath.row] as Event? {
             cell.event = event
         }
         return cell
+    }
+    
+}
+
+extension CalendarEventsViewController: UIPopoverPresentationControllerDelegate {
+    
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .None
+    }
+    
+    func prepareForPopoverPresentation(popoverPresentationController: UIPopoverPresentationController) {
+        if let ppc = popoverPresentationController as UIPopoverPresentationController? {
+            ppc.permittedArrowDirections = UIPopoverArrowDirection.allZeros
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let identifier = segue.identifier {
+            switch identifier {
+                case Segue.ShowEventWeather:
+                    if let vc = segue.destinationViewController as? EventWeatherPopoverViewController {
+                        if let ppc = vc.popoverPresentationController {
+                            ppc.delegate = self
+                        }
+                    }
+                default:
+                    break
+            }
+        }
+    }
+    
+}
+
+private struct Segue {
+    static let ShowEventWeather = "Show Event Weather"
+}
+
+extension CalendarEventsViewController: EventTableViewCellDelegate {
+    
+    func tableViewCell(didSwipeCellForDeletion cell: EventTableViewCell) {
+        if let indexPath = tableView.indexPathForCell(cell) {
+            tableView.beginUpdates()
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
+            dataModel.events.removeAtIndex(indexPath.row)
+            tableView.endUpdates()
+        }
+    }
+    
+    func tableViewCell(didSwipeCellForWeather cell: EventTableViewCell, onEvent event: Event) {
+        performSegueWithIdentifier(Segue.ShowEventWeather, sender: self)
     }
     
 }
