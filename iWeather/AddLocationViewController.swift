@@ -24,7 +24,17 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
     
     private var newLocation: Location? {
         didSet {
-            api.getWeatherData(newLocation!.getCoordinate())
+            getLocationWeather()
+        }
+    }
+    
+    private func getLocationWeather() {
+        api.getWeatherData(newLocation!.getCoordinate()) { [unowned self] weatherObject in
+            self.newLocation?.weatherObject = weatherObject
+            self.dataModel.locations.append(self.newLocation!)
+            dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+                self.tableView.reloadData()
+            }
         }
     }
     
@@ -70,7 +80,7 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
     // MARK: - Initialization
     
     required init(coder aDecoder: NSCoder) {
-        api = APIController()
+        api = APIController.sharedInstance
         dataModel = DataModel.sharedInstance
         searchResultViewController = SearchResultViewController()
         searchController = UISearchController(searchResultsController: searchResultViewController)
@@ -86,7 +96,6 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        api.delegate = self
         configureSearchController()
         tableView.tableFooterView = UIView(frame: CGRectZero)
         tableView.contentInset = UIEdgeInsets(top: -65, left: 0, bottom: 0, right: 0)
@@ -99,17 +108,9 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
 }
 
 
-extension AddLocationViewController: APIControllerDelegate, SearchResultViewControllerDelegate {
+extension AddLocationViewController: SearchResultViewControllerDelegate {
     
-    // MARK: - API Controller & Search ResultView Controller Delegate Methods
-    
-    func didReceiveWeatherResult(weatherObject: NSDictionary) {
-        newLocation?.weatherObject = weatherObject
-        dataModel.locations.append(newLocation!)
-        dispatch_async(dispatch_get_main_queue()) { [unowned self] in
-            self.tableView.reloadData()
-        }
-    }
+    // MARK: - Search ResultView Controller Delegate Methods
     
     func didSelectLocationFromSearchResult(placemark: CLPlacemark, selectedAddress: String) {
         newLocation = Location(placemark: placemark)

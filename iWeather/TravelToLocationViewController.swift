@@ -69,9 +69,18 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
     
     private var travelLocation: Location? {
         didSet {
-            api.getWeatherData(travelLocation!.getCoordinate())
+            getLocationWeather()
             getDirections(travelLocation!.placemark)
             addAnnotation(travelLocation!.placemark)
+        }
+    }
+    
+    private func getLocationWeather() {
+        api.getWeatherData(travelLocation!.getCoordinate()) { [unowned self] weatherObject in
+            self.travelLocation?.weatherObject = weatherObject
+            dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+                self.updateCurrentWeatherViewUI()
+            }
         }
     }
     
@@ -220,17 +229,13 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
     // MARK: - Initialization
     
     required init(coder aDecoder: NSCoder) {
-        api = APIController()
+        api = APIController.sharedInstance
         searchResultViewController = SearchResultViewController()
         searchController = UISearchController(searchResultsController: searchResultViewController)
         super.init(coder: aDecoder)
     }
     
     // MARK: - View Controller Life Cycle
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewWillAppear(true)
-    }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(true)
@@ -239,7 +244,6 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        api.delegate = self
         configureMapView()
         configureSearchController()
     }
@@ -250,20 +254,13 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
 
 }
 
-extension TravelToLocationViewController: SearchResultViewControllerDelegate, APIControllerDelegate {
+extension TravelToLocationViewController: SearchResultViewControllerDelegate {
     
-    // MARK: - API Controller & Search ResultView Controller Delegate Methods
-    
-    func didReceiveWeatherResult(weatherObject: NSDictionary) {
-        travelLocation?.weatherObject = weatherObject
-        dispatch_async(dispatch_get_main_queue()) { [unowned self] in
-            self.updateCurrentWeatherViewUI()
-        }
-    }
+    // MARK: - Search ResultView Controller Delegate Methods
     
     func didSelectLocationFromSearchResult(placemark: CLPlacemark, selectedAddress: String) {
-        self.formattedAddress = selectedAddress
-        self.travelLocation = Location(placemark: placemark)
+        formattedAddress = selectedAddress
+        travelLocation = Location(placemark: placemark)
     }
     
 }

@@ -8,12 +8,6 @@
 
 import Foundation
 
-@objc protocol APIControllerDelegate: class {
-    optional func didReceiveWeatherResult(weatherObject: NSDictionary)
-    optional func didReceiveLocationResult(locationObject: NSDictionary)
-    optional func didReceiveWeatherResultForTime(weatherObject: NSDictionary)
-}
-
 class APIController {
     
     private struct API {
@@ -35,10 +29,9 @@ class APIController {
         return Static.instance!
     }
     
-    weak var delegate: APIControllerDelegate?
     private let session = NSURLSession.sharedSession()
     
-    func getWeatherData(coordinate: String) {
+    func getWeatherData(coordinate: String, completion: (weatherObject: NSDictionary) -> Void) {
         let forecastURL = NSURLComponents(string: "\(API.ForecastURL)\(API.ForcastKEY)/\(coordinate)?")
         forecastURL?.query = API.ForecastQuery
         let task = session.dataTaskWithURL(forecastURL!.URL!) { data, response, error in
@@ -52,7 +45,7 @@ class APIController {
                         if err != nil {
                             println("JSON Error \(err!.localizedDescription)")
                         } else {
-                            self.delegate?.didReceiveWeatherResult!(weatherObject as NSDictionary)
+                            completion(weatherObject: weatherObject as NSDictionary)
                         }
                     }
                 }
@@ -61,7 +54,7 @@ class APIController {
         task.resume()
     }
     
-    func suggestLocation(location: String) {
+    func suggestLocation(location: String, completion: (locationObject: NSDictionary) -> Void) {
         let geocodeURL = NSURLComponents(string: API.GeocodeURL)
         geocodeURL?.query = "input=\(location)&key=\(API.GeocodeKey)"
         let task = session.dataTaskWithURL(geocodeURL!.URL!) { data, response, error in
@@ -75,7 +68,7 @@ class APIController {
                         if err != nil {
                             println("JSON Error \(err!.localizedDescription)")
                         } else {
-                            self.delegate?.didReceiveLocationResult!(locationObject as NSDictionary)
+                            completion(locationObject: locationObject as NSDictionary)
                         }
                     }
                 }
@@ -84,7 +77,7 @@ class APIController {
         task.resume()
     }
     
-    func getWeatherDataForTime(unixTime: Int, coordinate: String) {
+    func getWeatherDataForTime(unixTime: Int, coordinate: String, completion: (weatherObject: NSDictionary) -> Void) {
         let forecastURL = NSURLComponents(string: "\(API.ForecastURL)\(API.ForcastKEY)/\(coordinate),\(unixTime)?")
         forecastURL?.query = API.ForecastQuery
         let task = session.dataTaskWithURL(forecastURL!.URL!) { data, response, error in
@@ -98,7 +91,7 @@ class APIController {
                         if err != nil {
                             println("JSON Error \(err!.localizedDescription)")
                         } else {
-                            self.delegate?.didReceiveWeatherResultForTime!(weatherObject as NSDictionary)
+                            completion(weatherObject: weatherObject as NSDictionary)
                         }
                     }
                 }

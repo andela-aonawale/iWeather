@@ -41,24 +41,15 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
     }
     
     func moveToPage(index: Int) {
-        if let nextViewController = self.viewControllerAtIndex(index + 1) {
+        if let nextViewController = viewControllerAtIndex(index + 1) {
             setViewControllers([nextViewController], direction: .Forward, animated: false, completion: nil)
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(true)
-        dataSource = self
-    }
-    
-    override func viewDidDisappear(animated: Bool) {
-        super.viewDidDisappear(true)
-//        dataSource = nil
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let currentLocationViewController = self.viewControllerAtIndex(0) {
+        dataSource = self
+        if let currentLocationViewController = viewControllerAtIndex(0) {
             setViewControllers([currentLocationViewController], direction: .Forward, animated: true, completion: nil)
         }
     }

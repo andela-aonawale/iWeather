@@ -14,7 +14,11 @@ class Event {
     var title: String?
     var location: Location? {
         didSet {
-            api.getWeatherDataForTime(self.getStartDate(), coordinate: location!.getCoordinate())
+            api.getWeatherDataForTime(self.getStartDate(), coordinate: location!.getCoordinate()) { weatherObject in
+                self.location?.weatherObject = weatherObject
+                let notification = NSNotification(name: "Received Event Location Weather", object: nil, userInfo: nil)
+                NSNotificationCenter.defaultCenter().postNotification(notification)
+            }
         }
     }
     var eventLocationCoordinate: CLLocationCoordinate2D?
@@ -29,12 +33,15 @@ class Event {
         return Int(startDate!.timeIntervalSince1970)
     }
     
+    func getEventTime() -> String {
+        return NSDate.dateStringFromUnixTime(self.getStartDate(), dateStyle: .NoStyle, timeStyle: .ShortStyle)
+    }
+    
     func getEventDate() -> String {
         return NSDate.dateStringFromUnixTime(self.getStartDate(), dateStyle: .LongStyle, timeStyle: .ShortStyle)
     }
     
     init(title: String, startDate: NSDate, endDate: NSDate, location: String) {
-        api.delegate = self
         self.title = title
         self.startDate = startDate
         self.endDate = endDate
@@ -42,21 +49,11 @@ class Event {
     }
     
     init(title: String, startDate: NSDate, endDate: NSDate, location: String, coordinate: CLLocationCoordinate2D) {
-        api.delegate = self
         self.title = title
         self.startDate = startDate
         self.endDate = endDate
         self.eventLocationCoordinate = coordinate
         self.eventLocationName = location
-    }
-    
-}
-
-
-extension Event: APIControllerDelegate {
-    
-    dynamic func didReceiveWeatherResultForTime(weatherObject: NSDictionary) {
-        self.location?.weatherObject = weatherObject
     }
     
 }

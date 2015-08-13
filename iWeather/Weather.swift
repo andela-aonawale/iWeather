@@ -54,31 +54,14 @@ class Weather {
             self.pressure = String(format: "%@ mb", formattedPressure)
         }
         if let iconName = weatherDictionary[WeatherType.Icon] as? String {
-            self.imageName = weatherImageName(iconName)
+            self.imageName = iconName
+        } else {
+            self.imageName = "default"
         }
         if let visibility =  weatherDictionary.valueForKey(WeatherType.Visibility) as? Double {
             self.visibility = String(format: "%d km", Int(visibility * 1.60934))
         }
         self.summary = weatherDictionary.valueForKey(WeatherType.Summary) as? String
-    }
-    
-    func weatherImageName(iconName: String) -> String {
-        
-        enum IconName: String {
-            case ClearDay = "clear-day"
-            case ClearNight = "clear-night"
-            case Rain = "rain"
-            case Snow = "snow"
-            case Sleet = "sleet"
-            case Wind = "wind"
-            case Fog = "fog"
-            case Clody = "cloudy"
-            case PartlyCloudyDay = "partly-cloudy-day"
-            case PartlyCloudyNight = "partly-cloudy-night"
-            case Default = "default"
-        }
-        
-        return IconName(rawValue: iconName)?.rawValue as String!
     }
 
 }

@@ -15,7 +15,6 @@ class CalendarEventsViewController: UIViewController {
 
     private let eventStore: EKEventStore
     private var dataModel = DataModel.sharedInstance
-    private let locationManager = LocationManager.sharedInstance
     
     private func requestAccessToCalendar() {
         eventStore.requestAccessToEntityType(EKEntityTypeEvent) { [unowned self] in
@@ -45,7 +44,9 @@ class CalendarEventsViewController: UIViewController {
         let startDate = NSDate()
         let endDate = NSDate(timeIntervalSinceNow: 604800*10)
         let predicate = eventStore.predicateForEventsWithStartDate(startDate, endDate: endDate, calendars: calendars)
-        completed(eventStore.eventsMatchingPredicate(predicate) as! [EKEvent])
+        if let eventsArray = eventStore.eventsMatchingPredicate(predicate) as? [EKEvent] {
+            completed(eventsArray)
+        }
     }
     
     private func createEvent(event: EKEvent) {
@@ -66,19 +67,6 @@ class CalendarEventsViewController: UIViewController {
     private func createEvent(#event: EKEvent) {
         let event = Event(title: event.title, startDate: event.startDate, endDate: event.endDate, location: event.location)
         dataModel.events.append(event)
-    }
-    
-    private func getEventPlacemarkFromLocation(location: String, completed: (placemark: CLPlacemark) -> Void) {
-        locationManager.geocodeAddressFromString(location) { [unowned self] placemarks, error in
-            if error != nil {
-                println(error.localizedDescription)
-            } else if let placemark = placemarks?.first as? CLPlacemark {
-                completed(placemark: placemark)
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.tableView.reloadData()
-                }
-            }
-        }
     }
     
     private func enableCalendarAccess() {
@@ -122,6 +110,8 @@ class CalendarEventsViewController: UIViewController {
         super.init(coder: aDecoder)
     }
 
+    var selectedCell: EventTableViewCell?
+
 }
 
 extension CalendarEventsViewController: UITableViewDelegate, UITableViewDataSource {
@@ -137,6 +127,10 @@ extension CalendarEventsViewController: UITableViewDelegate, UITableViewDataSour
             cell.event = event
         }
         return cell
+    }
+    
+    func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
+        return nil
     }
     
 }
@@ -158,12 +152,37 @@ extension CalendarEventsViewController: UIPopoverPresentationControllerDelegate 
             switch identifier {
                 case Segue.ShowEventWeather:
                     if let vc = segue.destinationViewController as? EventWeatherPopoverViewController {
+                        if let indexPath = tableView.indexPathForCell(selectedCell!) {
+                            vc.event = dataModel.events[indexPath.row]
+                        }
                         if let ppc = vc.popoverPresentationController {
                             ppc.delegate = self
                         }
                     }
                 default:
                     break
+            }
+        }
+    }
+    
+    func popoverPresentationControllerDidDismissPopover(popoverPresentationController: UIPopoverPresentationController) {
+        repositionCell()
+    }
+    
+    private func repositionCell() {
+        if let cell = selectedCell {
+            UIView.animateWithDuration(0.15, animations: {
+                cell.center = cell.initialCenterPoint
+            })
+        }
+    }
+    
+    @IBAction func closePopover(segue:UIStoryboardSegue) {
+        if !segue.sourceViewController.isBeingDismissed() {
+            if let popover = segue.sourceViewController as? EventWeatherPopoverViewController {
+                popover.dismissViewControllerAnimated(true) { [unowned self] in
+                    self.repositionCell()
+                }
             }
         }
     }
@@ -185,7 +204,8 @@ extension CalendarEventsViewController: EventTableViewCellDelegate {
         }
     }
     
-    func tableViewCell(didSwipeCellForWeather cell: EventTableViewCell, onEvent event: Event) {
+    func tableViewCell(didSwipeCellForWeather cell: EventTableViewCell) {
+        selectedCell = cell
         performSegueWithIdentifier(Segue.ShowEventWeather, sender: self)
     }
     

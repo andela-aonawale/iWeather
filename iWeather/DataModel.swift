@@ -8,26 +8,24 @@
 
 import Foundation
 
-class DataModel: NSObject, APIControllerDelegate {
+class DataModel: NSObject {
     
     private let api: APIController!
     private let center = NSNotificationCenter.defaultCenter()
     private let queue = NSOperationQueue.mainQueue()
     
-    var locations = [Location]() { didSet { println(locations) } }
-    var events = [Event]() { didSet { println(events) } }
+    var locations = [Location]()
+    var events = [Event]()
     
     var currentLocation: Location? {
         didSet {
             println("auto get currentLocation:  \(currentLocation)")
-            api.getWeatherData(currentLocation!.getCoordinate())
+            api.getWeatherData(currentLocation!.getCoordinate()) { weatherObject in
+                self.currentLocation?.weatherObject = weatherObject
+                let notification = NSNotification(name: "Received New Location", object: nil, userInfo: ["newLocation" : self.currentLocation!])
+                self.center.postNotification(notification)
+            }
         }
-    }
-
-    func didReceiveWeatherResult(weatherObject: NSDictionary) {
-        currentLocation?.weatherObject = weatherObject
-        let notification = NSNotification(name: "Received New Location", object: nil, userInfo: ["newLocation" : currentLocation!])
-        center.postNotification(notification)
     }
     
     func listenForNewLocation(){
@@ -50,9 +48,8 @@ class DataModel: NSObject, APIControllerDelegate {
     }
     
     override init() {
-        api = APIController()
+        api = APIController.sharedInstance
         super.init()
-        api.delegate = self
         listenForNewLocation()
     }
     

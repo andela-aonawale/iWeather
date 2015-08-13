@@ -76,7 +76,7 @@ class LocationViewController: UIViewController {
 extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let count = location?.dailyWeather.count {
+        if let count = location?.dailyWeather?.count {
             return count + 2
         }
         return 0
@@ -132,9 +132,9 @@ extension LocationViewController: UICollectionViewDelegateFlowLayout, UICollecti
     // MARK: - Collection View Methods
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CVCell", forIndexPath: indexPath) as! WeatherCollectionViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Collection View Cell", forIndexPath: indexPath) as! WeatherCollectionViewCell
         
-        if let hourWeather: HourlyWeather? = location!.hourlyWeather[indexPath.row] as HourlyWeather? {
+        if let hourWeather = location?.hourlyWeather[indexPath.row] as HourlyWeather? {
             cell.hourWeather = hourWeather
             if indexPath.row == 0 {
                 cell.time?.text = "Now"
@@ -145,10 +145,7 @@ extension LocationViewController: UICollectionViewDelegateFlowLayout, UICollecti
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let count = location?.hourlyWeather.count {
-            return count
-        }
-        return 0
+        return location?.hourlyWeather?.count ?? 0
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
@@ -160,10 +157,6 @@ extension LocationViewController: UICollectionViewDelegateFlowLayout, UICollecti
 
 extension Weather {
     var weatherImage: UIImage? {
-        if let image = UIImage(named: imageName!) {
-            return image
-        } else {
-            return nil
-        }
+        return UIImage(named: imageName!)
     }
 }
