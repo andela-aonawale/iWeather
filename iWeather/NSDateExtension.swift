@@ -30,15 +30,20 @@ extension NSDate {
         return Range<String.Index>(start: advance(string.startIndex, range.startIndex), end: advance(string.startIndex, range.endIndex))
     }
     
-    class func localTimeForLocationFromAddressString(description: String, dateStyle: NSDateFormatterStyle, timeStyle: NSDateFormatterStyle) -> String {
-        var regex: NSRegularExpression = NSRegularExpression(pattern: "\"[a-z]*\\/[a-z]*_*[a-z]*\"", options: NSRegularExpressionOptions.CaseInsensitive, error: nil)!
-        var newSearchString: NSTextCheckingResult = regex.firstMatchInString(description, options: NSMatchingOptions.allZeros, range: NSMakeRange(0, count(description)))!
-        var timeZone: String = description.substringWithRange(convertNSRangeToSwiftRange(newSearchString.range.toRange()!, string: description))
-        timeZone = dropFirst(timeZone.substringToIndex(timeZone.endIndex.predecessor()))
+    class func dateStringFromTimezone(timeZone: String, dateStyle: NSDateFormatterStyle, timeStyle: NSDateFormatterStyle) -> String{
         let dateFormatter = NSDateFormatter()
         dateFormatter.timeZone = NSTimeZone(name: timeZone)
         dateFormatter.timeStyle = timeStyle
         dateFormatter.dateStyle = dateStyle
         return dateFormatter.stringFromDate(NSDate())
+    }
+    
+    class func dateStringFromTimezone(timeZone: String, unixTime: Int, dateStyle: NSDateFormatterStyle, timeStyle: NSDateFormatterStyle) -> String{
+        let dateFormatter = NSDateFormatter()
+        let date = NSDate(timeIntervalSince1970: NSTimeInterval(unixTime))
+        dateFormatter.timeZone = NSTimeZone(name: timeZone)
+        dateFormatter.timeStyle = timeStyle
+        dateFormatter.dateStyle = dateStyle
+        return dateFormatter.stringFromDate(date)
     }
 }

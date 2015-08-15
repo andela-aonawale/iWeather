@@ -23,8 +23,8 @@ class DailyWeatherTableViewCell: UITableViewCell {
     private func updateUI() {
         if let weather = dayWeather {
             weatherImage.image = weather.weatherImage
-            temperatureMax.text = weather.temperatureMax?.description
-            temperatureMin.text = weather.temperatureMin?.description
+            temperatureMax.text = weather.temperatureMax
+            temperatureMin.text = weather.temperatureMin
             day.text = weather.day
         }
     }

@@ -10,7 +10,6 @@ import UIKit
 
 class CurrentDayWeatherTableViewCell: UITableViewCell {
     
-    
     @IBOutlet weak var sunriseTime: UILabel!
     @IBOutlet weak var sunsetTime: UILabel!
     @IBOutlet weak var chanceOfRain: UILabel!
@@ -22,21 +21,21 @@ class CurrentDayWeatherTableViewCell: UITableViewCell {
     @IBOutlet weak var visibility: UILabel!
     @IBOutlet weak var uvIndex: UILabel!
     
-    var dayWeather: DailyWeathear? {
+    var currentDayWeather: DailyWeathear? {
         didSet {
             updateUI()
         }
     }
     
     private func updateUI() {
-        if let weather = dayWeather {
-            sunriseTime?.text = weather.sunriseTime
-            sunsetTime?.text = weather.sunsetTime
-            chanceOfRain?.text = weather.precipProbability
-            humidity?.text = weather.humidity
-            wind?.text = weather.windSpeed
-            pressure?.text = weather.pressure
-            visibility?.text = weather.visibility
+        if let weather = currentDayWeather {
+            sunriseTime.text = weather.sunriseTime
+            sunsetTime.text = weather.sunsetTime
+            chanceOfRain.text = weather.precipProbability
+            humidity.text = weather.humidity
+            wind.text = weather.windSpeed
+            pressure.text = weather.pressure
+            visibility.text = weather.visibility
         }
     }
 

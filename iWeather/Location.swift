@@ -19,14 +19,21 @@ class Location {
     var hourlyWeather: [HourlyWeather]!
     var dailyWeather: [DailyWeathear]!
     var placemark: CLPlacemark!
-    var localTime: String?
-    var localDateTime: String?
+    var timeZone: String?
+    var currentDay: DailyWeathear!
     
     var weatherObject: NSDictionary! {
         didSet {
+            self.setTimeZone()
             self.createCurrentWeather()
             self.populateHourlyWeather()
             self.populateDailyWeather()
+        }
+    }
+    
+    private func setTimeZone() {
+        if let timeZone = weatherObject.valueForKey("timezone") as? String {
+            self.timeZone = timeZone
         }
     }
     
@@ -36,10 +43,6 @@ class Location {
         private static let Daily = "daily"
         private static let Summary = "summary"
         private static let Data = "data"
-    }
-    
-    func getCLLocation() -> CLLocation {
-        return CLLocation(latitude: self.coordinate!.latitude, longitude: self.coordinate!.longitude)
     }
     
     func getCoordinate() -> String{
@@ -65,11 +68,13 @@ class Location {
     
     private func populateDailyWeather() {
         if let daily = weatherObject.valueForKey(WeatherType.Daily) as? NSDictionary {
-            weekWeatherSummary = daily.valueForKey(WeatherType.Summary) as? String
+            self.weekWeatherSummary = daily.valueForKey(WeatherType.Summary) as? String
             var dailyData = daily.valueForKey(WeatherType.Data) as! Array<AnyObject>
-            dailyData.removeAtIndex(0)
+            if let currentDay = dailyData.removeAtIndex(0) as? NSDictionary {
+                self.currentDay = DailyWeathear(weatherDictionary: currentDay, timeZone: self.timeZone!)
+            }
             for day in dailyData {
-                let dayWeather = DailyWeathear(weatherDictionary: day as! NSDictionary)
+                let dayWeather = DailyWeathear(weatherDictionary: day as! NSDictionary, timeZone: self.timeZone!)
                 self.dailyWeather.append(dayWeather)
             }
         }
@@ -86,8 +91,6 @@ class Location {
         self.coordinate = coordinate
         self.hourlyWeather = [HourlyWeather]()
         self.dailyWeather = [DailyWeathear]()
-        self.localTime = NSDate.localTimeForLocationFromAddressString(placemark.description, dateStyle: .NoStyle, timeStyle: .ShortStyle)
-        self.localDateTime = NSDate.localTimeForLocationFromAddressString(placemark.description, dateStyle: .LongStyle, timeStyle: .ShortStyle)
     }
     
     convenience init(name: String, coordinate: CLLocationCoordinate2D) {
@@ -100,7 +103,6 @@ class Location {
         self.coordinate = coordinate
         self.hourlyWeather = [HourlyWeather]()
         self.dailyWeather = [DailyWeathear]()
-//        self.localTime = NSDate.localTimeForLocationFromAddressString(placemark.description)
     }
     
 }

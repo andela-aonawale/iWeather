@@ -41,6 +41,7 @@ class EventTableViewCell: UITableViewCell {
     weak var delegate: EventTableViewCellDelegate?
     
     private let deleteImageView = UIImageView()
+    private let weatherImageView = UIImageView()
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -53,10 +54,14 @@ class EventTableViewCell: UITableViewCell {
     
         deleteImageView.image = UIImage(named: "Trash-White")
         deleteSlideView.addSubview(deleteImageView)
+        
+        weatherImageView.image = UIImage(named: "Weather")
+        weatherSlideView.addSubview(weatherImageView)
     }
     
     var divInitialCenter: CGPoint!
     
+    var initx: CGFloat!
     func pan(gesture: UIPanGestureRecognizer) {
         switch gesture.state {
         case .Began:
@@ -105,7 +110,8 @@ class EventTableViewCell: UITableViewCell {
         weatherSlideView.backgroundColor = UIColor.blueColor()
         deleteSlideView.backgroundColor = UIColor.redColor()
         
-        deleteImageView.frame = CGRectMake(cellContentWidth-30, cellContentHeight/2.8, 30, 30)
+        deleteImageView.frame = CGRectMake(cellContentWidth-50, cellContentHeight/3.5, 30, 30)
+        weatherImageView.frame = CGRectMake(10, cellContentHeight/3.5, 40, 40)
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

@@ -12,8 +12,8 @@ final class DailyWeathear: Weather {
     
     var sunriseTime: String?
     var sunsetTime: String?
-    var temperatureMin: Int?
-    var temperatureMax: Int?
+    var temperatureMin: String?
+    var temperatureMax: String?
     var day: String?
     
     struct DayWeather {
@@ -24,19 +24,24 @@ final class DailyWeathear: Weather {
         private static let Temperature = "temperature"
     }
     
-    override init(weatherDictionary: NSDictionary) {
-        self.temperatureMin = weatherDictionary.valueForKey(DayWeather.TemperatureMin) as? Int
-        self.temperatureMax = weatherDictionary.valueForKey(DayWeather.TemperatureMax) as? Int
-        
+    init(weatherDictionary: NSDictionary, timeZone: String) {
+        if let temperatureMin = weatherDictionary.valueForKey(DayWeather.TemperatureMin) as? Int {
+            self.temperatureMin = temperatureMin.description
+        }
+        if let temperatureMax = weatherDictionary.valueForKey(DayWeather.TemperatureMax) as? Int {
+            self.temperatureMax = temperatureMax.description
+        }
+
         let sunriseUnixTime = weatherDictionary.valueForKey(DayWeather.SunriseTime) as? Int
-        self.sunriseTime = NSDate.dateStringFromUnixTime(sunriseUnixTime!, dateStyle: .NoStyle, timeStyle: .ShortStyle)
-            
+        self.sunriseTime = NSDate.dateStringFromTimezone(timeZone, unixTime: sunriseUnixTime!, dateStyle: .NoStyle, timeStyle: .ShortStyle)
+        
         let sunsetUnixTime = weatherDictionary.valueForKey(DayWeather.SunsetTime) as? Int
-        self.sunsetTime = NSDate.dateStringFromUnixTime(sunsetUnixTime!, dateStyle: .NoStyle, timeStyle: .ShortStyle)
+        self.sunsetTime = NSDate.dateStringFromTimezone(timeZone, unixTime: sunsetUnixTime!, dateStyle: .NoStyle, timeStyle: .ShortStyle)
             
         let dayUnixTime = weatherDictionary.valueForKey("time") as? Int
         self.day = NSDate.dateFormatFromUnixTime(dayUnixTime!, format: "EEEE")
-            
+        
         super.init(weatherDictionary: weatherDictionary)
     }
+    
 }

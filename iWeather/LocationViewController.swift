@@ -18,8 +18,15 @@ class LocationViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var collectionViewParentView: UIView!
     
+    @IBOutlet weak var day: UILabel!
+    @IBOutlet weak var temperatureMax: UILabel!
+    @IBOutlet weak var temperatureMin: UILabel!
+    
     private func updateUIWithLocation(newLocation: Location?) {
         if let location = newLocation {
+            self.day.text = location.currentDay.day
+            self.temperatureMax.text = location.currentDay.temperatureMax
+            self.temperatureMin.text = location.currentDay.temperatureMin
             self.temperature.text = location.currentWeather.temperature
             self.weatherDescripion.text = location.currentWeather.summary
             self.locationName.text = location.name
@@ -90,10 +97,11 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
                 label.text = "Today: \(daySummary)"
             }
             return cell
-        } else if indexPath.row == 8 {
+        }
+        if indexPath.row == 8 {
             let cell = tableView.dequeueReusableCellWithIdentifier("CurrentDayCell") as! CurrentDayWeatherTableViewCell
-            if let currentDay = location?.dailyWeather.first {
-                cell.dayWeather = currentDay
+            if let currentDay = location?.currentDay {
+                cell.currentDayWeather = currentDay
             }
             return cell
         }
@@ -108,7 +116,7 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         let tableHeight = tableView.frame.size.height
         if indexPath.row == 7 {
-           return tableHeight / 3
+           return tableHeight / 3.5
         }
         if indexPath.row == 8 {
             return tableHeight * 1.3

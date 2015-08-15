@@ -31,6 +31,7 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
     @IBOutlet weak var arrivalSummary: UILabel!
     @IBOutlet weak var arrivalETA: UILabel!
     @IBOutlet weak var arrivalDistance: UILabel!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     
     @IBAction func showArrivalWeatherView(sender: UIButton) {
@@ -46,17 +47,21 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
             currentTemperature.text = weather.temperature
             currentWeatherImage.image = weather.weatherImage
             currentSummary.text = weather.summary
-            currentTime.text = travelLocation?.localDateTime
+            currentTime.text = weather.date
         }
     }
     
-    func updateArrivalWeatherViewUI(weather: HourlyWeather) {
-        arrivalTemperature?.text = weather.temperature
-        arrivalWeatherImage?.image = weather.weatherImage
-        arrivalSummary?.text = weather.summary
-        arrivalETA?.text = currentETA.text
-        arrivalDistance?.text = currentDistance.text
-//        arrivalTime?.text = NSDate.dateStringFromUnixTime(weather.unixTime)
+    func updateArrivalWeatherViewUI(weather: HourlyWeather?) {
+        arrivalETA.text = currentETA.text
+        arrivalDistance.text = currentDistance.text
+        if let weather = weather {
+            arrivalTemperature.text = weather.temperature
+            arrivalWeatherImage.image = weather.weatherImage
+            arrivalSummary.text = weather.summary
+            arrivalTime.text = NSDate.dateStringFromUnixTime(weather.unixTime, dateStyle: .LongStyle, timeStyle: .ShortStyle)
+        } else {
+            arrivalSummary.text = "Weather Unavailable"
+        }
     }
     
     // MARK: - Variables
@@ -69,6 +74,7 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
     
     private var travelLocation: Location? {
         didSet {
+            activityIndicator.startAnimating()
             getLocationWeather()
             getDirections(travelLocation!.placemark)
             addAnnotation(travelLocation!.placemark)
@@ -108,6 +114,10 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
         directions.calculateDirectionsWithCompletionHandler { [unowned self] response, error in
             if error != nil {
                 println("map error: \(error.localizedDescription)")
+                self.currentETA.text = "Unavailable"
+                self.currentDistance.text = "Unavailable"
+                self.updateArrivalWeatherViewUI(nil)
+                self.activityIndicator.stopAnimating()
             } else {
                 self.showRoutes(response)
             }
@@ -127,9 +137,8 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
             dispatch_async(dispatch_get_main_queue()) { [unowned self] in
                 self.currentETA.text = self.formatTimeInSec(Int(route.expectedTravelTime))
                 self.currentDistance.text = String(format: "%.1f km", (route.distance / 1000) )
-                if let etaWeather = self.getWeatherOnArrival(eta) {
-                    self.updateArrivalWeatherViewUI(etaWeather)
-                }
+                self.updateArrivalWeatherViewUI(etaWeather)
+                self.activityIndicator.stopAnimating()
             }
             
         }

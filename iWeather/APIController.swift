@@ -100,8 +100,4 @@ class APIController {
         task.resume()
     }
     
-    init() {
-        println("api controller")
-    }
-    
 }

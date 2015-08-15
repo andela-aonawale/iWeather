@@ -22,7 +22,7 @@ class LocationTableViewCell: UITableViewCell {
     private func updateUI() {
         if let location = self.location {
             locationName?.text = location.name
-            locationTime?.text = location.localTime
+            locationTime?.text = NSDate.dateStringFromTimezone(location.timeZone!, dateStyle: .NoStyle, timeStyle: .ShortStyle)
             locationTemperatureDegree?.text = location.currentWeather.temperature
         }
     }

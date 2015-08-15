@@ -19,6 +19,7 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
     @IBOutlet weak var eventWeatherDescription: UILabel!
     @IBOutlet weak var eventTime: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
     private let locationManager = LocationManager.sharedInstance
     
@@ -47,6 +48,7 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
             eventWeatherTemperature.text = weather.temperature
             eventWeatherDescription.text = weather.summary
             eventTime.text = weather.time
+            activityIndicator.stopAnimating()
         }
     }
     
@@ -68,6 +70,7 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
         locationManager.geocodeAddressFromString(location) { [unowned self] placemarks, error in
             if error != nil {
                 println(error.localizedDescription)
+                self.activityIndicator.stopAnimating()
             } else if let placemark = placemarks?.first as? CLPlacemark {
                 completed(placemark: placemark)
             }

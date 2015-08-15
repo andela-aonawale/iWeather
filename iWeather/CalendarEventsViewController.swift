@@ -52,20 +52,20 @@ class CalendarEventsViewController: UIViewController {
     private func createEvent(event: EKEvent) {
         if let location = event.valueForKey("structuredLocation") as? EKStructuredLocation {
             if let coordinate = location.geoLocation?.coordinate {
-                createEvent(event, withCoordinate: coordinate)
+                createEvent(event, coordinate: coordinate)
             } else {
                 createEvent(event: event)
             }
         }
     }
     
-    private func createEvent(event: EKEvent, withCoordinate: CLLocationCoordinate2D) {
-        let event = Event(title: event.title, startDate: event.startDate, endDate: event.endDate, location: event.location, coordinate: withCoordinate)
+    private func createEvent(event: EKEvent, coordinate: CLLocationCoordinate2D) {
+        let event = Event(event: event, coordinate: coordinate)
         dataModel.events.append(event)
     }
     
     private func createEvent(#event: EKEvent) {
-        let event = Event(title: event.title, startDate: event.startDate, endDate: event.endDate, location: event.location)
+        let event = Event(event: event)
         dataModel.events.append(event)
     }
     
@@ -95,8 +95,6 @@ class CalendarEventsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         checkCalendarAuthorizationStatus()
-        tableView.estimatedRowHeight = tableView.rowHeight
-        tableView.rowHeight = UITableViewAutomaticDimension
         tableView.tableFooterView = UIView(frame: CGRectZero)
         tableView.contentInset = UIEdgeInsets(top: -65, left: 0, bottom: 0, right: 0)
     }
@@ -197,10 +195,16 @@ extension CalendarEventsViewController: EventTableViewCellDelegate {
     
     func tableViewCell(didSwipeCellForDeletion cell: EventTableViewCell) {
         if let indexPath = tableView.indexPathForCell(cell) {
-            tableView.beginUpdates()
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
-            dataModel.events.removeAtIndex(indexPath.row)
-            tableView.endUpdates()
+            var error: NSError?
+            let event = dataModel.events[indexPath.row].event
+            if eventStore.removeEvent(event, span: EKSpanThisEvent, commit: true, error: &error) {
+                tableView.beginUpdates()
+                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
+                dataModel.events.removeAtIndex(indexPath.row)
+                tableView.endUpdates()
+            } else {
+                println(error?.localizedDescription)
+            }
         }
     }
     

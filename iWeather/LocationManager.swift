@@ -29,6 +29,11 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     func start() {
+        locationManager.startUpdatingLocation()
+    }
+    
+    override init() {
+        super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
     }
@@ -38,7 +43,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         case .NotDetermined:
             locationManager.requestWhenInUseAuthorization()
         case .AuthorizedWhenInUse:
-            locationManager.startUpdatingLocation()
+            break;
         case .Denied:
             delegate?.locationAccessDenied!()
         case .Restricted:

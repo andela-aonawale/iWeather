@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import CoreLocation
+import EventKit
 
 class Event {
     
@@ -26,6 +26,7 @@ class Event {
     var startDate: NSDate?
     var endDate: NSDate?
     var startTimeZone: String?
+    var event: EKEvent?
     
     let api = APIController.sharedInstance
     
@@ -41,19 +42,21 @@ class Event {
         return NSDate.dateStringFromUnixTime(self.getStartDate(), dateStyle: .LongStyle, timeStyle: .ShortStyle)
     }
     
-    init(title: String, startDate: NSDate, endDate: NSDate, location: String) {
-        self.title = title
-        self.startDate = startDate
-        self.endDate = endDate
-        self.eventLocationName = location
+    init(event: EKEvent) {
+        self.event = event
+        self.title = event.title
+        self.startDate = event.startDate
+        self.endDate = event.endDate
+        self.eventLocationName = event.location
     }
     
-    init(title: String, startDate: NSDate, endDate: NSDate, location: String, coordinate: CLLocationCoordinate2D) {
-        self.title = title
-        self.startDate = startDate
-        self.endDate = endDate
+    init(event: EKEvent, coordinate: CLLocationCoordinate2D) {
+        self.event = event
+        self.title = event.title
+        self.startDate = event.startDate
+        self.endDate = event.endDate
+        self.eventLocationName = event.location
         self.eventLocationCoordinate = coordinate
-        self.eventLocationName = location
     }
     
 }
