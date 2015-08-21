@@ -61,7 +61,9 @@ class Weather {
         if let visibility =  weatherDictionary.valueForKey(WeatherType.Visibility) as? Double {
             self.visibility = String(format: "%d km", Int(visibility * 1.60934))
         }
-        self.summary = weatherDictionary.valueForKey(WeatherType.Summary) as? String
+        if let summary = weatherDictionary.valueForKey(WeatherType.Summary) as? String {
+            self.summary = summary
+        }
     }
 
 }

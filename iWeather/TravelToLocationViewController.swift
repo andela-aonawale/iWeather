@@ -35,11 +35,11 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
     
     
     @IBAction func showArrivalWeatherView(sender: UIButton) {
-        UIView.transitionFromView(currentWeatherView, toView: arrivalWeatherView, duration: 0.3, options: .TransitionFlipFromRight | .ShowHideTransitionViews | .AllowAnimatedContent, completion: nil)
+        UIView.transitionFromView(currentWeatherView, toView: arrivalWeatherView, duration: 0.3, options: [.TransitionFlipFromRight, .ShowHideTransitionViews, .AllowAnimatedContent], completion: nil)
     }
     
     @IBAction func showCurrentWeatherView(sender: UIButton) {
-        UIView.transitionFromView(arrivalWeatherView, toView: currentWeatherView, duration: 0.3, options: .TransitionFlipFromLeft | .ShowHideTransitionViews | .AllowAnimatedContent, completion: nil)
+        UIView.transitionFromView(arrivalWeatherView, toView: currentWeatherView, duration: 0.3, options: [.TransitionFlipFromLeft, .ShowHideTransitionViews, .AllowAnimatedContent], completion: nil)
     }
     
     func updateCurrentWeatherViewUI() {
@@ -58,7 +58,7 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
             arrivalTemperature.text = weather.temperature
             arrivalWeatherImage.image = weather.weatherImage
             arrivalSummary.text = weather.summary
-            arrivalTime.text = NSDate.dateStringFromUnixTime(weather.unixTime, dateStyle: .LongStyle, timeStyle: .ShortStyle)
+            arrivalTime.text = NSDate.dateStringFromUnixTime(weather.unixTime!, dateStyle: .LongStyle, timeStyle: .ShortStyle)
         } else {
             arrivalSummary.text = "Weather Unavailable"
         }
@@ -105,15 +105,15 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
         let mapPlacemark = MKPlacemark(placemark: placemark)
         let destination = MKMapItem(placemark: mapPlacemark)
         let request = MKDirectionsRequest()
-        request.setSource(MKMapItem.mapItemForCurrentLocation())
-        request.setDestination(destination!)
+        request.source = MKMapItem.mapItemForCurrentLocation()
+        request.destination = destination
         request.transportType = .Automobile
         
         let directions = MKDirections(request: request)
         if directions.calculating { directions.cancel() }
         directions.calculateDirectionsWithCompletionHandler { [unowned self] response, error in
             if error != nil {
-                println("map error: \(error.localizedDescription)")
+                print("map error: \(error!.localizedDescription)")
                 self.currentETA.text = "Unavailable"
                 self.currentDistance.text = "Unavailable"
                 self.updateArrivalWeatherViewUI(nil)
@@ -125,12 +125,12 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
     }
     
     private func clearRoutes() {
-        if mapView?.annotations != nil { mapView.removeAnnotations(mapView.annotations as? [MKAnnotation]) }
-        if mapView?.annotations != nil { mapView.removeOverlays(mapView.overlays as? [MKOverlay]) }
+        if mapView?.annotations != nil { mapView.removeAnnotations(mapView.annotations) }
+        if mapView?.annotations != nil { mapView.removeOverlays(mapView.overlays) }
     }
     
     private func showRoutes(response: MKDirectionsResponse!) {
-        if let route = response.routes.first as? MKRoute {
+        if let route = response.routes.first {
             mapView.addOverlay(route.polyline, level: MKOverlayLevel.AboveRoads)
             let eta = NSDate().dateByAddingTimeInterval(route.expectedTravelTime)
             let etaWeather = getWeatherOnArrival(eta)
@@ -159,7 +159,7 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
     private func getWeatherOnArrival(eta: NSDate) -> HourlyWeather? {
         if let hourlyWeather = travelLocation?.hourlyWeather {
             for weather in hourlyWeather {
-                let weatherDate = NSDate(timeIntervalSince1970: NSTimeInterval(weather.unixTime))
+                let weatherDate = NSDate(timeIntervalSince1970: NSTimeInterval(weather.unixTime!))
                 if eta.compare(weatherDate) == .OrderedAscending {
                     return weather
                 }
@@ -171,7 +171,7 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
     private func addAnnotation(placemark: CLPlacemark) {
         clearRoutes()
         let point = MKPointAnnotation()
-        point.coordinate = placemark.location.coordinate
+        point.coordinate = placemark.location!.coordinate
         point.title = placemark.name
         point.subtitle = formattedAddress
         mapView.addAnnotation(point)
@@ -237,7 +237,7 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate {
     
     // MARK: - Initialization
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         api = APIController.sharedInstance
         searchResultViewController = SearchResultViewController()
         searchController = UISearchController(searchResultsController: searchResultViewController)
@@ -282,12 +282,12 @@ extension TravelToLocationViewController: UISearchControllerDelegate {
         let controller = searchController.searchResultsController as! SearchResultViewController
         controller.delegate = self
         dispatch_async(dispatch_get_main_queue()) {
-            searchController.searchResultsController.view.hidden = false
+            searchController.searchResultsController!.view.hidden = false
         }
     }
     
     func didPresentSearchController(searchController: UISearchController) {
-        searchController.searchResultsController.view.hidden = false
+        searchController.searchResultsController!.view.hidden = false
     }
     
 }
@@ -296,14 +296,14 @@ extension TravelToLocationViewController: MKMapViewDelegate {
     
     // MARK: - MKMapView Delegate Methods
     
-    func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
+    func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
         let renderer = MKPolylineRenderer(overlay: overlay)
         renderer.strokeColor = UIColor.blueColor()
         renderer.lineWidth = 3.0
         return renderer
     }
     
-    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation.isKindOfClass(MKUserLocation) {
             return nil
         }
@@ -311,29 +311,29 @@ extension TravelToLocationViewController: MKMapViewDelegate {
         if annotation.isKindOfClass(MKPointAnnotation) {
             if pinView == nil {
                 pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: Constants.AnnotationViewReuseIdentifier)
-                pinView.canShowCallout = true
+                pinView!.canShowCallout = true
             } else {
-                pinView.annotation = annotation
+                pinView!.annotation = annotation
                 
             }
-            pinView.leftCalloutAccessoryView = UIImageView(frame: Constants.LeftCalloutFrame)
+            pinView!.leftCalloutAccessoryView = UIImageView(frame: Constants.LeftCalloutFrame)
         }
         
         return pinView
     }
     
-    func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         if let weatherIcon = view.leftCalloutAccessoryView as? UIImageView {
             weatherIcon.image = travelLocation?.currentWeather.weatherImage
         }
     }
     
-    func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
-        let region = MKCoordinateRegionMakeWithDistance(userLocation.location.coordinate, 2000, 2000)
+    func mapView(mapView: MKMapView, didUpdateUserLocation userLocation: MKUserLocation) {
+        let region = MKCoordinateRegionMakeWithDistance(userLocation.location!.coordinate, 2000, 2000)
         mapView.setRegion(region, animated: true)
     }
     
-    func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
+    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         
     }
     

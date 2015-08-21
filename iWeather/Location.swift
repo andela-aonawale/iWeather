@@ -81,7 +81,7 @@ class Location {
     }
     
     convenience init(placemark: CLPlacemark) {
-        let coordinate = (latitude: placemark.location.coordinate.latitude, longitude: placemark.location.coordinate.longitude)
+        let coordinate = (latitude: placemark.location!.coordinate.latitude, longitude: placemark.location!.coordinate.longitude)
         self.init(placemark: placemark, coordinate: coordinate)
     }
     

@@ -38,7 +38,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
     }
 
-    func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         switch status {
         case .NotDetermined:
             locationManager.requestWhenInUseAuthorization()
@@ -60,7 +60,6 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     func createCurrentLocationWithPlacemark(placemark: CLPlacemark) {
-        let coordinate = (latitude: placemark.location.coordinate.latitude, longitude: placemark.location.coordinate.longitude)
         location = Location(placemark: placemark)
         postNewLocation(location!)
     }
@@ -76,28 +75,31 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         return Static.instance!
     }
     
-    func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         locationManager.stopUpdatingLocation()
-        geocoder.reverseGeocodeLocation(manager.location) { [unowned self] (placemarks, error) in
-            if error != nil {
-                println(error.localizedDescription)
-            } else if let placemark = placemarks?.first as? CLPlacemark {
-                self.createCurrentLocationWithPlacemark(placemark)
+        if let location = manager.location {
+            geocoder.reverseGeocodeLocation(location) { [unowned self] (placemarks, error) in
+                if error != nil {
+                    print(error!.localizedDescription)
+                } else if let placemark = placemarks?.first {
+                    self.createCurrentLocationWithPlacemark(placemark)
+                }
             }
         }
+        
     }
     
-    func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
         if error.domain == kCLErrorDomain {
             switch error {
             case CLError.LocationUnknown.rawValue:
-                println("The location manager was unable to obtain a location value right now.")
+                print("The location manager was unable to obtain a location value right now.")
             case CLError.Denied.rawValue:
                 locationManager.stopUpdatingLocation()
                 delegate?.locationAccessDenied!()
             case CLError.Network.rawValue:
                 delegate?.networkUnavailable!()
-                println("The network was unavailable or a network error occurred")
+                print("The network was unavailable or a network error occurred")
             default:
                 break
             }

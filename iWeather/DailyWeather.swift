@@ -31,16 +31,15 @@ final class DailyWeathear: Weather {
         if let temperatureMax = weatherDictionary.valueForKey(DayWeather.TemperatureMax) as? Int {
             self.temperatureMax = temperatureMax.description
         }
-
-        let sunriseUnixTime = weatherDictionary.valueForKey(DayWeather.SunriseTime) as? Int
-        self.sunriseTime = NSDate.dateStringFromTimezone(timeZone, unixTime: sunriseUnixTime!, dateStyle: .NoStyle, timeStyle: .ShortStyle)
-        
-        let sunsetUnixTime = weatherDictionary.valueForKey(DayWeather.SunsetTime) as? Int
-        self.sunsetTime = NSDate.dateStringFromTimezone(timeZone, unixTime: sunsetUnixTime!, dateStyle: .NoStyle, timeStyle: .ShortStyle)
-            
-        let dayUnixTime = weatherDictionary.valueForKey("time") as? Int
-        self.day = NSDate.dateFormatFromUnixTime(dayUnixTime!, format: "EEEE")
-        
+        if let sunriseUnixTime = weatherDictionary.valueForKey(DayWeather.SunriseTime) as? Int {
+            self.sunriseTime = NSDate.dateStringFromTimezone(timeZone, unixTime: sunriseUnixTime, dateStyle: .NoStyle, timeStyle: .ShortStyle)
+        }
+        if let sunsetUnixTime = weatherDictionary.valueForKey(DayWeather.SunsetTime) as? Int {
+            self.sunsetTime = NSDate.dateStringFromTimezone(timeZone, unixTime: sunsetUnixTime, dateStyle: .NoStyle, timeStyle: .ShortStyle)
+        }
+        if let dayUnixTime = weatherDictionary.valueForKey("time") as? Int {
+            self.day = NSDate.dateFormatFromUnixTime(dayUnixTime, format: "EEEE")
+        }
         super.init(weatherDictionary: weatherDictionary)
     }
     

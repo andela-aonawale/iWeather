@@ -10,14 +10,14 @@ import UIKit
 import EventKit
 
 class CalendarEventsViewController: UIViewController {
-    
+
     @IBOutlet weak var tableView: UITableView!
 
     private let eventStore: EKEventStore
     private var dataModel = DataModel.sharedInstance
     
     private func requestAccessToCalendar() {
-        eventStore.requestAccessToEntityType(EKEntityTypeEvent) { [unowned self] in
+        eventStore.requestAccessToEntityType(EKEntityType.Event) { [unowned self] in
             ($0 == true && $1 == nil) ? self.fetchCalendars() : self.showNeedPermissionView()
         }
     }
@@ -31,11 +31,10 @@ class CalendarEventsViewController: UIViewController {
     }
     
     private func fetchCalendars() {
-        if let calendars = eventStore.calendarsForEntityType(EKEntityTypeEvent) as? [EKCalendar] {
-            fetchEventsFromCalendars(calendars) { [unowned self] Events in
-                for event in Events {
-                    self.createEvent(event)
-                }
+        let calendars = eventStore.calendarsForEntityType(EKEntityType.Event)
+        fetchEventsFromCalendars(calendars) { [unowned self] Events in
+            for event in Events {
+                self.createEvent(event)
             }
         }
     }
@@ -44,9 +43,8 @@ class CalendarEventsViewController: UIViewController {
         let startDate = NSDate()
         let endDate = NSDate(timeIntervalSinceNow: 604800*10)
         let predicate = eventStore.predicateForEventsWithStartDate(startDate, endDate: endDate, calendars: calendars)
-        if let eventsArray = eventStore.eventsMatchingPredicate(predicate) as? [EKEvent] {
-            completed(eventsArray)
-        }
+        let eventsArray = eventStore.eventsMatchingPredicate(predicate)
+        completed(eventsArray)
     }
     
     private func createEvent(event: EKEvent) {
@@ -64,7 +62,7 @@ class CalendarEventsViewController: UIViewController {
         dataModel.events.append(event)
     }
     
-    private func createEvent(#event: EKEvent) {
+    private func createEvent(event event: EKEvent) {
         let event = Event(event: event)
         dataModel.events.append(event)
     }
@@ -75,7 +73,7 @@ class CalendarEventsViewController: UIViewController {
     }
     
     private func checkCalendarAuthorizationStatus() {
-        let status = EKEventStore.authorizationStatusForEntityType(EKEntityTypeEvent)
+        let status = EKEventStore.authorizationStatusForEntityType(EKEntityType.Event)
         switch status {
             case .NotDetermined:
                 requestAccessToCalendar()
@@ -96,14 +94,13 @@ class CalendarEventsViewController: UIViewController {
         super.viewDidLoad()
         checkCalendarAuthorizationStatus()
         tableView.tableFooterView = UIView(frame: CGRectZero)
-        tableView.contentInset = UIEdgeInsets(top: -65, left: 0, bottom: 0, right: 0)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         eventStore = EKEventStore()
         super.init(coder: aDecoder)
     }
@@ -141,7 +138,7 @@ extension CalendarEventsViewController: UIPopoverPresentationControllerDelegate 
     
     func prepareForPopoverPresentation(popoverPresentationController: UIPopoverPresentationController) {
         if let ppc = popoverPresentationController as UIPopoverPresentationController? {
-            ppc.permittedArrowDirections = UIPopoverArrowDirection.allZeros
+            ppc.permittedArrowDirections = UIPopoverArrowDirection()
         }
     }
     
@@ -197,13 +194,15 @@ extension CalendarEventsViewController: EventTableViewCellDelegate {
         if let indexPath = tableView.indexPathForCell(cell) {
             var error: NSError?
             let event = dataModel.events[indexPath.row].event
-            if eventStore.removeEvent(event, span: EKSpanThisEvent, commit: true, error: &error) {
+            do {
+                try eventStore.removeEvent(event!, span: EKSpan.ThisEvent, commit: true)
                 tableView.beginUpdates()
                 tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
                 dataModel.events.removeAtIndex(indexPath.row)
                 tableView.endUpdates()
-            } else {
-                println(error?.localizedDescription)
+            } catch let error1 as NSError {
+                error = error1
+                print(error?.localizedDescription)
             }
         }
     }

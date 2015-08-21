@@ -8,7 +8,7 @@
 
 import Foundation
 
-class DataModel: NSObject {
+class DataModel {
     
     private let api: APIController!
     private let center = NSNotificationCenter.defaultCenter()
@@ -19,7 +19,7 @@ class DataModel: NSObject {
     
     var currentLocation: Location? {
         didSet {
-            println("auto get currentLocation:  \(currentLocation)")
+            print("auto get currentLocation:  \(currentLocation)")
             api.getWeatherData(currentLocation!.getCoordinate()) { weatherObject in
                 self.currentLocation?.weatherObject = weatherObject
                 let notification = NSNotification(name: "Received New Location", object: nil, userInfo: ["newLocation" : self.currentLocation!])
@@ -30,7 +30,7 @@ class DataModel: NSObject {
     
     func listenForNewLocation(){
         center.addObserverForName("Received Current Location", object: nil, queue: queue) { notification in
-            if let location = notification?.userInfo?["currentLocation"] as? Location {
+            if let location = notification.userInfo?["currentLocation"] as? Location {
                 self.currentLocation = location
             }
         }
@@ -47,9 +47,8 @@ class DataModel: NSObject {
         return Static.instance!
     }
     
-    override init() {
+    init() {
         api = APIController.sharedInstance
-        super.init()
         listenForNewLocation()
     }
     

@@ -10,7 +10,7 @@ import UIKit
 import Foundation
 
 class LocationViewController: UIViewController {
-    
+
     @IBOutlet weak var temperature: UILabel!
     @IBOutlet weak var weatherDescripion: UILabel!
     @IBOutlet weak var locationName: UILabel!
@@ -48,17 +48,22 @@ class LocationViewController: UIViewController {
     private func listenForLocationChange() {
         let center = NSNotificationCenter.defaultCenter()
         let queue = NSOperationQueue.mainQueue()
-        center.addObserverForName("Received New Location", object: nil, queue: queue) { [unowned self] notification in
-            if let newLocation = notification?.userInfo?["newLocation"] as? Location {
-                self.location = newLocation
-                self.updateUIWithLocation(newLocation)
+        center.addObserverForName("Received New Location", object: nil, queue: queue) { [weak self] notification in
+            if let this = self {
+                if let newLocation = notification.userInfo?["newLocation"] as? Location {
+                    this.location = newLocation
+                    this.updateUIWithLocation(newLocation)
+                }
             }
+            
         }
     }
     
     // MARK: - VC life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.backgroundColor = UIColor.clearColor()
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         tableView.allowsSelection = false
         collectionView.backgroundColor = .clearColor()
         collectionViewParentView.addTopBorderWithColor(whiteColor, width: 0.5)
@@ -74,7 +79,9 @@ class LocationViewController: UIViewController {
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        if self.index == 0 {
+            NSNotificationCenter.defaultCenter().removeObserver(self)
+        }
     }
     
 }
@@ -91,12 +98,12 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.row == 7 {
-            let cell = tableView.dequeueReusableCellWithIdentifier("SummaryCell") as! UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("SummaryCell")
             if let daySummary = location?.dayWeatherSummary {
-                var label = cell.viewWithTag(10) as! UILabel
+                let label = cell!.viewWithTag(10) as! UILabel
                 label.text = "Today: \(daySummary)"
             }
-            return cell
+            return cell!
         }
         if indexPath.row == 8 {
             let cell = tableView.dequeueReusableCellWithIdentifier("CurrentDayCell") as! CurrentDayWeatherTableViewCell
@@ -135,7 +142,7 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 
-extension LocationViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+extension LocationViewController: UIScrollViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     
     // MARK: - Collection View Methods
     

@@ -36,17 +36,16 @@ class APIController {
         forecastURL?.query = API.ForecastQuery
         let task = session.dataTaskWithURL(forecastURL!.URL!) { data, response, error in
             if error != nil {
-                println(error.localizedDescription)
+                print(error!.localizedDescription)
             }
             if let HTTPresponse = response as? NSHTTPURLResponse {
                 if HTTPresponse.statusCode == 200 {
-                    var err: NSError?
-                    if let weatherObject = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers, error: &err) as? NSDictionary {
-                        if err != nil {
-                            println("JSON Error \(err!.localizedDescription)")
-                        } else {
-                            completion(weatherObject: weatherObject as NSDictionary)
-                        }
+                    do {
+                        let weatherObject = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
+                        completion(weatherObject: weatherObject as! NSDictionary)
+                    } catch {
+//                        let error: NSError?
+//                        print("JSON Error \(error!.localizedDescription)", appendNewline: true)
                     }
                 }
             }
@@ -59,17 +58,16 @@ class APIController {
         geocodeURL?.query = "input=\(location)&key=\(API.GeocodeKey)"
         let task = session.dataTaskWithURL(geocodeURL!.URL!) { data, response, error in
             if error != nil {
-                println(error.localizedDescription)
+                print(error!.localizedDescription)
             }
             if let HTTPresponse = response as? NSHTTPURLResponse {
                 if HTTPresponse.statusCode == 200 {
-                    var err: NSError?
-                    if let locationObject = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers, error: &err) as? NSDictionary {
-                        if err != nil {
-                            println("JSON Error \(err!.localizedDescription)")
-                        } else {
-                            completion(locationObject: locationObject as NSDictionary)
-                        }
+                    do {
+                        let locationObject = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
+                        completion(locationObject: locationObject as! NSDictionary)
+                    } catch {
+//                        let error: NSError?
+//                        print("JSON Error \(error!.localizedDescription)", appendNewline: true)
                     }
                 }
             }
@@ -82,20 +80,20 @@ class APIController {
         forecastURL?.query = API.ForecastQuery
         let task = session.dataTaskWithURL(forecastURL!.URL!) { data, response, error in
             if error != nil {
-                println(error.localizedDescription)
+                print(error!.localizedDescription)
             }
             if let HTTPresponse = response as? NSHTTPURLResponse {
                 if HTTPresponse.statusCode == 200 {
-                    var err: NSError?
-                    if let weatherObject = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers, error: &err) as? NSDictionary {
-                        if err != nil {
-                            println("JSON Error \(err!.localizedDescription)")
-                        } else {
-                            completion(weatherObject: weatherObject as NSDictionary)
-                        }
+                    do {
+                        let weatherObject = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
+                        completion(weatherObject: weatherObject as! NSDictionary)
+                    } catch {
+//                        let error: NSError?
+//                        print("JSON Error \(error!.localizedDescription)", appendNewline: true)
                     }
-                }
+                } 
             }
+            
         }
         task.resume()
     }

@@ -57,8 +57,9 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
     }
     
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
-        dismissViewControllerAnimated(true, completion: nil)
-        hideSearchBar()
+        dismissViewControllerAnimated(true) { [unowned self] in
+            self.hideSearchBar()
+        }
     }
     
     func showSearchBar() {
@@ -79,7 +80,7 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
     
     // MARK: - Initialization
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         api = APIController.sharedInstance
         dataModel = DataModel.sharedInstance
         searchResultViewController = SearchResultViewController()
@@ -89,16 +90,10 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
     
     // MARK: - View Controller Life Cycle
     
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(true)
-        searchController.searchBar.resignFirstResponder()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureSearchController()
         tableView.tableFooterView = UIView(frame: CGRectZero)
-        tableView.contentInset = UIEdgeInsets(top: -65, left: 0, bottom: 0, right: 0)
     }
     
     override func didReceiveMemoryWarning() {
@@ -113,8 +108,8 @@ extension AddLocationViewController: SearchResultViewControllerDelegate {
     // MARK: - Search ResultView Controller Delegate Methods
     
     func didSelectLocationFromSearchResult(placemark: CLPlacemark, selectedAddress: String) {
-        newLocation = Location(placemark: placemark)
         hideSearchBar()
+        newLocation = Location(placemark: placemark)
     }
     
 }
@@ -128,12 +123,12 @@ extension AddLocationViewController: UISearchControllerDelegate {
         let controller = searchController.searchResultsController as! SearchResultViewController
         controller.delegate = self
         dispatch_async(dispatch_get_main_queue()) {
-            searchController.searchResultsController.view.hidden = false
+            searchController.searchResultsController!.view.hidden = false
         }
     }
     
     func didPresentSearchController(searchController: UISearchController) {
-        searchController.searchResultsController.view.hidden = false
+        searchController.searchResultsController!.view.hidden = false
     }
     
 }
@@ -142,10 +137,6 @@ extension AddLocationViewController: UISearchControllerDelegate {
 extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource {
     
     // MARK: - UITableView Delegate & UITableView DataSource Methods
-    
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
-    }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataModel.locations.count
@@ -178,6 +169,9 @@ extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if searchController.searchBar.isFirstResponder() {
+            hideSearchBar()
+        }
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         tabBarController?.selectedIndex = 0
         if let pageViewController = tabBarController?.selectedViewController as? PageViewController {

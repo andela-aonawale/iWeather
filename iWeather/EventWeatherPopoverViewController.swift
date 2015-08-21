@@ -25,7 +25,7 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
     
     weak var event: Event? { didSet { createLocation() } }
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         listenForEventLocationWeather()
     }
@@ -56,7 +56,7 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
         if let event = event {
             if event.location == nil {
                 if let coordinate = event.eventLocationCoordinate {
-                    event.location = Location(name: event.eventLocationName!, coordinate: event.eventLocationCoordinate!)
+                    event.location = Location(name: event.eventLocationName!, coordinate: coordinate)
                 } else {
                     getEventPlacemarkFromLocationName(event.eventLocationName!) {
                         event.location = Location(placemark: $0)
@@ -69,7 +69,7 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
     private func getEventPlacemarkFromLocationName(location: String, completed: (placemark: CLPlacemark) -> Void) {
         locationManager.geocodeAddressFromString(location) { [unowned self] placemarks, error in
             if error != nil {
-                println(error.localizedDescription)
+                print(error.localizedDescription)
                 self.activityIndicator.stopAnimating()
             } else if let placemark = placemarks?.first as? CLPlacemark {
                 completed(placemark: placemark)

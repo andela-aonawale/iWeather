@@ -43,6 +43,14 @@ class EventTableViewCell: UITableViewCell {
     private let deleteImageView = UIImageView()
     private let weatherImageView = UIImageView()
     
+    override func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
+        let translation = gestureRecognizer.locationInView(self.superview)
+        if fabs(translation.x) > fabs(translation.y) {
+            return true
+        }
+        return false
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

@@ -38,8 +38,8 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
         let searchText = searchController.searchBar.text
-        if !searchText.isEmpty {
-            api.suggestLocation(searchText) { [unowned self] locationObject in
+        if !searchText!.isEmpty {
+            api.suggestLocation(searchText!) { [unowned self] locationObject in
                 self.predictions.removeAll(keepCapacity: false)
                 if let places = locationObject.valueForKey(Places.Predictions) as? NSArray {
                     for place in places {
@@ -53,6 +53,9 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
                     }
                 }
             }
+        } else {
+            predictions.removeAll(keepCapacity: false)
+            tableView.reloadData()
         }
     }
     
@@ -64,6 +67,7 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     }
     
     override func viewWillAppear(animated: Bool) {
+        predictions.removeAll(keepCapacity: false)
         tableView.reloadData()
     }
 
@@ -84,8 +88,8 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
         dismissViewControllerAnimated(true, completion: nil)
         CLGeocoder().geocodeAddressString(location) { (placemarks, error) in
             if error != nil {
-                println(error.localizedDescription)
-            } else if let placemark = placemarks?.first as? CLPlacemark {
+                print(error!.localizedDescription)
+            } else if let placemark = placemarks?.first {
                 let formattedAddress = self.predictions[indexPath.row]
                 self.delegate?.didSelectLocationFromSearchResult(placemark, selectedAddress: formattedAddress)
             }
@@ -93,7 +97,7 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier(Cell.ReuseIdentifier) as! UITableViewCell!
+        var cell = tableView.dequeueReusableCellWithIdentifier(Cell.ReuseIdentifier) as UITableViewCell!
         if cell == nil {
             cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: Cell.ReuseIdentifier)
         }
