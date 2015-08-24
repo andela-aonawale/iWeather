@@ -14,7 +14,7 @@ class Event {
     var title: String?
     var location: Location? {
         didSet {
-            api.getWeatherDataForTime(self.getStartDate(), coordinate: location!.getCoordinate()) { weatherObject in
+            api.getWeatherForDate(self.startDate!, coordinate: location!.getCoordinate()) { weatherObject in
                 self.location?.weatherObject = weatherObject
                 let notification = NSNotification(name: "Received Event Location Weather", object: nil, userInfo: nil)
                 NSNotificationCenter.defaultCenter().postNotification(notification)

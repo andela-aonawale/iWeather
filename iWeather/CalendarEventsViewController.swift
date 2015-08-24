@@ -11,14 +11,20 @@ import EventKit
 
 class CalendarEventsViewController: UIViewController {
 
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableView: UITableView! {
+        didSet {
+            let recognizer = PanDirectionGestureRecognizer(direction: PanDirection.Horizontal, target: self, action: "pan:")
+            recognizer.maximumNumberOfTouches = 1
+            tableView.addGestureRecognizer(recognizer)
+        }
+    }
 
     private let eventStore: EKEventStore
     private var dataModel = DataModel.sharedInstance
     
     private func requestAccessToCalendar() {
         eventStore.requestAccessToEntityType(EKEntityType.Event) { [unowned self] in
-            ($0 == true && $1 == nil) ? self.fetchCalendars() : self.showNeedPermissionView()
+            ($0 && $1 == nil) ? self.fetchCalendars() : self.showNeedPermissionView()
         }
     }
     
@@ -85,10 +91,6 @@ class CalendarEventsViewController: UIViewController {
                 showRestrictedView()
         }
     }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(true)
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,8 +106,14 @@ class CalendarEventsViewController: UIViewController {
         eventStore = EKEventStore()
         super.init(coder: aDecoder)
     }
-
-    var selectedCell: EventTableViewCell?
+    
+    private struct Swipe {
+        var delete: Bool!
+        var showWeather: Bool!
+    }
+    
+    private var selectedCell: EventTableViewCell?
+    private var swipeFarEnough = Swipe()
 
 }
 
@@ -117,7 +125,6 @@ extension CalendarEventsViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("EventCell") as! EventTableViewCell
-        cell.delegate = self
         if let event = dataModel.events[indexPath.row] as Event? {
             cell.event = event
         }
@@ -188,27 +195,71 @@ private struct Segue {
     static let ShowEventWeather = "Show Event Weather"
 }
 
-extension CalendarEventsViewController: EventTableViewCellDelegate {
+extension CalendarEventsViewController {
     
-    func tableViewCell(didSwipeCellForDeletion cell: EventTableViewCell) {
-        if let indexPath = tableView.indexPathForCell(cell) {
-            var error: NSError?
-            let event = dataModel.events[indexPath.row].event
-            do {
-                try eventStore.removeEvent(event!, span: EKSpan.ThisEvent, commit: true)
-                tableView.beginUpdates()
-                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
-                dataModel.events.removeAtIndex(indexPath.row)
-                tableView.endUpdates()
-            } catch let error1 as NSError {
-                error = error1
-                print(error?.localizedDescription)
+    func pan(gesture: UIPanGestureRecognizer) {
+        switch gesture.state {
+        case .Began:
+            let swipeLocation = gesture.locationInView(tableView)
+            if let swipedIndexPath = tableView.indexPathForRowAtPoint(swipeLocation) {
+                if let swipedCell = tableView.cellForRowAtIndexPath(swipedIndexPath) {
+                    selectedCell = swipedCell as? EventTableViewCell
+                }
+            } else {
+                selectedCell = nil
+            }
+        case .Changed:
+            if selectedCell != nil {
+                let translation = gesture.translationInView(tableView)
+                let originX = selectedCell!.frame.origin.x
+                let cellWidth = selectedCell!.frame.size.width
+                swipeFarEnough.delete = (originX > cellWidth / 2)
+                swipeFarEnough.showWeather = (originX < -cellWidth / 2)
+                selectedCell!.center = CGPointMake(selectedCell!.initialCenterPoint.x + translation.x, selectedCell!.initialCenterPoint.y)
+            }
+        case .Ended:
+            if selectedCell != nil {
+                let cell = (width: selectedCell!.frame.size.width, height: selectedCell!.frame.size.height)
+                let initialFrame = CGRectMake(0, selectedCell!.frame.origin.y, cell.width, cell.height)
+                if !swipeFarEnough.showWeather && !swipeFarEnough.delete {
+                    UIView.animateWithDuration(0.1) { self.selectedCell!.frame = initialFrame }
+                } else if swipeFarEnough.showWeather == true {
+                    UIView.animateWithDuration(0.1, animations: {
+                        self.selectedCell!.center = CGPointMake(-cell.width/2, self.selectedCell!.initialCenterPoint.y) }) { finished in
+                            if finished == true { self.showEventWeather() }
+                    }
+                } else if swipeFarEnough.delete == true {
+                    UIView.animateWithDuration(0.1, animations: {
+                        self.selectedCell!.center = CGPointMake(cell.width * 1.5, self.selectedCell!.initialCenterPoint.y) }) { finished in
+                            if finished == true { self.deleteCellAtIndexPath() }
+                    }
+                }
+            }
+        default:
+            break
+        }
+    }
+    
+    private func deleteCellAtIndexPath() {
+        if let cell = selectedCell {
+            if let indexPath = tableView.indexPathForCell(cell) {
+                var error: NSError?
+                let event = dataModel.events[indexPath.row].event
+                do {
+                    try eventStore.removeEvent(event!, span: EKSpan.ThisEvent, commit: true)
+                    tableView.beginUpdates()
+                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
+                    dataModel.events.removeAtIndex(indexPath.row)
+                    tableView.endUpdates()
+                } catch let error1 as NSError {
+                    error = error1
+                    print(error?.localizedDescription)
+                }
             }
         }
     }
     
-    func tableViewCell(didSwipeCellForWeather cell: EventTableViewCell) {
-        selectedCell = cell
+    private func showEventWeather() {
         performSegueWithIdentifier(Segue.ShowEventWeather, sender: self)
     }
     

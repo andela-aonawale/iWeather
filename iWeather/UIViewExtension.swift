@@ -37,4 +37,9 @@ extension UIView {
         border.frame = CGRectMake(0, 0, width, self.frame.size.height)
         self.layer.addSublayer(border)
     }
+    
+    class func viewFromNibName(name: String) -> UIView? {
+        let views = NSBundle.mainBundle().loadNibNamed(name, owner: nil, options: nil)
+        return views.first as? MarkerInfoView
+    }
 }

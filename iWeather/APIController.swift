@@ -13,8 +13,6 @@ class APIController {
     private struct API {
         private static let ForcastKEY = "e9f75045f39337c8df914eb723c4832b"
         private static let ForecastURL = "https://api.forecast.io/forecast/"
-        private static let GeocodeURL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?"
-        private static let GeocodeKey = "AIzaSyDo3xtVe5TuRDZ8PFrdLeuu14VCvM9ZILg"
         private static let ForecastQuery = "units=auto&exclude=minutely,alerts,flags"
     }
     
@@ -42,7 +40,9 @@ class APIController {
                 if HTTPresponse.statusCode == 200 {
                     do {
                         let weatherObject = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
-                        completion(weatherObject: weatherObject as! NSDictionary)
+                        dispatch_async(dispatch_get_main_queue()) {
+                            completion(weatherObject: weatherObject as! NSDictionary)
+                        }
                     } catch {
 //                        let error: NSError?
 //                        print("JSON Error \(error!.localizedDescription)", appendNewline: true)
@@ -53,29 +53,8 @@ class APIController {
         task.resume()
     }
     
-    func suggestLocation(location: String, completion: (locationObject: NSDictionary) -> Void) {
-        let geocodeURL = NSURLComponents(string: API.GeocodeURL)
-        geocodeURL?.query = "input=\(location)&key=\(API.GeocodeKey)"
-        let task = session.dataTaskWithURL(geocodeURL!.URL!) { data, response, error in
-            if error != nil {
-                print(error!.localizedDescription)
-            }
-            if let HTTPresponse = response as? NSHTTPURLResponse {
-                if HTTPresponse.statusCode == 200 {
-                    do {
-                        let locationObject = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
-                        completion(locationObject: locationObject as! NSDictionary)
-                    } catch {
-//                        let error: NSError?
-//                        print("JSON Error \(error!.localizedDescription)", appendNewline: true)
-                    }
-                }
-            }
-        }
-        task.resume()
-    }
-    
-    func getWeatherDataForTime(unixTime: Int, coordinate: String, completion: (weatherObject: NSDictionary) -> Void) {
+    func getWeatherForDate(date: NSDate, coordinate: String, completion: (weatherObject: NSDictionary) -> Void) {
+        let unixTime = Int(date.timeIntervalSince1970)
         let forecastURL = NSURLComponents(string: "\(API.ForecastURL)\(API.ForcastKEY)/\(coordinate),\(unixTime)?")
         forecastURL?.query = API.ForecastQuery
         let task = session.dataTaskWithURL(forecastURL!.URL!) { data, response, error in
@@ -86,7 +65,9 @@ class APIController {
                 if HTTPresponse.statusCode == 200 {
                     do {
                         let weatherObject = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
-                        completion(weatherObject: weatherObject as! NSDictionary)
+                        dispatch_async(dispatch_get_main_queue()) {
+                            completion(weatherObject: weatherObject as! NSDictionary)
+                        }
                     } catch {
 //                        let error: NSError?
 //                        print("JSON Error \(error!.localizedDescription)", appendNewline: true)

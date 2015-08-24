@@ -33,12 +33,8 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
     func listenForEventLocationWeather(){
         let queue = NSOperationQueue.mainQueue()
         NSNotificationCenter.defaultCenter().addObserverForName("Received Event Location Weather", object: nil, queue: queue) { [weak self] notification in
-            dispatch_async(dispatch_get_main_queue()) {
-                if let this = self {
-                    this.updateUI()
-                    this.collectionView.reloadData()
-                }
-            }
+            self?.updateUI()
+            self?.collectionView.reloadData()
         }
     }
     
@@ -56,7 +52,7 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
         if let event = event {
             if event.location == nil {
                 if let coordinate = event.eventLocationCoordinate {
-                    event.location = Location(name: event.eventLocationName!, coordinate: coordinate)
+                    event.location = Location(name: event.eventLocationName!, formattedAdrress: event.eventLocationName!, coordinate: coordinate)
                 } else {
                     getEventPlacemarkFromLocationName(event.eventLocationName!) {
                         event.location = Location(placemark: $0)
@@ -67,10 +63,10 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
     }
     
     private func getEventPlacemarkFromLocationName(location: String, completed: (placemark: CLPlacemark) -> Void) {
-        locationManager.geocodeAddressFromString(location) { [unowned self] placemarks, error in
+        locationManager.geocodeAddressFromString(location) { [weak self] placemarks, error in
             if error != nil {
                 print(error.localizedDescription)
-                self.activityIndicator.stopAnimating()
+                self?.activityIndicator.stopAnimating()
             } else if let placemark = placemarks?.first as? CLPlacemark {
                 completed(placemark: placemark)
             }

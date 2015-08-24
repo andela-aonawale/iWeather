@@ -9,10 +9,15 @@
 import Foundation
 import CoreLocation
 
+struct coordinate {
+    var latitude: Double
+    var longitude: Double
+}
+
 class Location {
     
     var name: String?
-    var coordinate: (latitude: Double, longitude: Double)?
+    var coordinate: CLLocationCoordinate2D?
     var dayWeatherSummary: String?
     var weekWeatherSummary: String?
     var currentWeather: CurrentWeather!
@@ -21,6 +26,7 @@ class Location {
     var placemark: CLPlacemark!
     var timeZone: String?
     var currentDay: DailyWeathear!
+    var formattedAdrress: String?
     
     var weatherObject: NSDictionary! {
         didSet {
@@ -81,11 +87,11 @@ class Location {
     }
     
     convenience init(placemark: CLPlacemark) {
-        let coordinate = (latitude: placemark.location!.coordinate.latitude, longitude: placemark.location!.coordinate.longitude)
-        self.init(placemark: placemark, coordinate: coordinate)
+        let coordinate = placemark.location?.coordinate
+        self.init(placemark: placemark, coordinate: coordinate!)
     }
     
-    init(placemark: CLPlacemark, coordinate: (latitude: Double, longitude: Double)) {
+    init(placemark: CLPlacemark, coordinate: CLLocationCoordinate2D) {
         self.name = placemark.name
         self.placemark = placemark
         self.coordinate = coordinate
@@ -93,14 +99,15 @@ class Location {
         self.dailyWeather = [DailyWeathear]()
     }
     
-    convenience init(name: String, coordinate: CLLocationCoordinate2D) {
-        let coordinate = (latitude: coordinate.latitude, longitude: coordinate.longitude)
-        self.init(name: name, coordinate: coordinate)
-    }
+//    convenience init(name: String, coordinate: CLLocationCoordinate2D) {
+//        let coordinate = (latitude: coordinate.latitude, longitude: coordinate.longitude)
+//        self.init(name: name, coordinate: coordinate)
+//    }
     
-    init(name: String, coordinate: (latitude: Double, longitude: Double)) {
+    init(name: String, formattedAdrress: String, coordinate: CLLocationCoordinate2D) {
         self.name = name
         self.coordinate = coordinate
+        self.formattedAdrress = formattedAdrress
         self.hourlyWeather = [HourlyWeather]()
         self.dailyWeather = [DailyWeathear]()
     }

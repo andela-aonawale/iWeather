@@ -7,17 +7,19 @@
 //
 
 import UIKit
+import GoogleMaps
 import CoreLocation
 
 protocol SearchResultViewControllerDelegate: class {
-    func didSelectLocationFromSearchResult(placemark: CLPlacemark, selectedAddress: String)
+    func didSelectPlace(place: String, formattedAddress: String, coordinate: CLLocationCoordinate2D)
 }
 
 class SearchResultViewController: UITableViewController, UISearchResultsUpdating {
     
-    private let api = APIController.sharedInstance
-    private var predictions = [String]()
+    typealias place = (name: String, id: String)
+    private var predictions = [place]()
     weak var delegate: SearchResultViewControllerDelegate?
+    var placesClient: GMSPlacesClient?
     
     func configureTableView() {
         tableView.rowHeight = 35
@@ -38,24 +40,33 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
         let searchText = searchController.searchBar.text
-        if !searchText!.isEmpty {
-            api.suggestLocation(searchText!) { [unowned self] locationObject in
-                self.predictions.removeAll(keepCapacity: false)
-                if let places = locationObject.valueForKey(Places.Predictions) as? NSArray {
-                    for place in places {
-                        self.predictions.append((place.valueForKey(Places.Description) as? String)!)
-                    }
-                    if self.predictions.isEmpty {
-                        self.predictions.append(Places.Empty)
-                    }
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.tableView.reloadData()
+        if searchText!.isEmpty {
+            predictions.removeAll()
+            tableView.reloadData()
+        } else {
+            suggestPlaces(searchText)
+        }
+    }
+    
+    private func suggestPlaces(searchText: String?) {
+        let filter = GMSAutocompleteFilter()
+        filter.type = GMSPlacesAutocompleteTypeFilter.Geocode
+        placesClient?.autocompleteQuery(searchText!, bounds: nil, filter: filter) { results, error in
+            if let error = error {
+                print("Autocomplete error \(error.localizedDescription)")
+                self.predictions.removeAll()
+                self.tableView.reloadData()
+            }
+            if let results = results {
+                self.predictions.removeAll()
+                for result in results {
+                    if let result = result as? GMSAutocompletePrediction {
+                        let place = (name: result.attributedFullText.string, id: result.placeID!)
+                        self.predictions.append(place)
                     }
                 }
+                self.tableView.reloadData()
             }
-        } else {
-            predictions.removeAll(keepCapacity: false)
-            tableView.reloadData()
         }
     }
     
@@ -64,10 +75,11 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
+        placesClient = GMSPlacesClient()
     }
     
     override func viewWillAppear(animated: Bool) {
-        predictions.removeAll(keepCapacity: false)
+        predictions.removeAll()
         tableView.reloadData()
     }
 
@@ -84,16 +96,18 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        let location = predictions[indexPath.row]
-        dismissViewControllerAnimated(true, completion: nil)
-        CLGeocoder().geocodeAddressString(location) { (placemarks, error) in
-            if error != nil {
-                print(error!.localizedDescription)
-            } else if let placemark = placemarks?.first {
-                let formattedAddress = self.predictions[indexPath.row]
-                self.delegate?.didSelectLocationFromSearchResult(placemark, selectedAddress: formattedAddress)
+        dismissViewControllerAnimated(true) { [unowned self] in
+            let placeID = self.predictions[indexPath.row].id
+            self.placesClient?.lookUpPlaceID(placeID) { place, error in
+                if let place = place {
+                    self.delegate?.didSelectPlace(place.name, formattedAddress: place.formattedAddress, coordinate: place.coordinate)
+                }
+                if let error = error {
+                    print("error \(error.localizedDescription)")
+                }
             }
         }
+        
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -101,8 +115,8 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
         if cell == nil {
             cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: Cell.ReuseIdentifier)
         }
-        if let place = predictions[indexPath.row] as String? {
-            cell.textLabel?.text = place ?? ""
+        if let place = predictions[indexPath.row] as place? {
+            cell.textLabel?.text = place.name
         }
         
         return cell

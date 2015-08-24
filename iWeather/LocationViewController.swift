@@ -55,7 +55,6 @@ class LocationViewController: UIViewController {
                     this.updateUIWithLocation(newLocation)
                 }
             }
-            
         }
     }
     
