@@ -9,70 +9,23 @@
 import UIKit
 import GoogleMaps
 
-class TravelToLocationViewController: UIViewController, UISearchBarDelegate, GMSMapViewDelegate {
+class TravelToLocationViewController: UIViewController {
     
     let mapTask = MapTask()
-
+    var currentlyTappedMarker: GMSMarker!
+    var displayedInfoWindow: MarkerInfoView!
+    
     private var travelLocation: Location! {
         didSet {
-            activityIndicator.startAnimating()
-            getCurrentTravelLocationWeather()
-            addLocationMarker(travelLocation.formattedAdrress!, coordinate: travelLocation.coordinate!)
+            addLocationMarker(atCoordinate: travelLocation.coordinate!)
             let origin = "\(mapView.myLocation.coordinate.latitude),\(mapView.myLocation.coordinate.longitude)"
-            getDirections(origin)
-        }
-    }
-    
-    private func getDirections(origin: String) {
-        mapTask.getDirections(origin, destination: travelLocation.getCoordinate(), waypoints: nil, travelMode: nil) { status, success in
-            switch status {
-                case .OK:
-                    self.getTravelLocationWeatherOnArrival()
-                    self.drawRoute()
-                    self.setDistanceAndETALabel()
-                default:
-                    break
-            }
+            getDirections(origin, destination: travelLocation.getCoordinate())
         }
     }
     
     private func setDistanceAndETALabel() {
-        distance.text = String(format: "%.1f km", mapTask.distance )
-        espectedTimeTravel.text = formatTimeFromSeconds(mapTask.expectedTravelTime)
-    }
-    
-    private func getTravelLocationWeatherOnArrival() {
-        let date = NSDate(timeIntervalSinceNow: NSTimeInterval(mapTask.expectedTravelTime))
-        api.getWeatherForDate(date, coordinate: travelLocation.getCoordinate()) { weatherObject in
-            self.activityIndicator.stopAnimating()
-            if let currently = weatherObject.valueForKey("currently") as? NSDictionary {
-                let currentWeather = CurrentWeather(weatherDictionary: currently)
-                self.updateArrivalWeatherViewUI(currentWeather)
-            }
-        }
-    }
-    
-    func updateArrivalWeatherViewUI(currentWeather: CurrentWeather) {
-        if let weather = currentWeather as CurrentWeather? {
-            arrivalTemperature.text = weather.temperature
-            arrivalWeatherImage.image = weather.weatherImage
-            arrivalSummary.text = weather.summary
-            arrivalTime.text = weather.date
-        }
-    }
-    
-    private func drawRoute() {
-        mapTask.createRoute().map = mapView
-    }
-    
-    private func addLocationMarker(name: String, coordinate: CLLocationCoordinate2D) {
-        mapTask.createMarker(name, coordinate: coordinate).map = mapView
-    }
-    
-    private func configureMapView() {
-        mapView.delegate = self
-        mapView.myLocationEnabled = true
-        mapView.addObserver(self, forKeyPath: "myLocation", options: .New, context: nil)
+        //        distance.text = String(format: "%.1f km", mapTask.distance )
+        //        espectedTimeTravel.text = formatTimeFromSeconds(mapTask.expectedTravelTime)
     }
     
     override func viewDidLoad() {
@@ -105,107 +58,24 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, GMS
             return "\(minutes) min"
         }
     }
+
+//    @IBOutlet weak var distance: UILabel!
+//    @IBOutlet weak var espectedTimeTravel: UILabel!
     
-    // MARK: - IB Outlets
-    
-//    @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var distance: UILabel!
-    @IBOutlet weak var espectedTimeTravel: UILabel!
     @IBOutlet weak var mapView: GMSMapView!
-    
-    @IBOutlet weak var currentWeatherView: UIView!
-    @IBOutlet weak var arrivalWeatherView: UIView!
-    
-    @IBOutlet weak var currentTemperature: UILabel!
-    @IBOutlet weak var currentWeatherImage: UIImageView!
-    @IBOutlet weak var currentTime: UILabel!
-    @IBOutlet weak var currentSummary: UILabel!
-    
-    @IBOutlet weak var arrivalTemperature: UILabel!
-    @IBOutlet weak var arrivalTime: UILabel!
-    @IBOutlet weak var arrivalWeatherImage: UIImageView!
-    @IBOutlet weak var arrivalSummary: UILabel!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
-    
-    @IBAction func showArrivalWeatherView(sender: UIButton) {
-        UIView.transitionFromView(currentWeatherView, toView: arrivalWeatherView, duration: 0.3, options: [.TransitionFlipFromRight, .ShowHideTransitionViews, .AllowAnimatedContent], completion: nil)
-    }
-    
-    @IBAction func showCurrentWeatherView(sender: UIButton) {
-        UIView.transitionFromView(arrivalWeatherView, toView: currentWeatherView, duration: 0.3, options: [.TransitionFlipFromLeft, .ShowHideTransitionViews, .AllowAnimatedContent], completion: nil)
-    }
-    
-    func updateCurrentWeatherViewUI() {
-        if let weather = travelLocation?.currentWeather {
-            currentTemperature.text = weather.temperature
-            currentWeatherImage.image = weather.weatherImage
-            currentSummary.text = weather.summary
-            currentTime.text = weather.date
-        }
-    }
-    
-    // MARK: - Variables
-    
-    private var formattedAddress: String?
-    private let api: APIController
     private var searchController: UISearchController!
     private let searchResultViewController: SearchResultViewController
     typealias address = (name: String, coordinate: (latitude: Double, longitude: Double))
-    
-    private func getCurrentTravelLocationWeather() {
-        api.getWeatherData(travelLocation!.getCoordinate()) { [unowned self] weatherObject in
-            self.travelLocation?.weatherObject = weatherObject
-            self.updateCurrentWeatherViewUI()
-        }
-    }
-    
-    // MARK: - UISearchBar Methods
-    
-    private func configureSearchController() {
-        searchController.delegate = self
-        definesPresentationContext = true
-        searchController.searchBar.sizeToFit()
-        searchController.searchBar.delegate = self
-        searchController.dimsBackgroundDuringPresentation = false
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.searchResultsUpdater = searchResultViewController
-        hiddenSearchBarButtonItem = navigationItem.rightBarButtonItem
-    }
-    
     @IBOutlet weak var searchButton: UIBarButtonItem!
-
     var hiddenSearchBarButtonItem: UIBarButtonItem?
 
     @IBAction func searchBarButtonPressed(sender: UIBarButtonItem) {
         showSearchBar()
     }
 
-    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
-        dismissViewControllerAnimated(true, completion: nil)
-        hideSearchBar()
-    }
-
-    func showSearchBar() {
-        navigationItem.setRightBarButtonItem(nil, animated: true)
-        UIView.animateWithDuration(0.5, animations: { [unowned self] in
-            self.navigationItem.titleView = self.searchController.searchBar }) {[unowned self] finished in
-                self.searchController.searchBar.becomeFirstResponder()
-        }
-    }
-    
-    func hideSearchBar() {
-        searchController.searchBar.resignFirstResponder()
-        UIView.animateWithDuration(0.3, animations: { [unowned self] in
-            self.navigationItem.titleView = nil }) { [unowned self] finished in
-            self.navigationItem.setRightBarButtonItem(self.hiddenSearchBarButtonItem, animated: true)
-        }
-    }
-    
     // MARK: - Initialization
     
     required init?(coder aDecoder: NSCoder) {
-        api = APIController.sharedInstance
         searchResultViewController = SearchResultViewController()
         searchController = UISearchController(searchResultsController: searchResultViewController)
         super.init(coder: aDecoder)
@@ -224,6 +94,122 @@ class TravelToLocationViewController: UIViewController, UISearchBarDelegate, GMS
     
     deinit {
         mapView.removeObserver(self, forKeyPath: "myLocation", context: nil)
+    }
+    
+}
+
+extension TravelToLocationViewController: UISearchBarDelegate {
+    
+    // MARK: - UISearchBar Methods
+    
+    private func configureSearchController() {
+        searchController.delegate = self
+        definesPresentationContext = true
+        searchController.searchBar.sizeToFit()
+        searchController.searchBar.delegate = self
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchResultsUpdater = searchResultViewController
+        hiddenSearchBarButtonItem = navigationItem.rightBarButtonItem
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        dismissViewControllerAnimated(true, completion: nil)
+        hideSearchBar()
+    }
+    
+    func showSearchBar() {
+        navigationItem.setRightBarButtonItem(nil, animated: true)
+        UIView.animateWithDuration(0.5, animations: { [unowned self] in
+            self.navigationItem.titleView = self.searchController.searchBar }) {[unowned self] finished in
+                self.searchController.searchBar.becomeFirstResponder()
+        }
+    }
+    
+    func hideSearchBar() {
+        searchController.searchBar.resignFirstResponder()
+        UIView.animateWithDuration(0.3, animations: { [unowned self] in
+            self.navigationItem.titleView = nil }) { [unowned self] finished in
+                self.navigationItem.setRightBarButtonItem(self.hiddenSearchBarButtonItem, animated: true)
+        }
+    }
+    
+}
+
+extension TravelToLocationViewController: GMSMapViewDelegate {
+    
+    private func getDirections(origin: String, destination: String) {
+        mapTask.getDirections(origin, destination: destination, waypoints: nil, travelMode: nil) { status, success in
+            switch status {
+            case .OK:
+                let date = NSDate(timeIntervalSinceNow: NSTimeInterval(self.mapTask.expectedTravelTime))
+                self.displayedInfoWindow.arrivalDate = date
+                self.drawRoute()
+            default:
+                break
+            }
+        }
+    }
+    
+    private func configureMapView() {
+        mapView.delegate = self
+        mapView.myLocationEnabled = true
+        mapView.addObserver(self, forKeyPath: "myLocation", options: .New, context: nil)
+    }
+    
+    func mapView(mapView: GMSMapView!, didTapMarker marker: GMSMarker!) -> Bool {
+        currentlyTappedMarker = marker
+        resetDisplayInfoWindow()
+        showMarkerInfoView(marker)
+        let origin = "\(mapView.myLocation.coordinate.latitude),\(mapView.myLocation.coordinate.longitude)"
+        let destination = "\(marker.position.latitude),\(marker.position.longitude)"
+        displayedInfoWindow.locationCoordinate = destination
+        getDirections(origin, destination: destination)
+        return true
+    }
+    
+    private func showMarkerInfoView(marker: GMSMarker) {
+        displayedInfoWindow = UIView.viewFromNibName("MarkerInfoView") as? MarkerInfoView
+        let markerPoint = mapView.projection.pointForCoordinate(marker.position)
+        displayedInfoWindow.frame.origin.x = markerPoint.x - 80
+        displayedInfoWindow.frame.origin.y = markerPoint.y - 130
+        self.view.addSubview(displayedInfoWindow)
+    }
+    
+    func mapView(mapView: GMSMapView!, didChangeCameraPosition position: GMSCameraPosition!) {
+        if currentlyTappedMarker != nil && displayedInfoWindow != nil {
+            let markerPoint = mapView.projection.pointForCoordinate(currentlyTappedMarker.position)
+            displayedInfoWindow.frame.origin.x = markerPoint.x - 80
+            displayedInfoWindow.frame.origin.y = markerPoint.y - 130
+        }
+    }
+    
+    func mapView(mapView: GMSMapView!, didTapAtCoordinate coordinate: CLLocationCoordinate2D) {
+        mapTask.removePolyline()
+        resetDisplayInfoWindow()
+        mapTask.createMarker(atCoordinate: coordinate).map = mapView
+    }
+    
+    private func drawRoute() {
+        mapTask.createRoute().map = mapView
+    }
+    
+    private func addLocationMarker(atCoordinate coordinate: CLLocationCoordinate2D) {
+        let marker = mapTask.createMarker(atCoordinate: coordinate)
+        marker.map = mapView
+        currentlyTappedMarker = marker
+        resetDisplayInfoWindow()
+        showMarkerInfoView(marker)
+        displayedInfoWindow.locationCoordinate = travelLocation.getCoordinate()
+    }
+    
+    private func resetDisplayInfoWindow() {
+        if displayedInfoWindow != nil {
+            if displayedInfoWindow.isDescendantOfView(self.view) {
+                displayedInfoWindow.removeFromSuperview()
+                displayedInfoWindow = nil
+            }
+        }
     }
     
 }

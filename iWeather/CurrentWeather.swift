@@ -15,7 +15,7 @@ final class CurrentWeather: Weather {
     
     override init(weatherDictionary: NSDictionary) {
         if let unixTime = weatherDictionary.valueForKey("time") as? Int {
-            self.date = NSDate.dateStringFromUnixTime(unixTime, dateStyle: .LongStyle, timeStyle: .ShortStyle)
+            self.date = NSDate.dateFormatFromUnixTime(unixTime, format: "LLL d, h:mm a")
             self.time = NSDate.dateStringFromUnixTime(unixTime, dateStyle: .NoStyle, timeStyle: .ShortStyle)
         }
         super.init(weatherDictionary: weatherDictionary)

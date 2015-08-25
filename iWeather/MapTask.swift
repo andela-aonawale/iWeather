@@ -9,8 +9,6 @@
 import Foundation
 import GoogleMaps
 
-
-
 class MapTask {
     
     enum Status: String {
@@ -76,11 +74,14 @@ class MapTask {
         return polyline
     }
     
-    func createMarker(name: String, coordinate: CLLocationCoordinate2D) -> GMSMarker {
+    func removePolyline() {
+        polyline?.map = nil
+    }
+    
+    func createMarker(atCoordinate coordinate: CLLocationCoordinate2D) -> GMSMarker {
         marker?.map = nil
         marker = GMSMarker(position: coordinate)
-        marker.title = name
-        marker.flat = true
+        marker.draggable = true
         marker.appearAnimation = kGMSMarkerAnimationPop
         return marker
     }

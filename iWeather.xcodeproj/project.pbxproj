@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		850A40A71B88A78E00756860 /* MapTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850A40A61B88A78E00756860 /* MapTask.swift */; };
 		85125DDD1B78FBF700670920 /* EventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85125DDC1B78FBF700670920 /* EventTableViewCell.swift */; };
+		853F798E1B8BDE0F00346437 /* MarkerInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 853F798D1B8BDE0F00346437 /* MarkerInfoView.xib */; };
 		855235A81B69002A0092AEEE /* NSDateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855235A71B69002A0092AEEE /* NSDateExtension.swift */; };
 		8554FC7B1B5F928E00FC6530 /* TravelToLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8554FC7A1B5F928E00FC6530 /* TravelToLocationViewController.swift */; };
 		8554FC7D1B5F971700FC6530 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8554FC7C1B5F971700FC6530 /* SearchResultViewController.swift */; };
@@ -33,7 +34,6 @@
 		8581BE431B8A128A00B30ECD /* PanDirectionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8581BE421B8A128A00B30ECD /* PanDirectionGestureRecognizer.swift */; };
 		85D8B38E1B7ABCF70037725E /* EventWeatherPopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D8B38D1B7ABCF70037725E /* EventWeatherPopoverViewController.swift */; };
 		85DE12EC1B8B92B100C9B4FF /* MarkerInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DE12EB1B8B92B100C9B4FF /* MarkerInfoView.swift */; };
-		85DE12EE1B8B92C100C9B4FF /* MarkerInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 85DE12ED1B8B92C100C9B4FF /* MarkerInfoView.xib */; };
 		85E2F5361B6B96E1008B4824 /* CalendarEventsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2F5351B6B96E1008B4824 /* CalendarEventsViewController.swift */; };
 		85E40B751B64D2E100263851 /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E40B741B64D2E100263851 /* PageViewController.swift */; };
 		85E40B791B653A4C00263851 /* LocationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E40B781B653A4C00263851 /* LocationTableViewCell.swift */; };
@@ -58,6 +58,7 @@
 		80DDAF10455EA2E1B3C81542 /* Pods-iWeather.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iWeather.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iWeather/Pods-iWeather.debug.xcconfig"; sourceTree = "<group>"; };
 		850A40A61B88A78E00756860 /* MapTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapTask.swift; sourceTree = "<group>"; };
 		85125DDC1B78FBF700670920 /* EventTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTableViewCell.swift; sourceTree = "<group>"; };
+		853F798D1B8BDE0F00346437 /* MarkerInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MarkerInfoView.xib; sourceTree = "<group>"; };
 		855235A71B69002A0092AEEE /* NSDateExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDateExtension.swift; sourceTree = "<group>"; };
 		8554FC7A1B5F928E00FC6530 /* TravelToLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TravelToLocationViewController.swift; sourceTree = "<group>"; };
 		8554FC7C1B5F971700FC6530 /* SearchResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
@@ -86,7 +87,6 @@
 		8581BE421B8A128A00B30ECD /* PanDirectionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanDirectionGestureRecognizer.swift; sourceTree = "<group>"; };
 		85D8B38D1B7ABCF70037725E /* EventWeatherPopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventWeatherPopoverViewController.swift; sourceTree = "<group>"; };
 		85DE12EB1B8B92B100C9B4FF /* MarkerInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerInfoView.swift; sourceTree = "<group>"; };
-		85DE12ED1B8B92C100C9B4FF /* MarkerInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MarkerInfoView.xib; sourceTree = "<group>"; };
 		85E2F5351B6B96E1008B4824 /* CalendarEventsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarEventsViewController.swift; sourceTree = "<group>"; };
 		85E40B741B64D2E100263851 /* PageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
 		85E40B781B653A4C00263851 /* LocationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTableViewCell.swift; sourceTree = "<group>"; };
@@ -122,6 +122,16 @@
 			name = Extension;
 			sourceTree = "<group>";
 		};
+		8511116D1B8CCD9200F1D2CD /* View */ = {
+			isa = PBXGroup;
+			children = (
+				857FB1221B5C902D000C107A /* Main.storyboard */,
+				853F798D1B8BDE0F00346437 /* MarkerInfoView.xib */,
+				857FB1271B5C902D000C107A /* LaunchScreen.xib */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
 		857FB1101B5C902D000C107A = {
 			isa = PBXGroup;
 			children = (
@@ -151,6 +161,7 @@
 				85EE37171B666B1600BC584D /* ViewController */,
 				85EE37161B666B0700BC584D /* Manager */,
 				85EE37151B666AF900BC584D /* API */,
+				8511116D1B8CCD9200F1D2CD /* View */,
 				857FB11C1B5C902D000C107A /* Supporting Files */,
 			);
 			path = iWeather;
@@ -162,9 +173,7 @@
 				857FB1251B5C902D000C107A /* Images.xcassets */,
 				850A40A61B88A78E00756860 /* MapTask.swift */,
 				8581BE421B8A128A00B30ECD /* PanDirectionGestureRecognizer.swift */,
-				857FB1221B5C902D000C107A /* Main.storyboard */,
 				857FB11E1B5C902D000C107A /* AppDelegate.swift */,
-				857FB1271B5C902D000C107A /* LaunchScreen.xib */,
 				857FB11D1B5C902D000C107A /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -226,7 +235,6 @@
 				85E2F5351B6B96E1008B4824 /* CalendarEventsViewController.swift */,
 				85D8B38D1B7ABCF70037725E /* EventWeatherPopoverViewController.swift */,
 				85DE12EB1B8B92B100C9B4FF /* MarkerInfoView.swift */,
-				85DE12ED1B8B92C100C9B4FF /* MarkerInfoView.xib */,
 			);
 			name = ViewController;
 			sourceTree = "<group>";
@@ -347,7 +355,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				85DE12EE1B8B92C100C9B4FF /* MarkerInfoView.xib in Resources */,
+				853F798E1B8BDE0F00346437 /* MarkerInfoView.xib in Resources */,
 				857FB1241B5C902D000C107A /* Main.storyboard in Resources */,
 				857FB1291B5C902D000C107A /* LaunchScreen.xib in Resources */,
 				857FB1261B5C902D000C107A /* Images.xcassets in Resources */,
