@@ -170,11 +170,11 @@ extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource 
         if searchController.searchBar.isFirstResponder() {
             hideSearchBar()
         }
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
         tabBarController?.selectedIndex = 0
         if let pageViewController = tabBarController?.selectedViewController as? PageViewController {
             pageViewController.moveToPage(indexPath.row)
         }
+        tableView.deselectRowAtIndexPath(indexPath, animated: false)
     }
     
 }

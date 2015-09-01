@@ -16,16 +16,36 @@ class MarkerInfoView: UIView {
     @IBOutlet weak var currentTemperature: UILabel!
     @IBOutlet weak var currentTime: UILabel!
     @IBOutlet weak var currentSummary: UILabel!
+    @IBOutlet weak var currentETA: UILabel!
+    @IBOutlet weak var currentDistance: UILabel!
 
     @IBOutlet weak var arrivalTemperature: UILabel!
     @IBOutlet weak var arrivalTime: UILabel!
     @IBOutlet weak var arrivalSummary: UILabel!
+    @IBOutlet weak var arrivalETA: UILabel!
+    @IBOutlet weak var arrivalDistance: UILabel!
     
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView! {
+        didSet {
+            activityIndicator.startAnimating()
+        }
+    }
     
     let radius: CGFloat = 2
     var fliped = false
     let api = APIController.sharedInstance
+    var expectedTravelTime: Int! {
+        didSet {
+            currentETA.text = formatTimeFromSeconds(expectedTravelTime)
+            arrivalETA.text = currentETA.text
+        }
+    }
+    var distance: Double! {
+        didSet {
+            currentDistance.text = String(format: "%.1f km", distance )
+            arrivalDistance.text = currentDistance.text
+        }
+    }
     var locationCoordinate: String! {
         didSet {
             getCurrentTravelLocationWeather()
@@ -37,20 +57,30 @@ class MarkerInfoView: UIView {
         }
     }
     
+    private func formatTimeFromSeconds(seconds: Int) -> String {
+        let minutes = (seconds / 60) % 60
+        let hours = seconds / 3600
+        if hours > 0 {
+            return "\(hours) h \(minutes) min"
+        } else {
+            return "\(minutes) min"
+        }
+    }
+    
     private func getCurrentTravelLocationWeather() {
-        api.getWeatherData(locationCoordinate) { weatherObject in
+        api.getWeatherData(locationCoordinate) { [weak self] weatherObject in
             if let currently = weatherObject.valueForKey("currently") as? NSDictionary {
                 let currentWeather = CurrentWeather(weatherDictionary: currently)
-                self.updateFrontViewUI(currentWeather)
+                self?.updateFrontViewUI(currentWeather)
             }
         }
     }
     
     private func getTravelLocationWeatherOnArrival() {
-        api.getWeatherForDate(arrivalDate, coordinate: locationCoordinate) { weatherObject in
+        api.getWeatherForDate(arrivalDate, coordinate: locationCoordinate) { [weak self] weatherObject in
             if let currently = weatherObject.valueForKey("currently") as? NSDictionary {
                 let currentWeather = CurrentWeather(weatherDictionary: currently)
-                self.updateBackViewUI(currentWeather)
+                self?.updateBackViewUI(currentWeather)
             }
         }
     }
@@ -65,6 +95,7 @@ class MarkerInfoView: UIView {
     
     func updateFrontViewUI(currentWeather: CurrentWeather) {
         if let weather = currentWeather as CurrentWeather? {
+            activityIndicator.stopAnimating()
             currentTemperature.text = weather.temperature
             currentSummary.text = weather.summary
             currentTime.text = weather.date

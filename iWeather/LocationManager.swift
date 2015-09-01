@@ -19,7 +19,6 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     
     private let locationManager = CLLocationManager()
     weak var delegate: LocationManagerDelegate?
-    private var location: Location?
     private let geocoder = CLGeocoder()
     
     func geocodeAddressFromString(address: String, completed: (placemarks: [AnyObject]!, error: NSError!) -> Void) {
@@ -32,6 +31,10 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         locationManager.startUpdatingLocation()
     }
     
+    class func locationAccessEnabled() -> Bool {
+        return CLLocationManager.locationServicesEnabled()
+    }
+    
     override init() {
         super.init()
         locationManager.delegate = self
@@ -40,28 +43,27 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         switch status {
-        case .NotDetermined:
-            locationManager.requestWhenInUseAuthorization()
-        case .AuthorizedWhenInUse:
-            break;
-        case .Denied:
-            delegate?.locationAccessDenied!()
-        case .Restricted:
-            delegate?.locationAccessRestricted!()
-        default:
-            break
+            case .NotDetermined:
+                locationManager.requestWhenInUseAuthorization()
+            case .AuthorizedWhenInUse:
+                break;
+            case .Denied:
+                delegate?.locationAccessDenied!()
+            case .Restricted:
+                delegate?.locationAccessRestricted!()
+            default:
+                break
         }
     }
     
     func postNewLocation(location: Location) {
-        let center = NSNotificationCenter.defaultCenter()
         let notification = NSNotification(name: "Received Current Location", object: nil, userInfo: ["currentLocation" : location])
-        center.postNotification(notification)
+        NSNotificationCenter.defaultCenter().postNotification(notification)
     }
     
     func createCurrentLocationWithPlacemark(placemark: CLPlacemark) {
-        location = Location(placemark: placemark)
-        postNewLocation(location!)
+        let location = Location(placemark: placemark)
+        postNewLocation(location)
     }
     
     class var sharedInstance : LocationManager {
@@ -86,12 +88,10 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 }
             }
         }
-        
     }
     
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        if error.domain == kCLErrorDomain {
-            switch error {
+        switch error {
             case CLError.LocationUnknown.rawValue:
                 print("The location manager was unable to obtain a location value right now.")
             case CLError.Denied.rawValue:
@@ -102,7 +102,6 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 print("The network was unavailable or a network error occurred")
             default:
                 break
-            }
         }
     }
     

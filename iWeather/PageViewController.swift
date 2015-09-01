@@ -49,7 +49,7 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return .LightContent
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         dataSource = self

@@ -57,7 +57,7 @@ class CalendarEventsViewController: UIViewController {
         if let location = event.valueForKey("structuredLocation") as? EKStructuredLocation {
             if let coordinate = location.geoLocation?.coordinate {
                 createEvent(event, coordinate: coordinate)
-            } else {
+            } else if !event.location!.isEmpty && (event.startDate != nil ?? false) {
                 createEvent(event: event)
             }
         }

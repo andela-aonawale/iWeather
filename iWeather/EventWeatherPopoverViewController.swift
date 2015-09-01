@@ -82,7 +82,14 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
         if let superView = view.superview {
-            superView.layer.cornerRadius = 0
+            let radius: CGFloat = 0
+            superView.layer.cornerRadius = radius
+            let shadowPath = UIBezierPath(roundedRect: superView.bounds, cornerRadius: radius)
+            superView.layer.masksToBounds = false
+            superView.layer.shadowColor = UIColor.blackColor().CGColor
+            superView.layer.shadowOffset = CGSize(width: 0, height: 0)
+            superView.layer.shadowOpacity = 0.5
+            superView.layer.shadowPath = shadowPath.CGPath
         }
     }
 

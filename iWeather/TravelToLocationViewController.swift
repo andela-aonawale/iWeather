@@ -14,6 +14,7 @@ class TravelToLocationViewController: UIViewController {
     let mapTask = MapTask()
     var currentlyTappedMarker: GMSMarker!
     var displayedInfoWindow: MarkerInfoView!
+    var gettingDirection = false
     
     private var travelLocation: Location! {
         didSet {
@@ -21,11 +22,6 @@ class TravelToLocationViewController: UIViewController {
             let origin = "\(mapView.myLocation.coordinate.latitude),\(mapView.myLocation.coordinate.longitude)"
             getDirections(origin, destination: travelLocation.getCoordinate())
         }
-    }
-    
-    private func setDistanceAndETALabel() {
-        //        distance.text = String(format: "%.1f km", mapTask.distance )
-        //        espectedTimeTravel.text = formatTimeFromSeconds(mapTask.expectedTravelTime)
     }
     
     override func viewDidLoad() {
@@ -36,7 +32,7 @@ class TravelToLocationViewController: UIViewController {
     
     var onceToken : dispatch_once_t = 0
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        dispatch_once(&onceToken) {
+        dispatch_once(&onceToken) { [unowned self] in
             if keyPath == "myLocation" {
                 if let coordinate = object?.myLocation?.coordinate {
                     self.mapView.camera = GMSCameraPosition.cameraWithTarget(coordinate, zoom: 15, bearing: 30, viewingAngle: 40)
@@ -45,22 +41,6 @@ class TravelToLocationViewController: UIViewController {
             }
         }
     }
-    
-    private func formatTimeFromSeconds(seconds: Int) -> String {
-        let minutes = (seconds / 60) % 60
-        let hours = seconds / 3600
-        let days = hours / 24
-        if days > 0 {
-            return "\(days) d \(hours) h \(minutes) min"
-        } else if hours > 0 {
-            return "\(hours) h \(minutes) min"
-        } else {
-            return "\(minutes) min"
-        }
-    }
-
-//    @IBOutlet weak var distance: UILabel!
-//    @IBOutlet weak var espectedTimeTravel: UILabel!
     
     @IBOutlet weak var mapView: GMSMapView!
     private var searchController: UISearchController!
@@ -139,15 +119,25 @@ extension TravelToLocationViewController: UISearchBarDelegate {
 extension TravelToLocationViewController: GMSMapViewDelegate {
     
     private func getDirections(origin: String, destination: String) {
-        mapTask.getDirections(origin, destination: destination, waypoints: nil, travelMode: nil) { status, success in
+        if gettingDirection {
+            return
+        } else {
+            gettingDirection = true
+        }
+        mapTask.getDirections(origin, destination: destination, waypoints: nil, travelMode: nil) { [unowned self] status, success in
             switch status {
             case .OK:
-                let date = NSDate(timeIntervalSinceNow: NSTimeInterval(self.mapTask.expectedTravelTime))
-                self.displayedInfoWindow.arrivalDate = date
-                self.drawRoute()
+                if self.displayedInfoWindow != nil {
+                    self.displayedInfoWindow.expectedTravelTime = self.mapTask.expectedTravelTime
+                    self.displayedInfoWindow.distance = self.mapTask.distance
+                    let date = NSDate(timeIntervalSinceNow: NSTimeInterval(self.mapTask.expectedTravelTime))
+                    self.displayedInfoWindow.arrivalDate = date
+                    self.drawRoute()
+                }
             default:
                 break
             }
+            self.gettingDirection = false
         }
     }
     
@@ -158,20 +148,25 @@ extension TravelToLocationViewController: GMSMapViewDelegate {
     }
     
     func mapView(mapView: GMSMapView!, didTapMarker marker: GMSMarker!) -> Bool {
-        currentlyTappedMarker = marker
-        resetDisplayInfoWindow()
-        showMarkerInfoView(marker)
-        let origin = "\(mapView.myLocation.coordinate.latitude),\(mapView.myLocation.coordinate.longitude)"
-        let destination = "\(marker.position.latitude),\(marker.position.longitude)"
-        displayedInfoWindow.locationCoordinate = destination
-        getDirections(origin, destination: destination)
-        return true
+        if LocationManager.locationAccessEnabled() {
+            currentlyTappedMarker = marker
+            resetDisplayInfoWindow()
+            showMarkerInfoView(marker)
+            let origin = "\(mapView.myLocation.coordinate.latitude),\(mapView.myLocation.coordinate.longitude)"
+            let destination = "\(marker.position.latitude),\(marker.position.longitude)"
+            displayedInfoWindow.locationCoordinate = destination
+            getDirections(origin, destination: destination)
+            return true
+        } else {
+            print("location access disabled")
+        }
+        return false
     }
     
     private func showMarkerInfoView(marker: GMSMarker) {
         displayedInfoWindow = UIView.viewFromNibName("MarkerInfoView") as? MarkerInfoView
         let markerPoint = mapView.projection.pointForCoordinate(marker.position)
-        displayedInfoWindow.frame.origin.x = markerPoint.x - 80
+        displayedInfoWindow.frame.origin.x = markerPoint.x - 105
         displayedInfoWindow.frame.origin.y = markerPoint.y - 130
         self.view.addSubview(displayedInfoWindow)
     }
@@ -179,7 +174,7 @@ extension TravelToLocationViewController: GMSMapViewDelegate {
     func mapView(mapView: GMSMapView!, didChangeCameraPosition position: GMSCameraPosition!) {
         if currentlyTappedMarker != nil && displayedInfoWindow != nil {
             let markerPoint = mapView.projection.pointForCoordinate(currentlyTappedMarker.position)
-            displayedInfoWindow.frame.origin.x = markerPoint.x - 80
+            displayedInfoWindow.frame.origin.x = markerPoint.x - 105
             displayedInfoWindow.frame.origin.y = markerPoint.y - 130
         }
     }

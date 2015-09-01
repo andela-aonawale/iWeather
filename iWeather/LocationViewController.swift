@@ -49,11 +49,9 @@ class LocationViewController: UIViewController {
         let center = NSNotificationCenter.defaultCenter()
         let queue = NSOperationQueue.mainQueue()
         center.addObserverForName("Received New Location", object: nil, queue: queue) { [weak self] notification in
-            if let this = self {
-                if let newLocation = notification.userInfo?["newLocation"] as? Location {
-                    this.location = newLocation
-                    this.updateUIWithLocation(newLocation)
-                }
+            if let newLocation = notification.userInfo?["newLocation"] as? Location {
+                self?.location = newLocation
+                self?.updateUIWithLocation(newLocation)
             }
         }
     }
@@ -85,7 +83,6 @@ class LocationViewController: UIViewController {
     
 }
 
-
 extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -97,12 +94,13 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.row == 7 {
-            let cell = tableView.dequeueReusableCellWithIdentifier("SummaryCell")
-            if let daySummary = location?.dayWeatherSummary {
-                let label = cell!.viewWithTag(10) as! UILabel
-                label.text = "Today: \(daySummary)"
+            if let cell = tableView.dequeueReusableCellWithIdentifier("SummaryCell") {
+                if let daySummary = location?.dayWeatherSummary {
+                    let label = cell.viewWithTag(10) as! UILabel
+                    label.text = "Today: \(daySummary)"
+                }
+                return cell
             }
-            return cell!
         }
         if indexPath.row == 8 {
             let cell = tableView.dequeueReusableCellWithIdentifier("CurrentDayCell") as! CurrentDayWeatherTableViewCell
@@ -121,13 +119,14 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         let tableHeight = tableView.frame.size.height
-        if indexPath.row == 7 {
-           return tableHeight / 3.5
+        switch indexPath.row {
+            case 7:
+                return tableHeight / 3.5
+            case 8:
+                return tableHeight * 1.3
+            default:
+                return tableHeight / 7
         }
-        if indexPath.row == 8 {
-            return tableHeight * 1.3
-        }
-        return tableHeight / 7
     }
     
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -140,21 +139,18 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
     
 }
 
-
 extension LocationViewController: UIScrollViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     
     // MARK: - Collection View Methods
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Collection View Cell", forIndexPath: indexPath) as! WeatherCollectionViewCell
-        
         if let hourWeather = location?.hourlyWeather[indexPath.row] as HourlyWeather? {
             cell.hourWeather = hourWeather
             if indexPath.row == 0 {
                 cell.time?.text = "Now"
             }
         }
-        
         return cell
     }
     
@@ -167,7 +163,6 @@ extension LocationViewController: UIScrollViewDelegate, UICollectionViewDelegate
     }
     
 }
-
 
 extension Weather {
     var weatherImage: UIImage? {

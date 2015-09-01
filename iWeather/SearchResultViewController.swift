@@ -51,7 +51,7 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     private func suggestPlaces(searchText: String?) {
         let filter = GMSAutocompleteFilter()
         filter.type = GMSPlacesAutocompleteTypeFilter.Geocode
-        placesClient?.autocompleteQuery(searchText!, bounds: nil, filter: filter) { results, error in
+        placesClient?.autocompleteQuery(searchText!, bounds: nil, filter: filter) { [unowned self] results, error in
             if let error = error {
                 print("Autocomplete error \(error.localizedDescription)")
                 self.predictions.removeAll()
@@ -107,7 +107,6 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
                 }
             }
         }
-        
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -118,7 +117,6 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
         if let place = predictions[indexPath.row] as place? {
             cell.textLabel?.text = place.name
         }
-        
         return cell
     }
 

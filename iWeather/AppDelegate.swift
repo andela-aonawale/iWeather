@@ -14,11 +14,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     let manager = LocationManager.sharedInstance
+    let dataModel = DataModel.sharedInstance
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        manager.start()
         GMSServices.provideAPIKey("AIzaSyC4sIc6LDwrS1atwdN2FV98lDQbG32HMWo")
+        if Reachability.connectedToNetwork() {
+            manager.start()
+        }
         return true
     }
 
@@ -34,10 +37,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+        if !Reachability.connectedToNetwork() {
+            window?.rootViewController?.presentViewController(noInternetNetworkAlert(), animated: false, completion: nil)
+        } else if dataModel.currentLocation == nil {
+            manager.start()
+        }
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
-        
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
 
@@ -46,7 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationSignificantTimeChange(application: UIApplication) {
-        print("applicationSignificantTimeChange \(NSData().description)")
+
     }
 
 }

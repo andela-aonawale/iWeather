@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 class DataModel {
     
@@ -19,14 +20,97 @@ class DataModel {
     
     var currentLocation: Location? {
         didSet {
-            print("auto get currentLocation:  \(currentLocation)")
-            api.getWeatherData(currentLocation!.getCoordinate()) { weatherObject in
-                self.currentLocation?.weatherObject = weatherObject
-                let notification = NSNotification(name: "Received New Location", object: nil, userInfo: ["newLocation" : self.currentLocation!])
-                self.center.postNotification(notification)
+            requestNotificationPermission()
+            getCurrentLocationWeather()
+        }
+    }
+    
+    private func requestNotificationPermission() {
+        let notificationSettings = UIUserNotificationSettings( forTypes: [.Alert, .Sound], categories: nil)
+        UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
+    }
+    
+    private func getCurrentLocationWeather() {
+        api.getWeatherData(currentLocation!.getCoordinate()) { [unowned self] weatherObject in
+            self.currentLocation!.weatherObject = weatherObject
+            UIApplication.sharedApplication().cancelAllLocalNotifications()
+            self.postLocationNotification()
+            self.getSignificantWeatherChangeTime()
+        }
+    }
+    
+    private func postLocationNotification() {
+        let notification = NSNotification(name: "Received New Location", object: nil, userInfo: ["newLocation" : self.currentLocation!])
+        self.center.postNotification(notification)
+    }
+    
+    func getSignificantWeatherChangeTime() {
+        if let hourlyWeatherArray = currentLocation!.hourlyWeather {
+            for var i = 2; i < hourlyWeatherArray.count; i++ {
+                let next = hourlyWeatherArray[i], previous = hourlyWeatherArray[i-1]
+                if next.imageName! != previous.imageName! {
+                    let message = ("\(getAlertMessageFrom(next.imageName!)!) \(next.hour!)")
+                    scheduleNotification(previous.unixTime!, alertBody: message)
+                }
             }
         }
     }
+    
+    private func getAlertMessageFrom(imageName: String) -> String? {
+        if let icon = Icon(rawValue: imageName) {
+            switch icon {
+                case .ClearDay, .ClearNight:
+                    return Message.Clear
+                case .Rain:
+                    return Message.Rain
+                case .Snow:
+                    return Message.Snow
+                case .Sleet:
+                    return Message.Sleet
+                case .Wind:
+                    return Message.Wind
+                case .Fog:
+                    return Message.Fog
+                case .Cloudy, .PartlyCloudyDay, .PartlyCloudyNight:
+                    return Message.Cloudy
+            }
+        }
+        return nil
+    }
+    
+    private enum Icon: String {
+        case ClearDay = "clear-day"
+        case ClearNight = "clear-night"
+        case Rain = "rain"
+        case Snow = "snow"
+        case Sleet = "sleet"
+        case Wind = "wind"
+        case Fog = "fog"
+        case Cloudy = "cloudy"
+        case PartlyCloudyDay = "partly-cloudy-day"
+        case PartlyCloudyNight = "partly-cloudy-night"
+    }
+    
+    private struct Message {
+        static let Clear = "Sky will be clear by"
+        static let Rain = "Its likely to rain by"
+        static let Snow = "It will probably snow by"
+        static let Sleet = "It will probably sleet by"
+        static let Wind = "Get cover wind is approaching by"
+        static let Fog = "Weather will be foggy by"
+        static let Cloudy = "It will be cloudy by"
+    }
+    
+    func scheduleNotification(unixTime: Int, alertBody: String) {
+        let notification = UILocalNotification()
+        notification.fireDate = NSDate(timeIntervalSince1970: NSTimeInterval(unixTime))
+        notification.timeZone = NSTimeZone.defaultTimeZone()
+        notification.alertBody = alertBody
+        notification.soundName = UILocalNotificationDefaultSoundName
+        UIApplication.sharedApplication().scheduleLocalNotification(notification)
+    }
+    
+    
     
     func listenForNewLocation(){
         center.addObserverForName("Received Current Location", object: nil, queue: queue) { notification in

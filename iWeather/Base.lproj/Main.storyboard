@@ -30,54 +30,66 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="69" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="jQc-Tm-wHO">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="88" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="jQc-Tm-wHO">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="1" reuseIdentifier="EventCell" rowHeight="69" id="Xgn-Aa-DkN" customClass="EventTableViewCell" customModule="iWeather" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="86" width="600" height="69"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="1" reuseIdentifier="EventCell" rowHeight="88" id="Xgn-Aa-DkN" customClass="EventTableViewCell" customModule="iWeather" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="86" width="600" height="88"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Xgn-Aa-DkN" id="CaA-hX-gjg">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="68.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="87.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Karashika's 25th Birthday" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XXO-CR-uIv">
-                                                    <rect key="frame" x="8" y="8" width="584" height="17"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                    <rect key="frame" x="8" y="8" width="584" height="19.5"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nigerian Army Cantonment Ikeja" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="57m-sd-gh4">
-                                                    <rect key="frame" x="8" y="28" width="584" height="17"/>
+                                                    <rect key="frame" x="8" y="35.5" width="584" height="17"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="August 19, 2015 at 10:00 PM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NGY-Ia-csT">
-                                                    <rect key="frame" x="8" y="48" width="584" height="15"/>
+                                                    <rect key="frame" x="8" y="62" width="584" height="14.5"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="NGY-Ia-csT" secondAttribute="bottom" constant="3" id="0b2-tf-19V"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="NGY-Ia-csT" secondAttribute="bottom" id="1O7-ZB-dU9"/>
                                                 <constraint firstItem="NGY-Ia-csT" firstAttribute="leading" secondItem="CaA-hX-gjg" secondAttribute="leadingMargin" id="4Dl-QJ-PAW"/>
                                                 <constraint firstItem="57m-sd-gh4" firstAttribute="leading" secondItem="CaA-hX-gjg" secondAttribute="leadingMargin" id="4jh-0N-yMo"/>
+                                                <constraint firstItem="NGY-Ia-csT" firstAttribute="top" secondItem="57m-sd-gh4" secondAttribute="bottom" constant="3" id="6Ui-ga-IL6"/>
+                                                <constraint firstItem="NGY-Ia-csT" firstAttribute="top" secondItem="57m-sd-gh4" secondAttribute="bottom" constant="3" id="7qQ-1m-fl9"/>
                                                 <constraint firstItem="NGY-Ia-csT" firstAttribute="top" secondItem="57m-sd-gh4" secondAttribute="bottom" constant="3" id="C2A-vH-4Gv"/>
                                                 <constraint firstItem="XXO-CR-uIv" firstAttribute="leading" secondItem="CaA-hX-gjg" secondAttribute="leadingMargin" id="JKL-fp-BIy"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="NGY-Ia-csT" secondAttribute="bottom" constant="3" id="MvD-oz-kOp"/>
                                                 <constraint firstItem="XXO-CR-uIv" firstAttribute="leading" secondItem="CaA-hX-gjg" secondAttribute="leadingMargin" id="OtY-Sq-NjC"/>
                                                 <constraint firstItem="57m-sd-gh4" firstAttribute="top" secondItem="XXO-CR-uIv" secondAttribute="bottom" constant="3" id="PqQ-CV-Edp"/>
                                                 <constraint firstItem="NGY-Ia-csT" firstAttribute="top" secondItem="57m-sd-gh4" secondAttribute="bottom" constant="3" id="UBM-cw-8lV"/>
+                                                <constraint firstItem="57m-sd-gh4" firstAttribute="leading" secondItem="XXO-CR-uIv" secondAttribute="trailing" constant="-584" id="VZ0-Lh-q67"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="NGY-Ia-csT" secondAttribute="bottom" constant="3" id="WBd-Qe-r33"/>
                                                 <constraint firstItem="NGY-Ia-csT" firstAttribute="top" secondItem="57m-sd-gh4" secondAttribute="bottom" constant="8" id="WQo-LH-xu9"/>
                                                 <constraint firstItem="57m-sd-gh4" firstAttribute="top" secondItem="XXO-CR-uIv" secondAttribute="bottom" constant="8" id="WaR-In-EiJ"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="NGY-Ia-csT" secondAttribute="bottom" constant="3" id="Wcp-tA-CZ3"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="57m-sd-gh4" secondAttribute="trailing" id="aG3-Ja-Tmo"/>
                                                 <constraint firstItem="XXO-CR-uIv" firstAttribute="top" secondItem="CaA-hX-gjg" secondAttribute="topMargin" id="bKa-8c-lXg"/>
+                                                <constraint firstItem="57m-sd-gh4" firstAttribute="top" secondItem="XXO-CR-uIv" secondAttribute="bottom" constant="8" id="bhW-AX-gLt"/>
+                                                <constraint firstItem="NGY-Ia-csT" firstAttribute="top" secondItem="57m-sd-gh4" secondAttribute="bottom" constant="8" id="clM-as-KmQ"/>
                                                 <constraint firstItem="57m-sd-gh4" firstAttribute="top" secondItem="XXO-CR-uIv" secondAttribute="bottom" constant="3" id="d9I-jr-YYO"/>
                                                 <constraint firstAttribute="centerY" secondItem="57m-sd-gh4" secondAttribute="centerY" id="dzh-aM-dT7"/>
+                                                <constraint firstItem="XXO-CR-uIv" firstAttribute="top" secondItem="CaA-hX-gjg" secondAttribute="topMargin" id="ekn-vQ-L0T"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="NGY-Ia-csT" secondAttribute="trailing" id="eyN-Fo-8Mr"/>
+                                                <constraint firstItem="57m-sd-gh4" firstAttribute="top" secondItem="XXO-CR-uIv" secondAttribute="bottom" constant="3" id="fM3-vV-KNi"/>
                                                 <constraint firstItem="XXO-CR-uIv" firstAttribute="leading" secondItem="CaA-hX-gjg" secondAttribute="leadingMargin" id="fWo-gZ-Yq2"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="XXO-CR-uIv" secondAttribute="trailing" id="gON-Rl-mBW"/>
+                                                <constraint firstItem="NGY-Ia-csT" firstAttribute="top" secondItem="57m-sd-gh4" secondAttribute="bottom" constant="3" id="gXA-38-nLK"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="57m-sd-gh4" secondAttribute="trailing" id="gwA-BQ-VGt"/>
                                                 <constraint firstItem="57m-sd-gh4" firstAttribute="leading" secondItem="CaA-hX-gjg" secondAttribute="leadingMargin" id="hwW-iT-GPI"/>
                                                 <constraint firstItem="57m-sd-gh4" firstAttribute="leading" secondItem="CaA-hX-gjg" secondAttribute="leadingMargin" id="jFS-1u-Vl3"/>
@@ -87,9 +99,11 @@
                                                 <constraint firstItem="NGY-Ia-csT" firstAttribute="bottom" secondItem="CaA-hX-gjg" secondAttribute="bottomMargin" constant="-3" id="rJT-Sg-q8F"/>
                                                 <constraint firstItem="NGY-Ia-csT" firstAttribute="leading" secondItem="CaA-hX-gjg" secondAttribute="leadingMargin" id="raA-5d-q4K"/>
                                                 <constraint firstItem="NGY-Ia-csT" firstAttribute="leading" secondItem="CaA-hX-gjg" secondAttribute="leadingMargin" id="rfx-jX-gU9"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="NGY-Ia-csT" secondAttribute="bottom" constant="3" id="tD4-cD-erB"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="NGY-Ia-csT" secondAttribute="bottom" id="tTx-Tl-cwd"/>
                                                 <constraint firstItem="XXO-CR-uIv" firstAttribute="top" secondItem="CaA-hX-gjg" secondAttribute="topMargin" id="wpd-cA-daq"/>
                                                 <constraint firstAttribute="centerY" secondItem="57m-sd-gh4" secondAttribute="centerY" id="yFF-Lz-30Q"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="NGY-Ia-csT" secondAttribute="bottom" id="zdR-ng-6hz"/>
                                             </constraints>
                                             <variation key="default">
                                                 <mask key="constraints">
@@ -98,21 +112,35 @@
                                                     <exclude reference="fWo-gZ-Yq2"/>
                                                     <exclude reference="gON-Rl-mBW"/>
                                                     <exclude reference="mdb-ZP-7xE"/>
+                                                    <exclude reference="wpd-cA-daq"/>
                                                     <exclude reference="PqQ-CV-Edp"/>
+                                                    <exclude reference="VZ0-Lh-q67"/>
                                                     <exclude reference="WaR-In-EiJ"/>
+                                                    <exclude reference="d9I-jr-YYO"/>
                                                     <exclude reference="dzh-aM-dT7"/>
+                                                    <exclude reference="fM3-vV-KNi"/>
                                                     <exclude reference="gwA-BQ-VGt"/>
                                                     <exclude reference="hwW-iT-GPI"/>
                                                     <exclude reference="jFS-1u-Vl3"/>
                                                     <exclude reference="yFF-Lz-30Q"/>
+                                                    <exclude reference="0b2-tf-19V"/>
                                                     <exclude reference="1O7-ZB-dU9"/>
                                                     <exclude reference="4Dl-QJ-PAW"/>
+                                                    <exclude reference="6Ui-ga-IL6"/>
+                                                    <exclude reference="7qQ-1m-fl9"/>
                                                     <exclude reference="C2A-vH-4Gv"/>
+                                                    <exclude reference="MvD-oz-kOp"/>
+                                                    <exclude reference="UBM-cw-8lV"/>
                                                     <exclude reference="WQo-LH-xu9"/>
+                                                    <exclude reference="Wcp-tA-CZ3"/>
+                                                    <exclude reference="clM-as-KmQ"/>
+                                                    <exclude reference="gXA-38-nLK"/>
                                                     <exclude reference="l7g-Gh-tVl"/>
                                                     <exclude reference="rJT-Sg-q8F"/>
                                                     <exclude reference="raA-5d-q4K"/>
+                                                    <exclude reference="tD4-cD-erB"/>
                                                     <exclude reference="tTx-Tl-cwd"/>
+                                                    <exclude reference="zdR-ng-6hz"/>
                                                 </mask>
                                             </variation>
                                         </tableViewCellContentView>
@@ -366,7 +394,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="I5b-ko-3pp">
             <objects>
-                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="dvh-3A-jWq" sceneMemberID="viewController">
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="dvh-3A-jWq" customClass="TabBarController" customModule="iWeather" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="fOS-1l-hEK">
