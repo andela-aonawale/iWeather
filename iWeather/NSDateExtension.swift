@@ -26,10 +26,6 @@ extension NSDate {
         return dateFormatter.stringFromDate(weatherDate)
     }
     
-    class func convertNSRangeToSwiftRange(range: Range<Int>, string: String) -> Range<String.Index> {
-        return Range<String.Index>(start: advance(string.startIndex, range.startIndex), end: advance(string.startIndex, range.endIndex))
-    }
-    
     class func dateStringFromTimezone(timeZone: String, dateStyle: NSDateFormatterStyle, timeStyle: NSDateFormatterStyle) -> String{
         let dateFormatter = NSDateFormatter()
         dateFormatter.timeZone = NSTimeZone(name: timeZone)

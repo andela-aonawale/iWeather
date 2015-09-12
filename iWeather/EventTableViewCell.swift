@@ -30,8 +30,8 @@ class EventTableViewCell: UITableViewCell {
 
     var initialCenterPoint: CGPoint!
 
-    private var weatherSlideView = UIView()
-    private var deleteSlideView = UIView()
+    private let weatherSlideView = UIView()
+    private let deleteSlideView = UIView()
     private let deleteImageView = UIImageView()
     private let weatherImageView = UIImageView()
     

@@ -20,4 +20,16 @@ final class HourlyWeather: Weather {
         }
         super.init(weatherDictionary: weatherDictionary)
     }
+    
+    override func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(hour, forKey: "hour")
+        aCoder.encodeInteger(unixTime!, forKey: "unixTime")
+        super.encodeWithCoder(aCoder)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        hour = aDecoder.decodeObjectForKey("hour") as? String
+        unixTime = aDecoder.decodeIntegerForKey("unixTime")
+        super.init(coder: aDecoder)
+    }
 }

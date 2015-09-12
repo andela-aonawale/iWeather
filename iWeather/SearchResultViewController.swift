@@ -8,16 +8,15 @@
 
 import UIKit
 import GoogleMaps
-import CoreLocation
 
 protocol SearchResultViewControllerDelegate: class {
-    func didSelectPlace(place: String, formattedAddress: String, coordinate: CLLocationCoordinate2D)
+    func didSelectPlace(place: String, coordinate: CLLocationCoordinate2D)
 }
 
 class SearchResultViewController: UITableViewController, UISearchResultsUpdating {
     
     typealias place = (name: String, id: String)
-    private var predictions = [place]()
+    private var predictions = Array<place>()
     weak var delegate: SearchResultViewControllerDelegate?
     var placesClient: GMSPlacesClient?
     
@@ -100,7 +99,7 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
             let placeID = self.predictions[indexPath.row].id
             self.placesClient?.lookUpPlaceID(placeID) { place, error in
                 if let place = place {
-                    self.delegate?.didSelectPlace(place.name, formattedAddress: place.formattedAddress, coordinate: place.coordinate)
+                    self.delegate?.didSelectPlace(place.name, coordinate: place.coordinate)
                 }
                 if let error = error {
                     print("error \(error.localizedDescription)")

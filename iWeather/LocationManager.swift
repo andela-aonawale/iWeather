@@ -9,6 +9,7 @@
 import Foundation
 import CoreLocation
 
+
 @objc protocol LocationManagerDelegate: class {
     optional func locationAccessDenied()
     optional func locationAccessRestricted()
@@ -45,8 +46,6 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         switch status {
             case .NotDetermined:
                 locationManager.requestWhenInUseAuthorization()
-            case .AuthorizedWhenInUse:
-                break;
             case .Denied:
                 delegate?.locationAccessDenied!()
             case .Restricted:
@@ -62,7 +61,9 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     }
     
     func createCurrentLocationWithPlacemark(placemark: CLPlacemark) {
-        let location = Location(placemark: placemark)
+        let coord = (placemark.location?.coordinate)!
+        let coordinate = Coordinate(latitude: coord.latitude, longitude: coord.longitude)
+        let location = Location(name: placemark.name!, coordinate: coordinate)
         postNewLocation(location)
     }
     

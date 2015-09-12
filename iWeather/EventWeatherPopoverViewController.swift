@@ -52,10 +52,15 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
         if let event = event {
             if event.location == nil {
                 if let coordinate = event.eventLocationCoordinate {
-                    event.location = Location(name: event.eventLocationName!, formattedAdrress: event.eventLocationName!, coordinate: coordinate)
+                    let coordinate = Coordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
+                    event.location = Location(name: event.eventLocationName!, coordinate: coordinate)
                 } else {
                     getEventPlacemarkFromLocationName(event.eventLocationName!) {
-                        event.location = Location(placemark: $0)
+                        if let coordinate = $0.location?.coordinate {
+                            let coordinate = Coordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
+                            event.location = Location(name: $0.name!, coordinate: coordinate)
+                        }
+                        
                     }
                 }
             }
@@ -132,7 +137,7 @@ extension EventWeatherPopoverViewController: UICollectionViewDelegateFlowLayout,
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return event?.location?.hourlyWeather?.count ?? 0
+        return event?.location?.hourlyWeather.count ?? 0
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {

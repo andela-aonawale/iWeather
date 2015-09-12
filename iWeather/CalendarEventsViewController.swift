@@ -13,7 +13,7 @@ class CalendarEventsViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView! {
         didSet {
-            let recognizer = PanDirectionGestureRecognizer(direction: PanDirection.Horizontal, target: self, action: "pan:")
+            let recognizer = PanDirectionGestureRecognizer(direction: .Horizontal, target: self, action: "handlePan:")
             recognizer.maximumNumberOfTouches = 1
             tableView.addGestureRecognizer(recognizer)
         }
@@ -43,6 +43,7 @@ class CalendarEventsViewController: UIViewController {
                 self.createEvent(event)
             }
         }
+        tableView.reloadData()
     }
     
     private func fetchEventsFromCalendars(calendars: [EKCalendar], completed: ([EKEvent]) -> Void) {
@@ -64,6 +65,7 @@ class CalendarEventsViewController: UIViewController {
     }
     
     private func createEvent(event: EKEvent, coordinate: CLLocationCoordinate2D) {
+        let coordinate = Coordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
         let event = Event(event: event, coordinate: coordinate)
         dataModel.events.append(event)
     }
@@ -108,8 +110,8 @@ class CalendarEventsViewController: UIViewController {
     }
     
     private struct Swipe {
-        var delete: Bool!
-        var showWeather: Bool!
+        var toDelete: Bool!
+        var toShowWeather: Bool!
     }
     
     private var selectedCell: EventTableViewCell?
@@ -197,46 +199,66 @@ private struct Segue {
 
 extension CalendarEventsViewController {
     
-    func pan(gesture: UIPanGestureRecognizer) {
+    private func moveCellToPoint(point: CGPoint) {
+        let originX = selectedCell!.frame.origin.x
+        let cellWidth = selectedCell!.frame.size.width
+        swipeFarEnough.toDelete = (originX > cellWidth / 2)
+        swipeFarEnough.toShowWeather = (originX < -cellWidth / 2)
+        selectedCell!.center = CGPointMake(selectedCell!.initialCenterPoint.x + point.x, selectedCell!.initialCenterPoint.y)
+    }
+    
+    private func setSelectedCellToCellAtPoint(point: CGPoint) {
+        if let swipedIndexPath = tableView.indexPathForRowAtPoint(point) {
+            if let swipedCell = tableView.cellForRowAtIndexPath(swipedIndexPath) {
+                selectedCell = swipedCell as? EventTableViewCell
+            }
+        } else {
+            selectedCell = nil
+        }
+    }
+        
+    private func animateCellToPoint(point: CGPoint, performAction: String) {
+        UIView.animateWithDuration(0.1, animations: {
+            self.selectedCell!.center = point }) { finished in
+            if finished {
+                switch performAction {
+                    case "Delete":
+                        self.deleteCellAtIndexPath()
+                    case "Show Weather":
+                        self.showEventWeather()
+                    default:
+                        break
+                }
+            }
+        }
+    }
+    
+    private func handlePan(gesture: UIPanGestureRecognizer) {
         switch gesture.state {
-        case .Began:
-            let swipeLocation = gesture.locationInView(tableView)
-            if let swipedIndexPath = tableView.indexPathForRowAtPoint(swipeLocation) {
-                if let swipedCell = tableView.cellForRowAtIndexPath(swipedIndexPath) {
-                    selectedCell = swipedCell as? EventTableViewCell
+            case .Began:
+                let point = gesture.locationInView(tableView)
+                setSelectedCellToCellAtPoint(point)
+            case .Changed:
+                if selectedCell != nil {
+                    let point = gesture.translationInView(tableView)
+                    moveCellToPoint(point)
                 }
-            } else {
-                selectedCell = nil
-            }
-        case .Changed:
-            if selectedCell != nil {
-                let translation = gesture.translationInView(tableView)
-                let originX = selectedCell!.frame.origin.x
-                let cellWidth = selectedCell!.frame.size.width
-                swipeFarEnough.delete = (originX > cellWidth / 2)
-                swipeFarEnough.showWeather = (originX < -cellWidth / 2)
-                selectedCell!.center = CGPointMake(selectedCell!.initialCenterPoint.x + translation.x, selectedCell!.initialCenterPoint.y)
-            }
-        case .Ended:
-            if selectedCell != nil {
-                let cell = (width: selectedCell!.frame.size.width, height: selectedCell!.frame.size.height)
-                let initialFrame = CGRectMake(0, selectedCell!.frame.origin.y, cell.width, cell.height)
-                if !swipeFarEnough.showWeather && !swipeFarEnough.delete {
-                    UIView.animateWithDuration(0.1) { self.selectedCell!.frame = initialFrame }
-                } else if swipeFarEnough.showWeather == true {
-                    UIView.animateWithDuration(0.1, animations: {
-                        self.selectedCell!.center = CGPointMake(-cell.width/2, self.selectedCell!.initialCenterPoint.y) }) { finished in
-                            if finished == true { self.showEventWeather() }
-                    }
-                } else if swipeFarEnough.delete == true {
-                    UIView.animateWithDuration(0.1, animations: {
-                        self.selectedCell!.center = CGPointMake(cell.width * 1.5, self.selectedCell!.initialCenterPoint.y) }) { finished in
-                            if finished == true { self.deleteCellAtIndexPath() }
+            case .Ended:
+                if selectedCell != nil {
+                    let cell = (width: selectedCell!.frame.size.width, height: selectedCell!.frame.size.height)
+                    let initialFrame = CGRectMake(0, selectedCell!.frame.origin.y, cell.width, cell.height)
+                    if !swipeFarEnough.toShowWeather && !swipeFarEnough.toDelete {
+                        UIView.animateWithDuration(0.1) { self.selectedCell!.frame = initialFrame }
+                    } else if swipeFarEnough.toShowWeather == true {
+                        let point = CGPointMake(-cell.width/2, self.selectedCell!.initialCenterPoint.y)
+                        animateCellToPoint(point, performAction: "Show Weather")
+                    } else if swipeFarEnough.toDelete == true {
+                        let point = CGPointMake(cell.width * 1.5, self.selectedCell!.initialCenterPoint.y)
+                        animateCellToPoint(point, performAction: "Delete")
                     }
                 }
-            }
-        default:
-            break
+            default:
+                break
         }
     }
     

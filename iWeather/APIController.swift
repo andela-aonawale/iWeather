@@ -44,8 +44,7 @@ class APIController {
                             completion(weatherObject: weatherObject as! NSDictionary)
                         }
                     } catch {
-//                        let error: NSError?
-//                        print("JSON Error \(error!.localizedDescription)", appendNewline: true)
+                        print("JSON Error \(error)")
                     }
                 }
             }
@@ -69,8 +68,7 @@ class APIController {
                             completion(weatherObject: weatherObject as! NSDictionary)
                         }
                     } catch {
-//                        let error: NSError?
-//                        print("JSON Error \(error!.localizedDescription)", appendNewline: true)
+                        print("JSON Error \(error)")
                     }
                 } 
             }

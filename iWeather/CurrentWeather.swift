@@ -20,4 +20,16 @@ final class CurrentWeather: Weather {
         }
         super.init(weatherDictionary: weatherDictionary)
     }
+    
+    override func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(date, forKey: "date")
+        aCoder.encodeObject(time, forKey: "time")
+        super.encodeWithCoder(aCoder)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        date = aDecoder.decodeObjectForKey("date") as? String
+        time = aDecoder.decodeObjectForKey("time") as? String
+        super.init(coder: aDecoder)
+    }
 }

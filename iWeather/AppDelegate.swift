@@ -13,14 +13,14 @@ import GoogleMaps
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    let manager = LocationManager.sharedInstance
+    let locationManager = LocationManager.sharedInstance
     let dataModel = DataModel.sharedInstance
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         GMSServices.provideAPIKey("AIzaSyC4sIc6LDwrS1atwdN2FV98lDQbG32HMWo")
         if Reachability.connectedToNetwork() {
-            manager.start()
+            locationManager.start()
         }
         return true
     }
@@ -31,6 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
+        dataModel.saveLocations()
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     }
@@ -40,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if !Reachability.connectedToNetwork() {
             window?.rootViewController?.presentViewController(noInternetNetworkAlert(), animated: false, completion: nil)
         } else if dataModel.currentLocation == nil {
-            manager.start()
+            locationManager.start()
         }
     }
 
@@ -50,6 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        dataModel.saveLocations()
     }
     
     func applicationSignificantTimeChange(application: UIApplication) {

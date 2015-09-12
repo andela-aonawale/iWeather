@@ -17,18 +17,17 @@ class LocationViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var collectionViewParentView: UIView!
-    
     @IBOutlet weak var day: UILabel!
     @IBOutlet weak var temperatureMax: UILabel!
     @IBOutlet weak var temperatureMin: UILabel!
     
     private func updateUIWithLocation(newLocation: Location?) {
         if let location = newLocation {
-            self.day.text = location.currentDay.day
-            self.temperatureMax.text = location.currentDay.temperatureMax
-            self.temperatureMin.text = location.currentDay.temperatureMin
-            self.temperature.text = location.currentWeather.temperature
-            self.weatherDescripion.text = location.currentWeather.summary
+            self.day.text = location.currentDayWeather?.day
+            self.temperatureMax.text = location.currentDayWeather?.temperatureMax
+            self.temperatureMin.text = location.currentDayWeather?.temperatureMin
+            self.temperature.text = location.currentWeather?.temperature
+            self.weatherDescripion.text = location.currentWeather?.summary
             self.locationName.text = location.name
             self.collectionView.reloadData()
             self.tableView.reloadData()
@@ -38,12 +37,6 @@ class LocationViewController: UIViewController {
     var index = 0
     var location: Location?
     let whiteColor = UIColor.whiteColor()
-    
-    private func openLocationSettings(alert: UIAlertAction!) {
-        if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
-            UIApplication.sharedApplication().openURL(url)
-        }
-    }
     
     private func listenForLocationChange() {
         let center = NSNotificationCenter.defaultCenter()
@@ -104,7 +97,7 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
         }
         if indexPath.row == 8 {
             let cell = tableView.dequeueReusableCellWithIdentifier("CurrentDayCell") as! CurrentDayWeatherTableViewCell
-            if let currentDay = location?.currentDay {
+            if let currentDay = location?.currentDayWeather {
                 cell.currentDayWeather = currentDay
             }
             return cell

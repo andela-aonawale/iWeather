@@ -16,14 +16,6 @@ class TravelToLocationViewController: UIViewController {
     var displayedInfoWindow: MarkerInfoView!
     var gettingDirection = false
     
-    private var travelLocation: Location! {
-        didSet {
-            addLocationMarker(atCoordinate: travelLocation.coordinate!)
-            let origin = "\(mapView.myLocation.coordinate.latitude),\(mapView.myLocation.coordinate.longitude)"
-            getDirections(origin, destination: travelLocation.getCoordinate())
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureMapView()
@@ -45,7 +37,6 @@ class TravelToLocationViewController: UIViewController {
     @IBOutlet weak var mapView: GMSMapView!
     private var searchController: UISearchController!
     private let searchResultViewController: SearchResultViewController
-    typealias address = (name: String, coordinate: (latitude: Double, longitude: Double))
     @IBOutlet weak var searchButton: UIBarButtonItem!
     var hiddenSearchBarButtonItem: UIBarButtonItem?
 
@@ -180,6 +171,10 @@ extension TravelToLocationViewController: GMSMapViewDelegate {
     }
     
     func mapView(mapView: GMSMapView!, didTapAtCoordinate coordinate: CLLocationCoordinate2D) {
+        addMarkerAtCoordinate(coordinate)
+    }
+    
+    func addMarkerAtCoordinate(coordinate: CLLocationCoordinate2D) {
         mapTask.removePolyline()
         resetDisplayInfoWindow()
         mapTask.createMarker(atCoordinate: coordinate).map = mapView
@@ -187,15 +182,6 @@ extension TravelToLocationViewController: GMSMapViewDelegate {
     
     private func drawRoute() {
         mapTask.createRoute().map = mapView
-    }
-    
-    private func addLocationMarker(atCoordinate coordinate: CLLocationCoordinate2D) {
-        let marker = mapTask.createMarker(atCoordinate: coordinate)
-        marker.map = mapView
-        currentlyTappedMarker = marker
-        resetDisplayInfoWindow()
-        showMarkerInfoView(marker)
-        displayedInfoWindow.locationCoordinate = travelLocation.getCoordinate()
     }
     
     private func resetDisplayInfoWindow() {
@@ -213,9 +199,10 @@ extension TravelToLocationViewController: SearchResultViewControllerDelegate {
     
     // MARK: - Search ResultView Controller Delegate Methods
     
-    func didSelectPlace(place: String, formattedAddress: String, coordinate: CLLocationCoordinate2D) {
+    func didSelectPlace(place: String, coordinate: CLLocationCoordinate2D) {
         hideSearchBar()
-        travelLocation = Location(name: place, formattedAdrress: formattedAddress, coordinate: coordinate)
+        addMarkerAtCoordinate(coordinate)
+        mapView.camera = GMSCameraPosition.cameraWithTarget(coordinate, zoom: 15, bearing: 30, viewingAngle: 40)
     }
     
 }

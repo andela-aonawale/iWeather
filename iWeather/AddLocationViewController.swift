@@ -29,7 +29,7 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
     }
     
     private func getLocationWeather() {
-        api.getWeatherData(newLocation!.getCoordinate()) { [unowned self] weatherObject in
+        api.getWeatherData(newLocation!.coordinateString) { [unowned self] weatherObject in
             self.newLocation?.weatherObject = weatherObject
             self.dataModel.locations.append(self.newLocation!)
             self.tableView.reloadData()
@@ -105,9 +105,10 @@ extension AddLocationViewController: SearchResultViewControllerDelegate {
     
     // MARK: - Search ResultView Controller Delegate Methods
     
-    func didSelectPlace(place: String, formattedAddress: String, coordinate: CLLocationCoordinate2D) {
+    func didSelectPlace(place: String, coordinate: CLLocationCoordinate2D) {
         hideSearchBar()
-        newLocation = Location(name: place, formattedAdrress: formattedAddress, coordinate: coordinate)
+        let coordinate = (latitude: coordinate.latitude, longitude: coordinate.longitude)
+        newLocation = Location(name: place, coordinate: coordinate)
     }
     
 }

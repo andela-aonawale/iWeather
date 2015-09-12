@@ -14,14 +14,14 @@ class Event {
     var title: String?
     var location: Location? {
         didSet {
-            api.getWeatherForDate(self.startDate!, coordinate: location!.getCoordinate()) { weatherObject in
+            api.getWeatherForDate(self.startDate!, coordinate: location!.coordinateString) { weatherObject in
                 self.location?.weatherObject = weatherObject
                 let notification = NSNotification(name: "Received Event Location Weather", object: nil, userInfo: nil)
                 NSNotificationCenter.defaultCenter().postNotification(notification)
             }
         }
     }
-    var eventLocationCoordinate: CLLocationCoordinate2D?
+    var eventLocationCoordinate: (latitude: Double, longitude: Double)?
     var eventLocationName: String?
     var startDate: NSDate?
     var endDate: NSDate?
@@ -50,7 +50,7 @@ class Event {
         self.eventLocationName = event.location
     }
     
-    init(event: EKEvent, coordinate: CLLocationCoordinate2D) {
+    init(event: EKEvent, coordinate: (latitude: Double, longitude: Double)) {
         self.event = event
         self.title = event.title
         self.startDate = event.startDate
