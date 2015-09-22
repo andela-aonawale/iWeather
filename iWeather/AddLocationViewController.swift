@@ -15,26 +15,11 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     private var hiddenAddBarButtonItem: UIBarButtonItem?
-    
     private let api: APIController
     private var dataModel: DataModel
     private var searchController: UISearchController!
     private let searchResultViewController: SearchResultViewController
     typealias address = (name: String, coordinate: (latitude: Double, longitude: Double))
-    
-    private var newLocation: Location? {
-        didSet {
-            getLocationWeather()
-        }
-    }
-    
-    private func getLocationWeather() {
-        api.getWeatherData(newLocation!.coordinateString) { [unowned self] weatherObject in
-            self.newLocation?.weatherObject = weatherObject
-            self.dataModel.locations.append(self.newLocation!)
-            self.tableView.reloadData()
-        }
-    }
     
     // MARK: - UISearchBar Methods
     
@@ -108,7 +93,9 @@ extension AddLocationViewController: SearchResultViewControllerDelegate {
     func didSelectPlace(place: String, coordinate: CLLocationCoordinate2D) {
         hideSearchBar()
         let coordinate = (latitude: coordinate.latitude, longitude: coordinate.longitude)
-        newLocation = Location(name: place, coordinate: coordinate)
+        let location = Location(name: place, coordinate: coordinate)
+        dataModel.locations.append(location)
+        tableView.reloadData()
     }
     
 }
@@ -142,7 +129,7 @@ extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("LocationCell", forIndexPath: indexPath) as! LocationTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.LocationCell, forIndexPath: indexPath) as! LocationTableViewCell
         if let location: Location? = dataModel.locations[indexPath.row] as Location? {
             cell.location = location
         }
@@ -150,7 +137,7 @@ extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
+        return (indexPath.row != 0)
     }
     
     func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
@@ -168,6 +155,7 @@ extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: false)
         if searchController.searchBar.isFirstResponder() {
             hideSearchBar()
         }
@@ -175,7 +163,6 @@ extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource 
         if let pageViewController = tabBarController?.selectedViewController as? PageViewController {
             pageViewController.moveToPage(indexPath.row)
         }
-        tableView.deselectRowAtIndexPath(indexPath, animated: false)
     }
     
 }

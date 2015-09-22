@@ -55,7 +55,7 @@ class CalendarEventsViewController: UIViewController {
     }
     
     private func createEvent(event: EKEvent) {
-        if let location = event.valueForKey("structuredLocation") as? EKStructuredLocation {
+        if let location = event.valueForKey(DictionaryConstant.StructuredLocation) as? EKStructuredLocation {
             if let coordinate = location.geoLocation?.coordinate {
                 createEvent(event, coordinate: coordinate)
             } else if !event.location!.isEmpty && (event.startDate != nil ?? false) {
@@ -126,7 +126,7 @@ extension CalendarEventsViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("EventCell") as! EventTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.EventCell) as! EventTableViewCell
         if let event = dataModel.events[indexPath.row] as Event? {
             cell.event = event
         }
@@ -193,10 +193,6 @@ extension CalendarEventsViewController: UIPopoverPresentationControllerDelegate 
     
 }
 
-private struct Segue {
-    static let ShowEventWeather = "Show Event Weather"
-}
-
 extension CalendarEventsViewController {
     
     private func moveCellToPoint(point: CGPoint) {
@@ -217,23 +213,26 @@ extension CalendarEventsViewController {
         }
     }
         
-    private func animateCellToPoint(point: CGPoint, performAction: String) {
+    private func animateCellToPoint(point: CGPoint, action: PerformAction) {
         UIView.animateWithDuration(0.1, animations: {
             self.selectedCell!.center = point }) { finished in
             if finished {
-                switch performAction {
-                    case "Delete":
+                switch action {
+                    case .Delete:
                         self.deleteCellAtIndexPath()
-                    case "Show Weather":
+                    case .ShowWeather:
                         self.showEventWeather()
-                    default:
-                        break
                 }
             }
         }
     }
     
-    private func handlePan(gesture: UIPanGestureRecognizer) {
+    enum PerformAction {
+        case Delete
+        case ShowWeather
+    }
+    
+    func handlePan(gesture: UIPanGestureRecognizer) {
         switch gesture.state {
             case .Began:
                 let point = gesture.locationInView(tableView)
@@ -251,10 +250,10 @@ extension CalendarEventsViewController {
                         UIView.animateWithDuration(0.1) { self.selectedCell!.frame = initialFrame }
                     } else if swipeFarEnough.toShowWeather == true {
                         let point = CGPointMake(-cell.width/2, self.selectedCell!.initialCenterPoint.y)
-                        animateCellToPoint(point, performAction: "Show Weather")
+                        animateCellToPoint(point, action: .ShowWeather)
                     } else if swipeFarEnough.toDelete == true {
                         let point = CGPointMake(cell.width * 1.5, self.selectedCell!.initialCenterPoint.y)
-                        animateCellToPoint(point, performAction: "Delete")
+                        animateCellToPoint(point, action: .Delete)
                     }
                 }
             default:

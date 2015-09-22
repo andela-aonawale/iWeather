@@ -10,31 +10,94 @@ import Foundation
 
 typealias Coordinate = (latitude: Double, longitude: Double)
 
+
+
 class Location: NSObject, NSCoding {
 
     var name: String!
     var coordinate: Coordinate!
     var timeZone: String!
     var dayWeatherSummary: String?
-    var currentWeather: CurrentWeather!
+    var currentWeather: Weather!
     var currentDayWeather: DailyWeathear!
     var dailyWeather: Array<DailyWeathear>!
-    var hourlyWeather: Array<HourlyWeather>!
+    var hourlyWeather: Array<Weather>!
+    var nextHourTimer: NSTimer!
+    var subsequentHourTimer: NSTimer!
+    
+    func fetchWeatherData() {
+        APIController.sharedInstance.getWeatherData(self.coordinateString) { [weak self] weatherObject in
+            self?.weatherDictionary = weatherObject
+            self?.postWeatherUpdateNotification()
+        }
+    }
+    
+    var currentTime: String? {
+        return NSDate.dateStringFromTimezone(self.timeZone, dateStyle: .NoStyle, timeStyle: .ShortStyle)
+    }
     
     var coordinateString: String! {
         return "\(self.coordinate.latitude),\(self.coordinate.longitude)"
     }
     
-    private struct Key {
-        private static let Name = "name"
-        private static let Latitude = "latitude"
-        private static let Longitude = "longitude"
-        private static let TimeZone = "timeZone"
-        private static let DayWeatherSummary = "dayWeatherSummary"
-        private static let CurrentWeather = "currentWeather"
-        private static let CurrentDayWeather = "currentDayWeather"
-        private static let DailyWeather = "dailyWeather"
-        private static let HourlyWeather = "hourlyWeather"
+    private func secondsToNextHour() -> NSTimeInterval? {
+        for (index, weather) in self.hourlyWeather.enumerate() {
+            let date = NSDate(timeIntervalSince1970: NSTimeInterval(weather.unixTime!))
+            if date > NSDate() {
+                return date.timeIntervalSinceDate(NSDate())
+            } else {
+                if ((index - 1) > -1) {
+                    removeElapsedHourWeather()
+                }
+            }
+        }
+        return nil
+    }
+    
+    private func scheduleNextHourRemovalTime() {
+        invalidateTimers()
+        if let interval = secondsToNextHour() {
+            nextHourTimer = NSTimer.scheduledTimerWithTimeInterval(interval, target: self, selector: "removePastHourWeather", userInfo: nil, repeats: false)
+        }
+    }
+    
+    func invalidateTimers() {
+        nextHourTimer?.invalidate()
+        subsequentHourTimer?.invalidate()
+    }
+    
+    func restartTimers() {
+        scheduleNextHourRemovalTime()
+        postWeatherUpdateNotification()
+    }
+    
+    private func removeElapsedHourWeather() {
+        hourlyWeather.removeFirst()
+        currentWeather = hourlyWeather.first
+    }
+    
+    func removePastHourWeather() {
+        removeElapsedHourWeather()
+        postWeatherUpdateNotification()
+        startMonitoringEveryHourPassed()
+    }
+    
+    private func startMonitoringEveryHourPassed() {
+        subsequentHourTimer = NSTimer.scheduledTimerWithTimeInterval(3600, target: self, selector: "removeSubsequentPastHourWeather", userInfo: nil, repeats: true)
+    }
+    
+    func removeSubsequentPastHourWeather() {
+        if hourlyWeather.count > 0 {
+            removeElapsedHourWeather()
+            postWeatherUpdateNotification()
+        } else {
+            subsequentHourTimer?.invalidate()
+        }
+    }
+    
+    private func postWeatherUpdateNotification() {
+        let notification = NSNotification(name: Notification.LocationDataUpdated, object: self, userInfo: [Notification.Location : self])
+        NSNotificationCenter.defaultCenter().postNotification(notification)
     }
     
     func encodeWithCoder(aCoder: NSCoder) {
@@ -54,16 +117,17 @@ class Location: NSObject, NSCoding {
         let latitude = aDecoder.decodeDoubleForKey(Key.Latitude)
         let longitude = aDecoder.decodeDoubleForKey(Key.Longitude)
         coordinate = Coordinate(latitude: latitude, longitude: longitude)
-        timeZone = aDecoder.decodeObjectForKey(Key.TimeZone) as! String
+        timeZone = aDecoder.decodeObjectForKey(Key.TimeZone) as? String
         dayWeatherSummary = aDecoder.decodeObjectForKey(Key.DayWeatherSummary) as? String
-        currentWeather = aDecoder.decodeObjectForKey(Key.CurrentWeather) as! CurrentWeather
+        currentWeather = aDecoder.decodeObjectForKey(Key.CurrentWeather) as! Weather
         currentDayWeather = aDecoder.decodeObjectForKey(Key.CurrentDayWeather) as! DailyWeathear
         dailyWeather = aDecoder.decodeObjectForKey(Key.DailyWeather) as! Array<DailyWeathear>
-        hourlyWeather = aDecoder.decodeObjectForKey(Key.HourlyWeather) as! Array<HourlyWeather>
+        hourlyWeather = aDecoder.decodeObjectForKey(Key.HourlyWeather) as! Array<Weather>
         super.init()
+        fetchWeatherData()
     }
     
-    var weatherObject: NSDictionary! {
+    var weatherDictionary: NSDictionary! {
         didSet {
             self.setTimeZone()
             self.setCurrentWeather()
@@ -73,41 +137,34 @@ class Location: NSObject, NSCoding {
     }
     
     private func setTimeZone() {
-        if let timeZone = weatherObject.valueForKey("timezone") as? String {
+        if let timeZone = weatherDictionary[WeatherConstant.TimeZone] as? String {
             self.timeZone = timeZone
         }
     }
     
-     private struct WeatherType {
-        private static let Current = "currently"
-        private static let Hourly = "hourly"
-        private static let Daily = "daily"
-        private static let Summary = "summary"
-        private static let Data = "data"
-    }
-    
     private func setCurrentWeather() {
-        if let currently = weatherObject.valueForKey(WeatherType.Current) as? NSDictionary {
-            self.currentWeather = CurrentWeather(weatherDictionary: currently)
+        if let currently = weatherDictionary[WeatherConstant.Currently] as? NSDictionary {
+            self.currentWeather = Weather(weatherDictionary: currently, timeZone: self.timeZone)
         }
     }
     
     private func populateHourlyWeather() {
         hourlyWeather.removeAll()
-        if let hourly = weatherObject[WeatherType.Hourly] as? NSDictionary {
-            self.dayWeatherSummary = hourly[WeatherType.Summary] as? String
-            let hourlyData = hourly[WeatherType.Data] as! Array<AnyObject>
+        if let hourly = weatherDictionary[WeatherConstant.Hourly] as? NSDictionary {
+            self.dayWeatherSummary = hourly[WeatherConstant.Summary] as? String
+            let hourlyData = hourly[WeatherConstant.Data] as! Array<AnyObject>
             for hour in hourlyData {
-                let hourWeather = HourlyWeather(weatherDictionary: hour as! NSDictionary)
+                let hourWeather = Weather(weatherDictionary: hour as! NSDictionary, timeZone: self.timeZone)
                 self.hourlyWeather.append(hourWeather)
             }
+            scheduleNextHourRemovalTime()
         }
     }
     
     private func populateDailyWeather() {
         dailyWeather.removeAll()
-        if let daily = weatherObject[WeatherType.Daily] as? NSDictionary {
-            var dailyData = daily[WeatherType.Data] as! Array<AnyObject>
+        if let daily = weatherDictionary[WeatherConstant.Daily] as? NSDictionary {
+            var dailyData = daily[WeatherConstant.Data] as! Array<AnyObject>
             if let currentDay = dailyData.removeAtIndex(0) as? NSDictionary {
                 self.currentDayWeather = DailyWeathear(weatherDictionary: currentDay, timeZone: self.timeZone!)
             }
@@ -122,7 +179,14 @@ class Location: NSObject, NSCoding {
         self.name = name
         self.coordinate = coordinate
         self.dailyWeather = Array<DailyWeathear>()
-        self.hourlyWeather = Array<HourlyWeather>()
+        self.hourlyWeather = Array<Weather>()
+        super.init()
+        self.fetchWeatherData()
+    }
+    
+    deinit {
+        nextHourTimer?.invalidate()
+        subsequentHourTimer?.invalidate()
     }
     
 }

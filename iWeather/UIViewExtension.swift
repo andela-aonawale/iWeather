@@ -10,10 +10,11 @@ import Foundation
 import UIKit
 
 extension UIView {
-    func addTopBorderWithColor(color: UIColor, width: CGFloat) {
+    
+    func addTopBorderWithColor(color: UIColor, lineWeight: CGFloat, lineWidth: CGFloat) {
         let border = CALayer()
         border.backgroundColor = color.CGColor
-        border.frame = CGRectMake(0, 0, self.frame.size.width, width)
+        border.frame = CGRectMake(0, 0, lineWidth, lineWeight)
         self.layer.addSublayer(border)
     }
     
@@ -24,10 +25,10 @@ extension UIView {
         self.layer.addSublayer(border)
     }
     
-    func addBottomBorderWithColor(color: UIColor, width: CGFloat) {
+    func addBottomBorderWithColor(color: UIColor, lineWeight: CGFloat, lineWidth: CGFloat) {
         let border = CALayer()
         border.backgroundColor = color.CGColor
-        border.frame = CGRectMake(0, self.frame.size.height - width, self.frame.size.width, width)
+        border.frame = CGRectMake(0, self.frame.size.height - lineWeight, lineWidth, lineWeight)
         self.layer.addSublayer(border)
     }
     

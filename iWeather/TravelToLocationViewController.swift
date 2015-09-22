@@ -25,7 +25,7 @@ class TravelToLocationViewController: UIViewController {
     var onceToken : dispatch_once_t = 0
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         dispatch_once(&onceToken) { [unowned self] in
-            if keyPath == "myLocation" {
+            if keyPath == Notification.MyLocation {
                 if let coordinate = object?.myLocation?.coordinate {
                     self.mapView.camera = GMSCameraPosition.cameraWithTarget(coordinate, zoom: 15, bearing: 30, viewingAngle: 40)
                     self.mapView.settings.myLocationButton = true
@@ -64,7 +64,7 @@ class TravelToLocationViewController: UIViewController {
     }
     
     deinit {
-        mapView.removeObserver(self, forKeyPath: "myLocation", context: nil)
+        mapView.removeObserver(self, forKeyPath: Notification.MyLocation, context: nil)
     }
     
 }
@@ -109,13 +109,13 @@ extension TravelToLocationViewController: UISearchBarDelegate {
 
 extension TravelToLocationViewController: GMSMapViewDelegate {
     
-    private func getDirections(origin: String, destination: String) {
+    private func getDirectionsFrom(origin: String, to destination: String) {
         if gettingDirection {
             return
         } else {
             gettingDirection = true
         }
-        mapTask.getDirections(origin, destination: destination, waypoints: nil, travelMode: nil) { [unowned self] status, success in
+        mapTask.getDirectionsFrom(origin, to: destination, waypoints: nil, travelMode: nil) { [unowned self] status, success in
             switch status {
             case .OK:
                 if self.displayedInfoWindow != nil {
@@ -135,7 +135,7 @@ extension TravelToLocationViewController: GMSMapViewDelegate {
     private func configureMapView() {
         mapView.delegate = self
         mapView.myLocationEnabled = true
-        mapView.addObserver(self, forKeyPath: "myLocation", options: .New, context: nil)
+        mapView.addObserver(self, forKeyPath: Notification.MyLocation, options: .New, context: nil)
     }
     
     func mapView(mapView: GMSMapView!, didTapMarker marker: GMSMarker!) -> Bool {
@@ -146,7 +146,7 @@ extension TravelToLocationViewController: GMSMapViewDelegate {
             let origin = "\(mapView.myLocation.coordinate.latitude),\(mapView.myLocation.coordinate.longitude)"
             let destination = "\(marker.position.latitude),\(marker.position.longitude)"
             displayedInfoWindow.locationCoordinate = destination
-            getDirections(origin, destination: destination)
+            getDirectionsFrom(origin, to: destination)
             return true
         } else {
             print("location access disabled")
@@ -155,7 +155,7 @@ extension TravelToLocationViewController: GMSMapViewDelegate {
     }
     
     private func showMarkerInfoView(marker: GMSMarker) {
-        displayedInfoWindow = UIView.viewFromNibName("MarkerInfoView") as? MarkerInfoView
+        displayedInfoWindow = UIView.viewFromNibName(View.MarkerInfoView) as? MarkerInfoView
         let markerPoint = mapView.projection.pointForCoordinate(marker.position)
         displayedInfoWindow.frame.origin.x = markerPoint.x - 105
         displayedInfoWindow.frame.origin.y = markerPoint.y - 130

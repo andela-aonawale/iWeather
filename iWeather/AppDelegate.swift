@@ -15,38 +15,52 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     let locationManager = LocationManager.sharedInstance
     let dataModel = DataModel.sharedInstance
+    var reachability: Reachability! = Reachability.reachabilityForInternetConnection()
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         GMSServices.provideAPIKey("AIzaSyC4sIc6LDwrS1atwdN2FV98lDQbG32HMWo")
-        if Reachability.connectedToNetwork() {
-            locationManager.start()
+        if (launchOptions?[UIApplicationLaunchOptionsLocationKey] != nil) && reachability.isReachable() {
+            locationManager.startMonitoringLocationChanges()
+        } else if reachability.isReachable() {
+            locationManager.startMonitoringLocationChanges()
         }
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "reachabilityChanged:", name: kReachabilityChangedNotification, object: nil)
+        reachability.startNotifier()
         return true
+    }
+    
+    func reachabilityChanged(notification: NSNotification) {
+        if reachability.isReachable() && dataModel.locations[safe: 0] == nil {
+            locationManager.startMonitoringLocationChanges()
+        } else {
+            window?.rootViewController?.presentViewController(noInternetNetworkAlert(), animated: false, completion: nil)
+        }
     }
 
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+        for location in dataModel.locations {
+            location.invalidateTimers()
+        }
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
-        dataModel.saveLocations()
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        dataModel.saveLocations()
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-        if !Reachability.connectedToNetwork() {
-            window?.rootViewController?.presentViewController(noInternetNetworkAlert(), animated: false, completion: nil)
-        } else if dataModel.currentLocation == nil {
-            locationManager.start()
-        }
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        for location in dataModel.locations {
+            location.restartTimers()
+        }
     }
 
     func applicationWillTerminate(application: UIApplication) {
@@ -55,8 +69,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationSignificantTimeChange(application: UIApplication) {
-
+        for location in dataModel.locations {
+            location.fetchWeatherData()
+        }
     }
-
+    
 }
 

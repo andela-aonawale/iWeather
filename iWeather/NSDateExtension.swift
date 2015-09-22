@@ -26,12 +26,15 @@ extension NSDate {
         return dateFormatter.stringFromDate(weatherDate)
     }
     
-    class func dateStringFromTimezone(timeZone: String, dateStyle: NSDateFormatterStyle, timeStyle: NSDateFormatterStyle) -> String{
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.timeZone = NSTimeZone(name: timeZone)
-        dateFormatter.timeStyle = timeStyle
-        dateFormatter.dateStyle = dateStyle
-        return dateFormatter.stringFromDate(NSDate())
+    class func dateStringFromTimezone(timeZone: String?, dateStyle: NSDateFormatterStyle, timeStyle: NSDateFormatterStyle) -> String? {
+        if let timeZone = timeZone {
+            let dateFormatter = NSDateFormatter()
+            dateFormatter.timeZone = NSTimeZone(name: timeZone)
+            dateFormatter.timeStyle = timeStyle
+            dateFormatter.dateStyle = dateStyle
+            return dateFormatter.stringFromDate(NSDate())
+        }
+        return nil
     }
     
     class func dateStringFromTimezone(timeZone: String, unixTime: Int, dateStyle: NSDateFormatterStyle, timeStyle: NSDateFormatterStyle) -> String{
@@ -41,5 +44,14 @@ extension NSDate {
         dateFormatter.timeStyle = timeStyle
         dateFormatter.dateStyle = dateStyle
         return dateFormatter.stringFromDate(date)
+    }
+    
+    class func dateFormatFromUnixTime(unixTime: Int, format: String, timeZone: String) -> String {
+        let timeInSeconds = NSTimeInterval(unixTime)
+        let weatherDate = NSDate(timeIntervalSince1970: timeInSeconds)
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = format
+        dateFormatter.timeZone = NSTimeZone(name: timeZone)
+        return dateFormatter.stringFromDate(weatherDate)
     }
 }

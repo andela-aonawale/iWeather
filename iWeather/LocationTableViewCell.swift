@@ -18,13 +18,21 @@ class LocationTableViewCell: UITableViewCell {
             updateUI()
         }
     }
+    var timer: NSTimer!
     
     private func updateUI() {
         if let location = self.location {
-            locationName?.text = location.name
-            locationTime?.text = NSDate.dateStringFromTimezone(location.timeZone!, dateStyle: .NoStyle, timeStyle: .ShortStyle)
-            locationTemperatureDegree?.text = location.currentWeather.temperature
+            locationName.text = location.name
+            locationTemperatureDegree.text = location.currentWeather?.temperature
+            locationTime.text = location.currentTime
+            timer?.invalidate()
+            timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateTime", userInfo: nil, repeats: true)
         }
+    }
+    
+    func updateTime() {
+        locationTime.text = location?.currentTime
+        locationTemperatureDegree.text = location?.currentWeather?.temperature
     }
 
     override func awakeFromNib() {

@@ -40,8 +40,8 @@ class EventTableViewCell: UITableViewCell {
         // Initialization code
         self.addSubview(weatherSlideView)
         self.addSubview(deleteSlideView)
-        weatherImageView.image = UIImage(named: "Weather")
-        deleteImageView.image = UIImage(named: "Trash-White")
+        weatherImageView.image = UIImage(named: "weather")
+        deleteImageView.image = UIImage(named: "trash")
         deleteSlideView.addSubview(deleteImageView)
         weatherSlideView.addSubview(weatherImageView)
     }

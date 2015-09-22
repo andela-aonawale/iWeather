@@ -69,8 +69,9 @@ class MarkerInfoView: UIView {
     
     private func getCurrentTravelLocationWeather() {
         api.getWeatherData(locationCoordinate) { [weak self] weatherObject in
-            if let currently = weatherObject.valueForKey("currently") as? NSDictionary {
-                let currentWeather = CurrentWeather(weatherDictionary: currently)
+            if let currently = weatherObject[WeatherConstant.Currently] as? NSDictionary {
+                let timeZone = weatherObject[WeatherConstant.TimeZone] as! String
+                let currentWeather = Weather(weatherDictionary: currently, timeZone: timeZone)
                 self?.updateFrontViewUI(currentWeather)
             }
         }
@@ -78,23 +79,24 @@ class MarkerInfoView: UIView {
     
     private func getTravelLocationWeatherOnArrival() {
         api.getWeatherForDate(arrivalDate, coordinate: locationCoordinate) { [weak self] weatherObject in
-            if let currently = weatherObject.valueForKey("currently") as? NSDictionary {
-                let currentWeather = CurrentWeather(weatherDictionary: currently)
+            if let currently = weatherObject[WeatherConstant.Currently] as? NSDictionary {
+                let timeZone = weatherObject[WeatherConstant.TimeZone] as! String
+                let currentWeather = Weather(weatherDictionary: currently, timeZone: timeZone)
                 self?.updateBackViewUI(currentWeather)
             }
         }
     }
     
-    func updateBackViewUI(currentWeather: CurrentWeather) {
-        if let weather = currentWeather as CurrentWeather? {
+    func updateBackViewUI(currentWeather: Weather) {
+        if let weather = currentWeather as Weather? {
             arrivalTemperature.text = weather.temperature
             arrivalSummary.text = weather.summary
             arrivalTime.text = weather.date
         }
     }
     
-    func updateFrontViewUI(currentWeather: CurrentWeather) {
-        if let weather = currentWeather as CurrentWeather? {
+    func updateFrontViewUI(currentWeather: Weather) {
+        if let weather = currentWeather as Weather? {
             activityIndicator.stopAnimating()
             currentTemperature.text = weather.temperature
             currentSummary.text = weather.summary

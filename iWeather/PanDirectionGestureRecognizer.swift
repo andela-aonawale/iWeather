@@ -15,7 +15,7 @@ enum PanDirection {
 
 class PanDirectionGestureRecognizer: UIPanGestureRecognizer {
     
-    let direction : PanDirection
+    let direction: PanDirection
     
     init(direction: PanDirection, target: AnyObject, action: Selector) {
         self.direction = direction

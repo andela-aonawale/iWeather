@@ -32,7 +32,7 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
     
     func listenForEventLocationWeather(){
         let queue = NSOperationQueue.mainQueue()
-        NSNotificationCenter.defaultCenter().addObserverForName("Received Event Location Weather", object: nil, queue: queue) { [weak self] notification in
+        NSNotificationCenter.defaultCenter().addObserverForName(Notification.LocationDataUpdated, object: nil, queue: queue) { [weak self] notification in
             self?.updateUI()
             self?.collectionView.reloadData()
         }
@@ -129,8 +129,8 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
 extension EventWeatherPopoverViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Collection View Cell", forIndexPath: indexPath) as! WeatherCollectionViewCell
-        if let hourWeather = event?.location?.hourlyWeather[indexPath.row] as HourlyWeather? {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellIdentifier.CollectionViewCell, forIndexPath: indexPath) as! WeatherCollectionViewCell
+        if let hourWeather = event?.location?.hourlyWeather[indexPath.row] as Weather? {
             cell.hourWeather = hourWeather
         }
         return cell

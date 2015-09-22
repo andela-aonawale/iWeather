@@ -29,7 +29,7 @@ class MapTask {
     private var overviewPolyline: Dictionary<NSObject, AnyObject>!
     private let baseURLDirections = NSURL(string: "https://maps.googleapis.com/maps/api/directions/json?")
     
-    func getDirections(origin: String, destination: String, waypoints: Array<String>!, travelMode: AnyObject!, completion: ((status: Status, success: Bool) -> Void)) {
+    func getDirectionsFrom(origin: String, to destination: String, waypoints: Array<String>!, travelMode: AnyObject!, completion: ((status: Status, success: Bool) -> Void)) {
         if !origin.isEmpty && !destination.isEmpty {
             let directionsURL = NSURLComponents(URL: baseURLDirections!, resolvingAgainstBaseURL: true)
             directionsURL?.query = "origin=\(origin)&destination=\(destination)"

@@ -25,16 +25,6 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
         tableView.separatorStyle = UITableViewCellSeparatorStyle.None
     }
     
-    struct Cell {
-        static let ReuseIdentifier = "AddressCell"
-    }
-    
-    struct Places {
-        static let Predictions = "predictions"
-        static let Description = "description"
-        static let Empty = "No results found."
-    }
-    
     // MARK: - UISearchResultsUpdating Delegate methods
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
@@ -109,9 +99,9 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier(Cell.ReuseIdentifier) as UITableViewCell!
+        var cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.AddressCell) as UITableViewCell!
         if cell == nil {
-            cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: Cell.ReuseIdentifier)
+            cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: CellIdentifier.AddressCell)
         }
         if let place = predictions[indexPath.row] as place? {
             cell.textLabel?.text = place.name

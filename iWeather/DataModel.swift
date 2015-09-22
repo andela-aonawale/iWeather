@@ -9,11 +9,9 @@
 import Foundation
 import UIKit
 
-class DataModel {
+class DataModel: NSObject {
     
-    private let api: APIController!
-    private let center = NSNotificationCenter.defaultCenter()
-    private let queue = NSOperationQueue.mainQueue()
+    private let api = APIController.sharedInstance
     
     private func documentsDirectory() -> String {
         let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
@@ -21,19 +19,13 @@ class DataModel {
     }
     
     private func dataFilePath() -> String {
-        return documentsDirectory().stringByAppendingPathComponent("Location.plist")
-    }
-    
-    private struct Key {
-        static let Locations = "locations"
-        static let CurrentLocation = "currentLocation"
+        return documentsDirectory().stringByAppendingPathComponent(Path.Location)
     }
     
     func saveLocations() {
         let data = NSMutableData()
         let archiver = NSKeyedArchiver(forWritingWithMutableData: data)
         archiver.encodeObject(locations, forKey: Key.Locations)
-        archiver.encodeObject(currentLocation, forKey: Key.CurrentLocation)
         archiver.finishEncoding()
         data.writeToFile(dataFilePath(), atomically: true)
     }
@@ -44,7 +36,6 @@ class DataModel {
             if let data = NSData(contentsOfFile: path) {
                 let unarchiver = NSKeyedUnarchiver(forReadingWithData: data)
                 locations = unarchiver.decodeObjectForKey(Key.Locations) as! Array<Location>
-                currentLocation = unarchiver.decodeObjectForKey(Key.CurrentLocation) as? Location
                 unarchiver.finishDecoding()
             }
         }
@@ -53,34 +44,30 @@ class DataModel {
     var locations = Array<Location>()
     var events = Array<Event>()
     
-    var currentLocation: Location? {
-        didSet {
-            requestNotificationPermission()
-            getCurrentLocationWeather()
-        }
-    }
-    
     private func requestNotificationPermission() {
         let notificationSettings = UIUserNotificationSettings( forTypes: [.Alert, .Sound], categories: nil)
         UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
     }
     
-    private func getCurrentLocationWeather() {
-        api.getWeatherData(currentLocation!.coordinateString) { [unowned self] weatherObject in
-            self.currentLocation!.weatherObject = weatherObject
-            UIApplication.sharedApplication().cancelAllLocalNotifications()
-            self.postLocationNotification()
-            self.getSignificantWeatherChangeTime()
+    private func listenForNewLocation(){
+        let center = NSNotificationCenter.defaultCenter()
+        let queue = NSOperationQueue.mainQueue()
+        center.addObserverForName(Notification.UserCurrentLocation, object: nil, queue: queue) { [unowned self] notification in
+            if let userLocation = notification.userInfo?[Notification.UserLocation] as? Location {
+                if let _ = self.locations[safe: 0] {
+                    self.locations[0] = userLocation
+                } else {
+                    self.locations.insert(userLocation, atIndex: 0)
+                }
+                self.requestNotificationPermission()
+                UIApplication.sharedApplication().cancelAllLocalNotifications()
+                self.getSignificantWeatherChangeTime()
+            }
         }
     }
     
-    private func postLocationNotification() {
-        let notification = NSNotification(name: "Received New Location", object: nil, userInfo: ["newLocation" : self.currentLocation!])
-        self.center.postNotification(notification)
-    }
-    
     func getSignificantWeatherChangeTime() {
-        if let hourlyWeatherArray = currentLocation!.hourlyWeather {
+        if let hourlyWeatherArray = locations.first?.hourlyWeather {
             for var i = 2; i < hourlyWeatherArray.count; i++ {
                 let next = hourlyWeatherArray[i], previous = hourlyWeatherArray[i-1]
                 if next.imageName! != previous.imageName! {
@@ -126,16 +113,6 @@ class DataModel {
         case PartlyCloudyNight = "partly-cloudy-night"
     }
     
-    private struct Message {
-        static let Clear = "Sky will be clear by"
-        static let Rain = "Its likely to rain by"
-        static let Snow = "It will probably snow by"
-        static let Sleet = "It will probably sleet by"
-        static let Wind = "Get cover wind is approaching by"
-        static let Fog = "Weather will be foggy by"
-        static let Cloudy = "It will be cloudy by"
-    }
-    
     func scheduleNotification(unixTime: Int, alertBody: String) {
         let notification = UILocalNotification()
         notification.fireDate = NSDate(timeIntervalSince1970: NSTimeInterval(unixTime))
@@ -143,16 +120,6 @@ class DataModel {
         notification.alertBody = alertBody
         notification.soundName = UILocalNotificationDefaultSoundName
         UIApplication.sharedApplication().scheduleLocalNotification(notification)
-    }
-    
-    
-    
-    func listenForNewLocation(){
-        center.addObserverForName("Received Current Location", object: nil, queue: queue) { notification in
-            if let location = notification.userInfo?["currentLocation"] as? Location {
-                self.currentLocation = location
-            }
-        }
     }
     
     class var sharedInstance : DataModel {
@@ -166,8 +133,8 @@ class DataModel {
         return Static.instance!
     }
     
-    init() {
-        api = APIController.sharedInstance
+    override init() {
+        super.init()
         loadLocations()
         listenForNewLocation()
     }

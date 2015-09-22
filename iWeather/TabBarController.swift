@@ -29,7 +29,7 @@ class TabBarController: UITabBarController {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        if !Reachability.connectedToNetwork() {
+        if !Reachability.reachabilityForInternetConnection().isReachable() {
             presentViewController(noInternetNetworkAlert(), animated: false, completion: nil)
         }
     }

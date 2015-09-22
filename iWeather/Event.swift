@@ -12,15 +12,7 @@ import EventKit
 class Event {
     
     var title: String?
-    var location: Location? {
-        didSet {
-            api.getWeatherForDate(self.startDate!, coordinate: location!.coordinateString) { weatherObject in
-                self.location?.weatherObject = weatherObject
-                let notification = NSNotification(name: "Received Event Location Weather", object: nil, userInfo: nil)
-                NSNotificationCenter.defaultCenter().postNotification(notification)
-            }
-        }
-    }
+    var location: Location?
     var eventLocationCoordinate: (latitude: Double, longitude: Double)?
     var eventLocationName: String?
     var startDate: NSDate?

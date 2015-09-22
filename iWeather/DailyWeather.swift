@@ -16,48 +16,40 @@ final class DailyWeathear: Weather {
     var temperatureMax: String?
     var day: String?
     
-    struct DayWeather {
-        private static let TemperatureMin = "temperatureMin"
-        private static let TemperatureMax = "temperatureMax"
-        private static let SunriseTime = "sunriseTime"
-        private static let SunsetTime = "sunsetTime"
-        private static let Temperature = "temperature"
-    }
-    
-    init(weatherDictionary: NSDictionary, timeZone: String) {
-        if let temperatureMin = weatherDictionary.valueForKey(DayWeather.TemperatureMin) as? Int {
+    override init(weatherDictionary: NSDictionary, timeZone: String) {
+        if let temperatureMin = weatherDictionary.valueForKey(WeatherConstant.TemperatureMin) as? Int {
             self.temperatureMin = temperatureMin.description
         }
-        if let temperatureMax = weatherDictionary.valueForKey(DayWeather.TemperatureMax) as? Int {
+        if let temperatureMax = weatherDictionary.valueForKey(WeatherConstant.TemperatureMax) as? Int {
             self.temperatureMax = temperatureMax.description
         }
-        if let sunriseUnixTime = weatherDictionary.valueForKey(DayWeather.SunriseTime) as? Int {
+        if let sunriseUnixTime = weatherDictionary.valueForKey(WeatherConstant.SunriseTime) as? Int {
             self.sunriseTime = NSDate.dateStringFromTimezone(timeZone, unixTime: sunriseUnixTime, dateStyle: .NoStyle, timeStyle: .ShortStyle)
         }
-        if let sunsetUnixTime = weatherDictionary.valueForKey(DayWeather.SunsetTime) as? Int {
+        if let sunsetUnixTime = weatherDictionary.valueForKey(WeatherConstant.SunsetTime) as? Int {
             self.sunsetTime = NSDate.dateStringFromTimezone(timeZone, unixTime: sunsetUnixTime, dateStyle: .NoStyle, timeStyle: .ShortStyle)
         }
-        if let dayUnixTime = weatherDictionary.valueForKey("time") as? Int {
-            self.day = NSDate.dateFormatFromUnixTime(dayUnixTime, format: "EEEE")
+        if let dayUnixTime = weatherDictionary[WeatherConstant.Time] as? Int {
+            self.day = NSDate.dateFormatFromUnixTime(dayUnixTime, format: DateFormat.Day)
         }
-        super.init(weatherDictionary: weatherDictionary)
+        super.init(weatherDictionary: weatherDictionary, timeZone: timeZone)
     }
 
     override func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(sunriseTime, forKey: "sunriseTime")
-        aCoder.encodeObject(sunsetTime, forKey: "sunsetTime")
-        aCoder.encodeObject(temperatureMin, forKey: "temperatureMin")
-        aCoder.encodeObject(temperatureMax, forKey: "temperatureMax")
-        aCoder.encodeObject(day, forKey: "day")
+        aCoder.encodeObject(sunriseTime, forKey: WeatherConstant.SunriseTime)
+        aCoder.encodeObject(sunsetTime, forKey: WeatherConstant.SunsetTime)
+        aCoder.encodeObject(temperatureMin, forKey: WeatherConstant.TemperatureMin)
+        aCoder.encodeObject(temperatureMax, forKey: WeatherConstant.TemperatureMax)
+        aCoder.encodeObject(day, forKey: WeatherConstant.Day)
         super.encodeWithCoder(aCoder)
     }
     
     required init?(coder aDecoder: NSCoder) {
-        sunriseTime = aDecoder.decodeObjectForKey("sunriseTime") as? String
-        sunsetTime = aDecoder.decodeObjectForKey("sunsetTime") as? String
-        temperatureMin = aDecoder.decodeObjectForKey("temperatureMin") as? String
-        temperatureMax = aDecoder.decodeObjectForKey("temperatureMax") as? String
-        day = aDecoder.decodeObjectForKey("day") as? String
+        sunriseTime = aDecoder.decodeObjectForKey(WeatherConstant.SunriseTime) as? String
+        sunsetTime = aDecoder.decodeObjectForKey(WeatherConstant.SunsetTime) as? String
+        temperatureMin = aDecoder.decodeObjectForKey(WeatherConstant.TemperatureMin) as? String
+        temperatureMax = aDecoder.decodeObjectForKey(WeatherConstant.TemperatureMax) as? String
+        day = aDecoder.decodeObjectForKey(WeatherConstant.Day) as? String
         super.init(coder: aDecoder)
     }
     
