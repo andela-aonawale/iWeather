@@ -73,7 +73,7 @@ class Weather: NSObject, NSCoding {
             self.unixTime = unixTime
         }
         if let temperature = weatherDictionary[WeatherConstant.Temperature] as? Int {
-            self.temperature = ("\(temperature.description)\u{00B0}")
+            self.temperature = ("\(temperature.description)")
         }
         if let humidity = weatherDictionary[WeatherConstant.Humidity] as? Double {
             self.humidity = String(format: "%d%%", Int(humidity * 100))

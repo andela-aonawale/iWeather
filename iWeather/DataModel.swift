@@ -11,7 +11,16 @@ import UIKit
 
 class DataModel: NSObject {
     
-    private let api = APIController.sharedInstance
+    var events: [Event]
+    var locations: [Location]
+    
+    func convertUnitsToCelcius() {
+        print("touch convetUnitsToCelcius")
+    }
+    
+    func convetUnitsToFarenheit() {
+        print("touch convetUnitsToFarenheit")
+    }
     
     private func documentsDirectory() -> String {
         let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
@@ -41,9 +50,6 @@ class DataModel: NSObject {
         }
     }
     
-    var locations = Array<Location>()
-    var events = Array<Event>()
-    
     private func requestNotificationPermission() {
         let notificationSettings = UIUserNotificationSettings( forTypes: [.Alert, .Sound], categories: nil)
         UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
@@ -59,19 +65,19 @@ class DataModel: NSObject {
                 } else {
                     self.locations.insert(userLocation, atIndex: 0)
                 }
-                self.requestNotificationPermission()
                 UIApplication.sharedApplication().cancelAllLocalNotifications()
-                self.getSignificantWeatherChangeTime()
+                self.requestNotificationPermission()
+                //self.getSignificantWeatherChangeTime()
             }
         }
     }
     
-    func getSignificantWeatherChangeTime() {
-        if let hourlyWeatherArray = locations.first?.hourlyWeather {
-            for var i = 2; i < hourlyWeatherArray.count; i++ {
-                let next = hourlyWeatherArray[i], previous = hourlyWeatherArray[i-1]
+    private func getSignificantWeatherChangeTime() {
+        if let hourlyWeather = locations.first?.hourlyWeather {
+            for index in 2..<hourlyWeather.count {
+                let next = hourlyWeather[index], previous = hourlyWeather[index-1]
                 if next.imageName! != previous.imageName! {
-                    let message = ("\(getAlertMessageFrom(next.imageName!)!) \(next.hour!)")
+                    let message = ("\(getAlertMessageFrom(next.imageName!)!) \(next.hour)")
                     scheduleNotification(previous.unixTime!, alertBody: message)
                 }
             }
@@ -113,7 +119,7 @@ class DataModel: NSObject {
         case PartlyCloudyNight = "partly-cloudy-night"
     }
     
-    func scheduleNotification(unixTime: Int, alertBody: String) {
+    private func scheduleNotification(unixTime: Int, alertBody: String) {
         let notification = UILocalNotification()
         notification.fireDate = NSDate(timeIntervalSince1970: NSTimeInterval(unixTime))
         notification.timeZone = NSTimeZone.defaultTimeZone()
@@ -134,6 +140,8 @@ class DataModel: NSObject {
     }
     
     override init() {
+        events = [Event]()
+        locations = [Location]()
         super.init()
         loadLocations()
         listenForNewLocation()

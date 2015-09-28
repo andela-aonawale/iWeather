@@ -49,13 +49,13 @@ class EventTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         let cellContentWidth = self.contentView.bounds.size.width
         let cellContentHeight = self.contentView.bounds.size.height
-        weatherSlideView.frame = CGRectMake(cellContentWidth, 0, cellContentWidth, cellContentHeight)
-        deleteSlideView.frame = CGRectMake(-cellContentWidth, 0, cellContentWidth, cellContentHeight)
+        weatherSlideView.frame = CGRect(x: cellContentWidth, y: 0, width: cellContentWidth, height: cellContentHeight)
+        deleteSlideView.frame = CGRect(x: -cellContentWidth, y: 0, width: cellContentWidth, height: cellContentHeight)
         weatherSlideView.backgroundColor = UIColor.blueColor()
         deleteSlideView.backgroundColor = UIColor.redColor()
         initialCenterPoint = self.center
-        deleteImageView.frame = CGRectMake(cellContentWidth-50, cellContentHeight/3.5, 30, 30)
-        weatherImageView.frame = CGRectMake(10, cellContentHeight/3.5, 40, 40)
+        deleteImageView.frame = CGRect(x: cellContentWidth-50, y: cellContentHeight/3.5, width: 30, height: 30)
+        weatherImageView.frame = CGRect(x: 10, y: cellContentHeight/3.5, width: 40, height: 40)
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

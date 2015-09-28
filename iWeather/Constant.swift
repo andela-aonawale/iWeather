@@ -36,6 +36,7 @@ struct WeatherConstant {
     static let SunriseTime = "sunriseTime"
     static let SunsetTime = "sunsetTime"
     static let Day = "day"
+    static let LocalWeather = "Local Weather"
 }
 
 //struct IconName {
@@ -92,6 +93,7 @@ struct Key {
     static let DailyWeather = "dailyWeather"
     static let HourlyWeather = "hourlyWeather"
     static let Locations = "locations"
+    static let HasWeatherData = "hasWeatherData"
 }
 
 struct Path {

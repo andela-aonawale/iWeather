@@ -24,13 +24,6 @@ extension Array {
     }
 }
 
-extension UIFont {
-    func bold() -> UIFont {
-        let descriptor = self.fontDescriptor().fontDescriptorWithSymbolicTraits(UIFontDescriptorSymbolicTraits.TraitBold)
-        return UIFont(descriptor: descriptor, size: 0)
-    }
-}
-
 public func <=(lhs: NSDate, rhs: NSDate) -> Bool {
     let res = lhs.compare(rhs)
     return res == .OrderedAscending || res == .OrderedSame

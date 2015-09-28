@@ -11,19 +11,20 @@ import CoreLocation
 
 class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentationControllerDelegate {
     
-    @IBOutlet weak var eventName: UILabel! {
-        didSet { eventName.text = event?.title }
-    }
+    @IBOutlet weak var eventName: UILabel!
     @IBOutlet weak var eventWeatherImage: UIImageView!
     @IBOutlet weak var eventWeatherTemperature: UILabel!
     @IBOutlet weak var eventWeatherDescription: UILabel!
     @IBOutlet weak var eventTime: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-
-    private let locationManager = LocationManager.sharedInstance
+    @IBOutlet weak var degreeSymbol: UILabel!
     
-    weak var event: Event? { didSet { createLocation() } }
+    weak var event: Event? {
+        didSet {
+            createLocation()
+        }
+    }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -44,30 +45,30 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
             eventWeatherTemperature.text = weather.temperature
             eventWeatherDescription.text = weather.summary
             eventTime.text = weather.time
+            degreeSymbol.hidden = false
             activityIndicator.stopAnimating()
         }
     }
     
     func createLocation() {
-        if let event = event {
-            if event.location == nil {
-                if let coordinate = event.eventLocationCoordinate {
-                    let coordinate = Coordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
-                    event.location = Location(name: event.eventLocationName!, coordinate: coordinate)
-                } else {
-                    getEventPlacemarkFromLocationName(event.eventLocationName!) {
-                        if let coordinate = $0.location?.coordinate {
-                            let coordinate = Coordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
-                            event.location = Location(name: $0.name!, coordinate: coordinate)
-                        }
-                        
+        if let event = self.event where event.location == nil {
+            if let coordinate = event.eventLocationCoordinate {
+                let coordinate = Coordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
+                event.location = Location(name: event.eventLocationName!, coordinate: coordinate)
+            } else {
+                getEventPlacemarkFromLocationName(event.eventLocationName!) {
+                    if let coordinate = $0.location?.coordinate {
+                        let coordinate = Coordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
+                        event.location = Location(name: $0.name!, coordinate: coordinate)
                     }
+                    
                 }
             }
         }
     }
     
     private func getEventPlacemarkFromLocationName(location: String, completed: (placemark: CLPlacemark) -> Void) {
+        let locationManager = LocationManager.sharedInstance
         locationManager.geocodeAddressFromString(location) { [weak self] placemarks, error in
             if error != nil {
                 print(error.localizedDescription)
@@ -81,6 +82,7 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
     override func viewDidLoad() {
         super.viewDidLoad()
         updateUI()
+        eventName.text = event?.title
         collectionView.backgroundColor = .clearColor()
     }
     
@@ -112,7 +114,7 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
                 var height: CGFloat {
                     return presentingViewController!.view.bounds.height / 2
                 }
-                return CGSizeMake(width, height)
+                return CGSize(width: width, height: height)
             } else {
                 return super.preferredContentSize
             }
@@ -141,7 +143,7 @@ extension EventWeatherPopoverViewController: UICollectionViewDelegateFlowLayout,
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSizeMake(view.frame.size.width / 6 , collectionView.frame.size.height)
+        return CGSize(width: view.frame.size.width / 6 , height: collectionView.frame.size.height)
     }
     
 }

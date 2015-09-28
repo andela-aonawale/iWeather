@@ -19,28 +19,38 @@ class LocationViewController: UIViewController {
     @IBOutlet weak var day: UILabel!
     @IBOutlet weak var temperatureMax: UILabel!
     @IBOutlet weak var temperatureMin: UILabel!
-    @IBOutlet weak var collectionViewSuperView: UIView! {
-        didSet {
-            
+    @IBOutlet weak var collectionViewSuperView: UIView!
+    @IBOutlet weak var degreeSymbol: UILabel!
+    @IBOutlet weak var todayLabel: UILabel!
+    
+    var index = 0
+    var location: Location?
+    
+    private func isTheSameDay(unixTime: Int) -> Bool {
+        let dayInLocation = NSDate(timeIntervalSince1970: NSTimeInterval(unixTime))
+        let order = NSCalendar.currentCalendar().compareDate(NSDate(), toDate: dayInLocation, toUnitGranularity: .Day)
+        switch order {
+            case .OrderedSame:
+                return false
+            default:
+                return true
         }
     }
     
     private func updateUI() {
-        if let location = self.location {
+        locationName.text = location?.name ?? WeatherConstant.LocalWeather
+        if let location = self.location, weather = location.currentDayWeather {
+            todayLabel.hidden = isTheSameDay(weather.unixTime)
             day.text = location.currentDayWeather?.day
-            temperatureMax.text = location.currentDayWeather?.temperatureMax
-            temperatureMin.text = location.currentDayWeather?.temperatureMin
+            temperatureMax.text = weather.temperatureMax
+            temperatureMin.text = weather.temperatureMin
             temperature.text = location.currentWeather?.temperature
             weatherDescripion.text = location.currentWeather?.summary
-            locationName.text = location.name
+            degreeSymbol.hidden = false
             collectionView.reloadData()
             tableView.reloadData()
         }
     }
-    
-    var index = 0
-    var location: Location?
-    let whiteColor = UIColor.whiteColor()
     
     private func listenForHourWeatherRemoval(){
         let center = NSNotificationCenter.defaultCenter()
@@ -62,10 +72,14 @@ class LocationViewController: UIViewController {
         tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         tableView.allowsSelection = false
         collectionView.backgroundColor = .clearColor()
-        collectionViewSuperView.addTopBorderWithColor(whiteColor, lineWeight: 0.5, lineWidth: self.view.frame.width)
-        collectionViewSuperView.addBottomBorderWithColor(whiteColor, lineWeight: 0.5, lineWidth: self.view.frame.width)
         updateUI()
         listenForHourWeatherRemoval()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionViewSuperView.addTopBorderWithColor(.whiteColor(), lineWeight: 0.5, lineWidth: view.frame.width)
+        collectionViewSuperView.addBottomBorderWithColor(.whiteColor(), lineWeight: 0.5, lineWidth: view.frame.width)
     }
     
     override func didReceiveMemoryWarning() {
@@ -127,8 +141,8 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         cell.backgroundColor = UIColor.clearColor()
         if indexPath.row == 7 {
-            cell.contentView.addTopBorderWithColor(whiteColor, lineWeight: 0.5, lineWidth: self.view.frame.width)
-            cell.contentView.addBottomBorderWithColor(whiteColor, lineWeight: 0.5, lineWidth: self.view.frame.width)
+            cell.contentView.addTopBorderWithColor(.whiteColor(), lineWeight: 0.5, lineWidth: self.view.frame.width)
+            cell.contentView.addBottomBorderWithColor(.whiteColor(), lineWeight: 0.5, lineWidth: self.view.frame.width)
         }
     }
     
@@ -144,8 +158,6 @@ extension LocationViewController: UIScrollViewDelegate, UICollectionViewDelegate
             cell.hourWeather = hourWeather
             if indexPath.row == 0 {
                 cell.time?.text = "Now"
-                cell.time.font.bold()
-                cell.degree.font.bold()
             }
         }
         return cell

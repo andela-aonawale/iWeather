@@ -15,11 +15,9 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     private var hiddenAddBarButtonItem: UIBarButtonItem?
-    private let api: APIController
     private var dataModel: DataModel
     private var searchController: UISearchController!
     private let searchResultViewController: SearchResultViewController
-    typealias address = (name: String, coordinate: (latitude: Double, longitude: Double))
     
     // MARK: - UISearchBar Methods
     
@@ -47,24 +45,31 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
     
     func showSearchBar() {
         navigationItem.setRightBarButtonItem(nil, animated: true)
-        UIView.animateWithDuration(0.5, animations: { [unowned self] in
-            self.navigationItem.titleView = self.searchController.searchBar }) {[unowned self] finished in
-            self.searchController.searchBar.becomeFirstResponder()
-        }
+        UIView.animateWithDuration(0.5,
+            animations: { [unowned self] in
+                self.navigationItem.titleView = self.searchController.searchBar
+            },
+            completion: {[unowned self] finished in
+                self.searchController.searchBar.becomeFirstResponder()
+            }
+        )
     }
     
     func hideSearchBar() {
         searchController.searchBar.resignFirstResponder()
-        UIView.animateWithDuration(0.3, animations: { [unowned self] in
-            self.navigationItem.titleView = nil }) { [unowned self] finished in
-            self.navigationItem.setRightBarButtonItem(self.hiddenAddBarButtonItem, animated: true)
-        }
+        UIView.animateWithDuration(0.3,
+            animations: { [unowned self] in
+                self.navigationItem.titleView = nil
+            },
+            completion: { [unowned self] finished in
+                self.navigationItem.setRightBarButtonItem(self.hiddenAddBarButtonItem, animated: true)
+            }
+        )
     }
     
     // MARK: - Initialization
     
     required init?(coder aDecoder: NSCoder) {
-        api = APIController.sharedInstance
         dataModel = DataModel.sharedInstance
         searchResultViewController = SearchResultViewController()
         searchController = UISearchController(searchResultsController: searchResultViewController)
@@ -85,7 +90,6 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
 
 }
 
-
 extension AddLocationViewController: SearchResultViewControllerDelegate {
     
     // MARK: - Search ResultView Controller Delegate Methods
@@ -99,7 +103,6 @@ extension AddLocationViewController: SearchResultViewControllerDelegate {
     }
     
 }
-
 
 extension AddLocationViewController: UISearchControllerDelegate {
     
@@ -119,10 +122,51 @@ extension AddLocationViewController: UISearchControllerDelegate {
     
 }
 
-
 extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource {
     
     // MARK: - UITableView Delegate & UITableView DataSource Methods
+    
+    func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 44))
+        footerView.backgroundColor = UIColor.blueColor()
+        
+        let frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        
+        let celciusButton = UIButton(frame: frame)
+        celciusButton.setTitle("\u{00B0}C", forState: .Normal)
+        celciusButton.addTarget(dataModel, action: "convertUnitsToCelcius", forControlEvents: .TouchUpInside)
+        
+        let slashLabel = UILabel(frame: frame)
+        slashLabel.text = "/"
+        slashLabel.textColor = UIColor.whiteColor()
+        
+        let farenheitButton = UIButton(frame: frame)
+        farenheitButton.setTitle("\u{00B0}F", forState: .Normal)
+        farenheitButton.addTarget(dataModel, action: "convetUnitsToFarenheit", forControlEvents: .TouchUpInside)
+        
+        celciusButton.translatesAutoresizingMaskIntoConstraints = false
+        slashLabel.translatesAutoresizingMaskIntoConstraints = false
+        farenheitButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        footerView.addSubview(celciusButton)
+        footerView.addSubview(slashLabel)
+        footerView.addSubview(farenheitButton)
+        
+        footerView.addConstraint(NSLayoutConstraint(item: celciusButton, attribute: .CenterY, relatedBy: .Equal, toItem: footerView, attribute: .CenterY, multiplier: 1, constant: 0))
+        footerView.addConstraint(NSLayoutConstraint(item: celciusButton, attribute: .Trailing, relatedBy: .Equal, toItem: footerView, attribute: .Trailing, multiplier: 1, constant: -8))
+        
+        footerView.addConstraint(NSLayoutConstraint(item: slashLabel, attribute: .CenterY, relatedBy: .Equal, toItem: footerView, attribute: .CenterY, multiplier: 1, constant: 0))
+        footerView.addConstraint(NSLayoutConstraint(item: slashLabel, attribute: .Trailing, relatedBy: .Equal, toItem: celciusButton, attribute: .Leading, multiplier: 1, constant: 0))
+        
+        footerView.addConstraint(NSLayoutConstraint(item: farenheitButton, attribute: .CenterY, relatedBy: .Equal, toItem: footerView, attribute: .CenterY, multiplier: 1, constant: 0))
+        footerView.addConstraint(NSLayoutConstraint(item: farenheitButton, attribute: .Trailing, relatedBy: .Equal, toItem: slashLabel, attribute: .Leading, multiplier: 1, constant: 0))
+        
+        return footerView
+    }
+    
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 44.0
+    }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataModel.locations.count

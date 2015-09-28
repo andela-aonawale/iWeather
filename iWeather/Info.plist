@@ -26,6 +26,7 @@
 	<string>Your location is used to update the weather condition wherever you are</string>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>fetch</string>
 		<string>location</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

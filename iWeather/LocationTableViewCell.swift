@@ -13,6 +13,8 @@ class LocationTableViewCell: UITableViewCell {
     @IBOutlet weak var locationName: UILabel!
     @IBOutlet weak var locationTime: UILabel!
     @IBOutlet weak var locationTemperatureDegree: UILabel!
+    @IBOutlet weak var degreeSymbol: UILabel!
+    
     var location: Location? {
         didSet {
             updateUI()
@@ -25,6 +27,7 @@ class LocationTableViewCell: UITableViewCell {
             locationName.text = location.name
             locationTemperatureDegree.text = location.currentWeather?.temperature
             locationTime.text = location.currentTime
+            degreeSymbol.hidden = false
             timer?.invalidate()
             timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateTime", userInfo: nil, repeats: true)
         }

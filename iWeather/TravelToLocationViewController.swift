@@ -91,18 +91,26 @@ extension TravelToLocationViewController: UISearchBarDelegate {
     
     func showSearchBar() {
         navigationItem.setRightBarButtonItem(nil, animated: true)
-        UIView.animateWithDuration(0.5, animations: { [unowned self] in
-            self.navigationItem.titleView = self.searchController.searchBar }) {[unowned self] finished in
+        UIView.animateWithDuration(0.5,
+            animations: { [unowned self] in
+                self.navigationItem.titleView = self.searchController.searchBar
+            },
+            completion: {[unowned self] finished in
                 self.searchController.searchBar.becomeFirstResponder()
-        }
+            }
+        )
     }
     
     func hideSearchBar() {
         searchController.searchBar.resignFirstResponder()
-        UIView.animateWithDuration(0.3, animations: { [unowned self] in
-            self.navigationItem.titleView = nil }) { [unowned self] finished in
+        UIView.animateWithDuration(0.3,
+            animations: { [unowned self] in
+                self.navigationItem.titleView = nil
+            },
+            completion: { [unowned self] finished in
                 self.navigationItem.setRightBarButtonItem(self.hiddenSearchBarButtonItem, animated: true)
-        }
+            }
+        )
     }
     
 }
@@ -112,19 +120,16 @@ extension TravelToLocationViewController: GMSMapViewDelegate {
     private func getDirectionsFrom(origin: String, to destination: String) {
         if gettingDirection {
             return
-        } else {
-            gettingDirection = true
         }
+        gettingDirection = true
         mapTask.getDirectionsFrom(origin, to: destination, waypoints: nil, travelMode: nil) { [unowned self] status, success in
             switch status {
-            case .OK:
-                if self.displayedInfoWindow != nil {
-                    self.displayedInfoWindow.expectedTravelTime = self.mapTask.expectedTravelTime
-                    self.displayedInfoWindow.distance = self.mapTask.distance
-                    let date = NSDate(timeIntervalSinceNow: NSTimeInterval(self.mapTask.expectedTravelTime))
-                    self.displayedInfoWindow.arrivalDate = date
-                    self.drawRoute()
-                }
+            case .OK where self.displayedInfoWindow != nil:
+                self.displayedInfoWindow.expectedTravelTime = self.mapTask.expectedTravelTime
+                self.displayedInfoWindow.distance = self.mapTask.distance
+                let date = NSDate(timeIntervalSinceNow: NSTimeInterval(self.mapTask.expectedTravelTime))
+                self.displayedInfoWindow.arrivalDate = date
+                self.drawRoute()
             default:
                 break
             }
@@ -139,7 +144,7 @@ extension TravelToLocationViewController: GMSMapViewDelegate {
     }
     
     func mapView(mapView: GMSMapView!, didTapMarker marker: GMSMarker!) -> Bool {
-        if LocationManager.locationAccessEnabled() {
+        if LocationManager.locationServicesEnabled() {
             currentlyTappedMarker = marker
             resetDisplayInfoWindow()
             showMarkerInfoView(marker)
@@ -159,7 +164,7 @@ extension TravelToLocationViewController: GMSMapViewDelegate {
         let markerPoint = mapView.projection.pointForCoordinate(marker.position)
         displayedInfoWindow.frame.origin.x = markerPoint.x - 105
         displayedInfoWindow.frame.origin.y = markerPoint.y - 130
-        self.view.addSubview(displayedInfoWindow)
+        view.addSubview(displayedInfoWindow)
     }
     
     func mapView(mapView: GMSMapView!, didChangeCameraPosition position: GMSCameraPosition!) {
@@ -186,7 +191,7 @@ extension TravelToLocationViewController: GMSMapViewDelegate {
     
     private func resetDisplayInfoWindow() {
         if displayedInfoWindow != nil {
-            if displayedInfoWindow.isDescendantOfView(self.view) {
+            if displayedInfoWindow.isDescendantOfView(view) {
                 displayedInfoWindow.removeFromSuperview()
                 displayedInfoWindow = nil
             }

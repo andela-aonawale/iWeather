@@ -33,11 +33,23 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         }
     }
     
+    func setAccuracyToHundredMeters() {
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+    }
+    
+    func setAccuracyToBest() {
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+    }
+    
     func startMonitoringLocationChanges() {
         locationManager.startMonitoringSignificantLocationChanges()
     }
     
-    class func locationAccessEnabled() -> Bool {
+    func stopMonitoringLocationChanges() {
+        locationManager.stopMonitoringSignificantLocationChanges()
+    }
+    
+    class func locationServicesEnabled() -> Bool {
         return CLLocationManager.locationServicesEnabled()
     }
 
@@ -61,7 +73,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         NSNotificationCenter.defaultCenter().postNotification(notification)
     }
     
-    private func createCurrentLocationWithPlacemark(placemark: CLPlacemark) {
+    private func createLocationWithPlacemark(placemark: CLPlacemark) {
         let coord = (placemark.location?.coordinate)!
         let coordinate = Coordinate(latitude: coord.latitude, longitude: coord.longitude)
         let location = Location(name: placemark.name!, coordinate: coordinate)
@@ -85,7 +97,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 if error != nil {
                     print(error!.localizedDescription)
                 } else if let placemark = placemarks?.first {
-                    self.createCurrentLocationWithPlacemark(placemark)
+                    self.createLocationWithPlacemark(placemark)
                 }
             }
         }
@@ -99,9 +111,11 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 locationManager.stopMonitoringSignificantLocationChanges()
                 delegate?.locationAccessDenied!()
             case CLError.Network.rawValue:
+                locationManager.stopMonitoringSignificantLocationChanges()
                 delegate?.networkUnavailable!()
                 print("The network was unavailable or a network error occurred")
             default:
+                locationManager.stopMonitoringSignificantLocationChanges()
                 break
         }
     }

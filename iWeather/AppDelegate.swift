@@ -27,14 +27,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "reachabilityChanged:", name: kReachabilityChangedNotification, object: nil)
         reachability.startNotifier()
+        application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
         return true
     }
     
     func reachabilityChanged(notification: NSNotification) {
-        if reachability.isReachable() && dataModel.locations[safe: 0] == nil {
+        if reachability.isReachable() {
             locationManager.startMonitoringLocationChanges()
+            for location in dataModel.locations {
+                if !location.hasWeatherData {
+                    location.fetchWeatherData()
+                }
+            }
         } else {
+            locationManager.stopMonitoringLocationChanges()
             window?.rootViewController?.presentViewController(noInternetNetworkAlert(), animated: false, completion: nil)
+        }
+    }
+    
+    func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+        let group = dispatch_group_create()
+        var updated = false
+        
+        for location in dataModel.locations {
+            if reachability.isReachable() {
+                dispatch_group_enter(group)
+                location.updateWeatherData() { success in
+                    updated = success
+                    dispatch_group_leave(group)
+                }
+            }
+        }
+        
+        dispatch_group_notify(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+            updated ? completionHandler(.NewData) : completionHandler(.Failed)
         }
     }
 
@@ -50,10 +76,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         dataModel.saveLocations()
+        locationManager.setAccuracyToHundredMeters()
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+        locationManager.setAccuracyToBest()
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
@@ -66,12 +94,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         dataModel.saveLocations()
-    }
-    
-    func applicationSignificantTimeChange(application: UIApplication) {
-        for location in dataModel.locations {
-            location.fetchWeatherData()
-        }
     }
     
 }

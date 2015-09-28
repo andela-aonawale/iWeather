@@ -20,7 +20,7 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     weak var delegate: SearchResultViewControllerDelegate?
     var placesClient: GMSPlacesClient?
     
-    func configureTableView() {
+    private func configureTableView() {
         tableView.rowHeight = 35
         tableView.separatorStyle = UITableViewCellSeparatorStyle.None
     }
@@ -28,34 +28,36 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     // MARK: - UISearchResultsUpdating Delegate methods
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
-        let searchText = searchController.searchBar.text
-        if searchText!.isEmpty {
-            predictions.removeAll()
-            tableView.reloadData()
+        if let searchText = searchController.searchBar.text where !searchText.isEmpty {
+            if Reachability.reachabilityForInternetConnection().isReachable() {
+                suggestPlaces(searchText)
+            } else {
+                predictions.removeAll()
+                predictions.append((name: "Network unavailable.", id: ""))
+            }
         } else {
-            suggestPlaces(searchText)
+            predictions.removeAll()
         }
+        tableView.reloadData()
     }
     
-    private func suggestPlaces(searchText: String?) {
+    private func suggestPlaces(searchText: String) {
         let filter = GMSAutocompleteFilter()
         filter.type = GMSPlacesAutocompleteTypeFilter.Geocode
-        placesClient?.autocompleteQuery(searchText!, bounds: nil, filter: filter) { [unowned self] results, error in
+        placesClient?.autocompleteQuery(searchText, bounds: nil, filter: filter) { [unowned self] results, error in
+            self.predictions.removeAll()
             if let error = error {
+                self.predictions.append((name: "No results found.", id: ""))
                 print("Autocomplete error \(error.localizedDescription)")
-                self.predictions.removeAll()
-                self.tableView.reloadData()
-            }
-            if let results = results {
-                self.predictions.removeAll()
+            } else if let results = results {
                 for result in results {
                     if let result = result as? GMSAutocompletePrediction {
                         let place = (name: result.attributedFullText.string, id: result.placeID!)
                         self.predictions.append(place)
                     }
                 }
-                self.tableView.reloadData()
             }
+            self.tableView.reloadData()
         }
     }
     
@@ -81,6 +83,13 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return predictions.count
+    }
+    
+    override func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
+        if !Reachability.reachabilityForInternetConnection().isReachable() || predictions[indexPath.row].id.isEmpty {
+            return nil
+        }
+        return indexPath
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

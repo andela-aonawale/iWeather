@@ -18,12 +18,15 @@ class MarkerInfoView: UIView {
     @IBOutlet weak var currentSummary: UILabel!
     @IBOutlet weak var currentETA: UILabel!
     @IBOutlet weak var currentDistance: UILabel!
+    @IBOutlet weak var currentDegreeSymbol: UILabel!
 
     @IBOutlet weak var arrivalTemperature: UILabel!
     @IBOutlet weak var arrivalTime: UILabel!
     @IBOutlet weak var arrivalSummary: UILabel!
     @IBOutlet weak var arrivalETA: UILabel!
     @IBOutlet weak var arrivalDistance: UILabel!
+    @IBOutlet weak var arrivalDegreeSymbol: UILabel!
+
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView! {
         didSet {
@@ -33,7 +36,6 @@ class MarkerInfoView: UIView {
     
     let radius: CGFloat = 2
     var fliped = false
-    let api = APIController.sharedInstance
     var expectedTravelTime: Int! {
         didSet {
             currentETA.text = formatTimeFromSeconds(expectedTravelTime)
@@ -68,9 +70,9 @@ class MarkerInfoView: UIView {
     }
     
     private func getCurrentTravelLocationWeather() {
-        api.getWeatherData(locationCoordinate) { [weak self] weatherObject in
-            if let currently = weatherObject[WeatherConstant.Currently] as? NSDictionary {
-                let timeZone = weatherObject[WeatherConstant.TimeZone] as! String
+        APIController.sharedInstance.getWeatherData(locationCoordinate) { [weak self] result, error in
+            if let result = result, currently = result[WeatherConstant.Currently] as? NSDictionary {
+                let timeZone = result[WeatherConstant.TimeZone] as! String
                 let currentWeather = Weather(weatherDictionary: currently, timeZone: timeZone)
                 self?.updateFrontViewUI(currentWeather)
             }
@@ -78,9 +80,9 @@ class MarkerInfoView: UIView {
     }
     
     private func getTravelLocationWeatherOnArrival() {
-        api.getWeatherForDate(arrivalDate, coordinate: locationCoordinate) { [weak self] weatherObject in
-            if let currently = weatherObject[WeatherConstant.Currently] as? NSDictionary {
-                let timeZone = weatherObject[WeatherConstant.TimeZone] as! String
+        APIController.sharedInstance.getWeatherForDate(arrivalDate, coordinate: locationCoordinate) { [weak self] result, error in
+            if let result = result, currently = result[WeatherConstant.Currently] as? NSDictionary {
+                let timeZone = result[WeatherConstant.TimeZone] as! String
                 let currentWeather = Weather(weatherDictionary: currently, timeZone: timeZone)
                 self?.updateBackViewUI(currentWeather)
             }
@@ -92,6 +94,7 @@ class MarkerInfoView: UIView {
             arrivalTemperature.text = weather.temperature
             arrivalSummary.text = weather.summary
             arrivalTime.text = weather.date
+            arrivalDegreeSymbol.hidden = false
         }
     }
     
@@ -101,6 +104,7 @@ class MarkerInfoView: UIView {
             currentTemperature.text = weather.temperature
             currentSummary.text = weather.summary
             currentTime.text = weather.date
+            currentDegreeSymbol.hidden = false
         }
     }
     

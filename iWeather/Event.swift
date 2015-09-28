@@ -20,14 +20,8 @@ class Event {
     var startTimeZone: String?
     var event: EKEvent?
     
-    let api = APIController.sharedInstance
-    
     func getStartDate() -> Int {
         return Int(startDate!.timeIntervalSince1970)
-    }
-    
-    func getEventTime() -> String {
-        return NSDate.dateStringFromUnixTime(self.getStartDate(), dateStyle: .NoStyle, timeStyle: .ShortStyle)
     }
     
     func getEventDate() -> String {
