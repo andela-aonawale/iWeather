@@ -12,16 +12,36 @@ final class DailyWeathear: Weather {
     
     var sunriseTime: String?
     var sunsetTime: String?
-    var temperatureMin: String?
-    var temperatureMax: String?
+    var temperatureMin: Double!
+    var temperatureMax: Double!
     var day: String?
     
+    var temperatureMaxString: String {
+        return String(format: "%.0f", temperatureMax)
+    }
+    
+    var temperatureMinString: String {
+        return String(format: "%.0f", temperatureMin)
+    }
+    
+    override func convertUnitsToSI() {
+        fahrenheitToCelsius(&temperatureMax!)
+        fahrenheitToCelsius(&temperatureMin!)
+        super.convertUnitsToSI()
+    }
+    
+    override func convertUnitsToUS() {
+        celsiusToFahrenheit(&temperatureMax!)
+        celsiusToFahrenheit(&temperatureMin!)
+        super.convertUnitsToUS()
+    }
+    
     override init(weatherDictionary: NSDictionary, timeZone: String) {
-        if let temperatureMin = weatherDictionary.valueForKey(WeatherConstant.TemperatureMin) as? Int {
-            self.temperatureMin = temperatureMin.description
+        if let temperatureMin = weatherDictionary.valueForKey(WeatherConstant.TemperatureMin) as? Double {
+            self.temperatureMin = temperatureMin
         }
-        if let temperatureMax = weatherDictionary.valueForKey(WeatherConstant.TemperatureMax) as? Int {
-            self.temperatureMax = temperatureMax.description
+        if let temperatureMax = weatherDictionary.valueForKey(WeatherConstant.TemperatureMax) as? Double {
+            self.temperatureMax = temperatureMax
         }
         if let sunriseUnixTime = weatherDictionary.valueForKey(WeatherConstant.SunriseTime) as? Int {
             self.sunriseTime = NSDate.dateStringFromTimezone(timeZone, unixTime: sunriseUnixTime, dateStyle: .NoStyle, timeStyle: .ShortStyle)
@@ -38,8 +58,8 @@ final class DailyWeathear: Weather {
     override func encodeWithCoder(aCoder: NSCoder) {
         aCoder.encodeObject(sunriseTime, forKey: WeatherConstant.SunriseTime)
         aCoder.encodeObject(sunsetTime, forKey: WeatherConstant.SunsetTime)
-        aCoder.encodeObject(temperatureMin, forKey: WeatherConstant.TemperatureMin)
-        aCoder.encodeObject(temperatureMax, forKey: WeatherConstant.TemperatureMax)
+        aCoder.encodeDouble(temperatureMin, forKey: WeatherConstant.TemperatureMin)
+        aCoder.encodeDouble(temperatureMax, forKey: WeatherConstant.TemperatureMax)
         aCoder.encodeObject(day, forKey: WeatherConstant.Day)
         super.encodeWithCoder(aCoder)
     }
@@ -47,8 +67,8 @@ final class DailyWeathear: Weather {
     required init?(coder aDecoder: NSCoder) {
         sunriseTime = aDecoder.decodeObjectForKey(WeatherConstant.SunriseTime) as? String
         sunsetTime = aDecoder.decodeObjectForKey(WeatherConstant.SunsetTime) as? String
-        temperatureMin = aDecoder.decodeObjectForKey(WeatherConstant.TemperatureMin) as? String
-        temperatureMax = aDecoder.decodeObjectForKey(WeatherConstant.TemperatureMax) as? String
+        temperatureMin = aDecoder.decodeDoubleForKey(WeatherConstant.TemperatureMin)
+        temperatureMax = aDecoder.decodeDoubleForKey(WeatherConstant.TemperatureMax)
         day = aDecoder.decodeObjectForKey(WeatherConstant.Day) as? String
         super.init(coder: aDecoder)
     }

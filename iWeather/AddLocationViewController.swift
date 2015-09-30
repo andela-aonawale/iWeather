@@ -18,10 +18,12 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
     private var dataModel: DataModel
     private var searchController: UISearchController!
     private let searchResultViewController: SearchResultViewController
+    private var celciusButton: UIButton!
+    private var fahrenheitButton: UIButton!
     
     // MARK: - UISearchBar Methods
     
-    func configureSearchController() {
+    private func configureSearchController() {
         searchController.delegate = self
         definesPresentationContext = true
         searchController.searchBar.sizeToFit()
@@ -43,7 +45,7 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
         }
     }
     
-    func showSearchBar() {
+    private func showSearchBar() {
         navigationItem.setRightBarButtonItem(nil, animated: true)
         UIView.animateWithDuration(0.5,
             animations: { [unowned self] in
@@ -55,7 +57,7 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
         )
     }
     
-    func hideSearchBar() {
+    private func hideSearchBar() {
         searchController.searchBar.resignFirstResponder()
         UIView.animateWithDuration(0.3,
             animations: { [unowned self] in
@@ -65,6 +67,30 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
                 self.navigationItem.setRightBarButtonItem(self.hiddenAddBarButtonItem, animated: true)
             }
         )
+    }
+    
+    // MARK: - Button Configuration
+    
+    var unit: String {
+        return NSUserDefaults.standardUserDefaults().stringForKey("unit")!
+    }
+    
+    private func configureCelciusButton() {
+        celciusButton = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        celciusButton.selected = (unit == "si")
+        celciusButton.setTitle("\u{00B0}C", forState: .Normal)
+        celciusButton.setTitleColor(UIColor.blueColor(), forState: .Selected)
+        celciusButton.addTarget(dataModel, action: "convertUnitsToCelcius", forControlEvents: .TouchUpInside)
+        celciusButton.addTarget(self, action: "changeCelciusButtonSelectedState:", forControlEvents: .TouchUpInside)
+    }
+    
+    private func configurefahrenheitButton() {
+        fahrenheitButton = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        fahrenheitButton.selected = (unit == "us")
+        fahrenheitButton.setTitle("\u{00B0}F", forState: .Normal)
+        fahrenheitButton.setTitleColor(UIColor.blueColor(), forState: .Selected)
+        fahrenheitButton.addTarget(dataModel, action: "convetUnitsToFarenheit", forControlEvents: .TouchUpInside)
+        fahrenheitButton.addTarget(self, action: "changefahrenheitButtonSelectedState:", forControlEvents: .TouchUpInside)
     }
     
     // MARK: - Initialization
@@ -80,8 +106,9 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureCelciusButton()
+        configurefahrenheitButton()
         configureSearchController()
-        tableView.tableFooterView = UIView(frame: CGRectZero)
     }
     
     override func didReceiveMemoryWarning() {
@@ -128,29 +155,19 @@ extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 44))
-        footerView.backgroundColor = UIColor.blueColor()
-        
-        let frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        
-        let celciusButton = UIButton(frame: frame)
-        celciusButton.setTitle("\u{00B0}C", forState: .Normal)
-        celciusButton.addTarget(dataModel, action: "convertUnitsToCelcius", forControlEvents: .TouchUpInside)
-        
-        let slashLabel = UILabel(frame: frame)
+        footerView.backgroundColor = UIColor.blackColor()
+
+        let slashLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         slashLabel.text = "/"
         slashLabel.textColor = UIColor.whiteColor()
-        
-        let farenheitButton = UIButton(frame: frame)
-        farenheitButton.setTitle("\u{00B0}F", forState: .Normal)
-        farenheitButton.addTarget(dataModel, action: "convetUnitsToFarenheit", forControlEvents: .TouchUpInside)
-        
+
         celciusButton.translatesAutoresizingMaskIntoConstraints = false
         slashLabel.translatesAutoresizingMaskIntoConstraints = false
-        farenheitButton.translatesAutoresizingMaskIntoConstraints = false
+        fahrenheitButton.translatesAutoresizingMaskIntoConstraints = false
         
         footerView.addSubview(celciusButton)
         footerView.addSubview(slashLabel)
-        footerView.addSubview(farenheitButton)
+        footerView.addSubview(fahrenheitButton)
         
         footerView.addConstraint(NSLayoutConstraint(item: celciusButton, attribute: .CenterY, relatedBy: .Equal, toItem: footerView, attribute: .CenterY, multiplier: 1, constant: 0))
         footerView.addConstraint(NSLayoutConstraint(item: celciusButton, attribute: .Trailing, relatedBy: .Equal, toItem: footerView, attribute: .Trailing, multiplier: 1, constant: -8))
@@ -158,10 +175,26 @@ extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource 
         footerView.addConstraint(NSLayoutConstraint(item: slashLabel, attribute: .CenterY, relatedBy: .Equal, toItem: footerView, attribute: .CenterY, multiplier: 1, constant: 0))
         footerView.addConstraint(NSLayoutConstraint(item: slashLabel, attribute: .Trailing, relatedBy: .Equal, toItem: celciusButton, attribute: .Leading, multiplier: 1, constant: 0))
         
-        footerView.addConstraint(NSLayoutConstraint(item: farenheitButton, attribute: .CenterY, relatedBy: .Equal, toItem: footerView, attribute: .CenterY, multiplier: 1, constant: 0))
-        footerView.addConstraint(NSLayoutConstraint(item: farenheitButton, attribute: .Trailing, relatedBy: .Equal, toItem: slashLabel, attribute: .Leading, multiplier: 1, constant: 0))
+        footerView.addConstraint(NSLayoutConstraint(item: fahrenheitButton, attribute: .CenterY, relatedBy: .Equal, toItem: footerView, attribute: .CenterY, multiplier: 1, constant: 0))
+        footerView.addConstraint(NSLayoutConstraint(item: fahrenheitButton, attribute: .Trailing, relatedBy: .Equal, toItem: slashLabel, attribute: .Leading, multiplier: 1, constant: 0))
         
         return footerView
+    }
+    
+    func changeCelciusButtonSelectedState(sender: UIButton) {
+        if fahrenheitButton.selected {
+            fahrenheitButton.selected = false
+        }
+        sender.selected = true
+        tableView.reloadData()
+    }
+    
+    func changefahrenheitButtonSelectedState(sender: UIButton) {
+        if celciusButton.selected {
+            celciusButton.selected = false
+        }
+        sender.selected = true
+        tableView.reloadData()
     }
     
     func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -190,8 +223,13 @@ extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
+            CATransaction.begin()
+            CATransaction.setCompletionBlock({ Void in
+                tableView.reloadData()
+            })
             dataModel.locations.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Left)
+            CATransaction.commit()
             if let pageViewController = tabBarController?.viewControllers?.first as? PageViewController {
                 pageViewController.moveToPage(indexPath.row - 1)
             }

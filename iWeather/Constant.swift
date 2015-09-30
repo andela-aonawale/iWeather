@@ -37,6 +37,7 @@ struct WeatherConstant {
     static let SunsetTime = "sunsetTime"
     static let Day = "day"
     static let LocalWeather = "Local Weather"
+    static let ApparentTemperature = "apparentTemperature"
 }
 
 //struct IconName {

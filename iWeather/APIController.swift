@@ -13,7 +13,10 @@ class APIController {
     private struct API {
         private static let ForcastKEY = "e9f75045f39337c8df914eb723c4832b"
         private static let ForecastURL = "https://api.forecast.io/forecast/"
-        private static let ForecastQuery = "units=si&exclude=minutely,alerts,flags"
+        private static var ForecastQuery: String! {
+            let unit = NSUserDefaults.standardUserDefaults().stringForKey("unit")!
+            return "units=\(unit)&exclude=minutely,alerts,flags"
+        }
     }
     
     class var sharedInstance : APIController {

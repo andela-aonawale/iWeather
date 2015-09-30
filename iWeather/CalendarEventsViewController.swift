@@ -264,10 +264,8 @@ extension CalendarEventsViewController {
             let event = dataModel.events[indexPath.row].event
             do {
                 try eventStore.removeEvent(event!, span: EKSpan.ThisEvent, commit: true)
-                tableView.beginUpdates()
-                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
                 dataModel.events.removeAtIndex(indexPath.row)
-                tableView.endUpdates()
+                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
             } catch let error as NSError {
                 print(error.localizedDescription)
             }

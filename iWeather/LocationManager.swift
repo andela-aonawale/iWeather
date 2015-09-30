@@ -9,11 +9,11 @@
 import Foundation
 import CoreLocation
 
-
-@objc protocol LocationManagerDelegate: class {
-    optional func locationAccessDenied()
-    optional func locationAccessRestricted()
-    optional func networkUnavailable()
+protocol LocationManagerDelegate: class {
+    func locationAccessDenied()
+    func locationAccessRestricted()
+    func networkUnavailable()
+    func locationUnknown()
 }
 
 class LocationManager: NSObject, CLLocationManagerDelegate {
@@ -57,14 +57,14 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         switch status {
             case .NotDetermined:
                 locationManager.requestAlwaysAuthorization()
-            case .Denied:
+            case .Denied, .AuthorizedWhenInUse:
                 locationManager.stopMonitoringSignificantLocationChanges()
-                delegate?.locationAccessDenied!()
+                delegate?.locationAccessDenied()
             case .Restricted:
                 locationManager.stopMonitoringSignificantLocationChanges()
-                delegate?.locationAccessRestricted!()
-            default:
-                break
+                delegate?.locationAccessRestricted()
+            case .AuthorizedAlways:
+                locationManager.startMonitoringSignificantLocationChanges()
         }
     }
     
@@ -109,10 +109,10 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 print("The location manager was unable to obtain a location value right now.")
             case CLError.Denied.rawValue:
                 locationManager.stopMonitoringSignificantLocationChanges()
-                delegate?.locationAccessDenied!()
+                delegate?.locationAccessDenied()
             case CLError.Network.rawValue:
                 locationManager.stopMonitoringSignificantLocationChanges()
-                delegate?.networkUnavailable!()
+                delegate?.networkUnavailable()
                 print("The network was unavailable or a network error occurred")
             default:
                 locationManager.stopMonitoringSignificantLocationChanges()

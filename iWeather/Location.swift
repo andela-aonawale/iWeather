@@ -10,7 +10,7 @@ import Foundation
 
 typealias Coordinate = (latitude: Double, longitude: Double)
 
-class Location: NSObject, NSCoding {
+final class Location: NSObject, NSCoding {
 
     var name: String!
     var coordinate: Coordinate!
@@ -23,6 +23,34 @@ class Location: NSObject, NSCoding {
     private var nextHourTimer: NSTimer!
     private var subsequentHourTimer: NSTimer!
     var hasWeatherData: Bool
+    
+    func convertWeatherUnitsToSI() {
+        if hasWeatherData {
+            currentWeather.convertUnitsToSI()
+            currentDayWeather.convertUnitsToSI()
+            for weather in dailyWeather {
+                weather.convertUnitsToSI()
+            }
+            for weather in hourlyWeather {
+                weather.convertUnitsToSI()
+            }
+            postWeatherUpdateNotification()
+        }
+    }
+    
+    func convertWeatherUnitsToUS() {
+        if hasWeatherData {
+            currentWeather.convertUnitsToUS()
+            currentDayWeather.convertUnitsToUS()
+            for weather in dailyWeather {
+                weather.convertUnitsToUS()
+            }
+            for weather in hourlyWeather {
+                weather.convertUnitsToUS()
+            }
+            postWeatherUpdateNotification()
+        }
+    }
     
     func fetchWeatherData() {
         updateWeatherData { [weak self] success in

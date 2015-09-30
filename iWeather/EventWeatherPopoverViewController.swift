@@ -42,7 +42,7 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
     private func updateUI() {
         if let weather = event?.location?.currentWeather {
             eventWeatherImage.image = weather.weatherImage
-            eventWeatherTemperature.text = weather.temperature
+            eventWeatherTemperature.text = weather.temperatureString
             eventWeatherDescription.text = weather.summary
             eventTime.text = weather.time
             degreeSymbol.hidden = false

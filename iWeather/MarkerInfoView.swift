@@ -91,7 +91,7 @@ class MarkerInfoView: UIView {
     
     func updateBackViewUI(currentWeather: Weather) {
         if let weather = currentWeather as Weather? {
-            arrivalTemperature.text = weather.temperature
+            arrivalTemperature.text = weather.temperatureString
             arrivalSummary.text = weather.summary
             arrivalTime.text = weather.date
             arrivalDegreeSymbol.hidden = false
@@ -101,7 +101,7 @@ class MarkerInfoView: UIView {
     func updateFrontViewUI(currentWeather: Weather) {
         if let weather = currentWeather as Weather? {
             activityIndicator.stopAnimating()
-            currentTemperature.text = weather.temperature
+            currentTemperature.text = weather.temperatureString
             currentSummary.text = weather.summary
             currentTime.text = weather.date
             currentDegreeSymbol.hidden = false

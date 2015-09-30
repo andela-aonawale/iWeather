@@ -14,12 +14,26 @@ class DataModel: NSObject {
     var events: [Event]
     var locations: [Location]
     
+    var unit: String {
+        return NSUserDefaults.standardUserDefaults().stringForKey("unit")!
+    }
+    
     func convertUnitsToCelcius() {
-        print("touch convetUnitsToCelcius")
+        if unit != "si" {
+            for location in locations {
+                location.convertWeatherUnitsToSI()
+            }
+            NSUserDefaults.standardUserDefaults().setObject("si", forKey: "unit")
+        }
     }
     
     func convetUnitsToFarenheit() {
-        print("touch convetUnitsToFarenheit")
+        if unit != "us" {
+            for location in locations {
+                location.convertWeatherUnitsToUS()
+            }
+            NSUserDefaults.standardUserDefaults().setObject("us", forKey: "unit")
+        }
     }
     
     private func documentsDirectory() -> String {
@@ -140,6 +154,7 @@ class DataModel: NSObject {
     }
     
     override init() {
+        NSUserDefaults.standardUserDefaults().registerDefaults(["unit": "si"])
         events = [Event]()
         locations = [Location]()
         super.init()

@@ -42,9 +42,9 @@ class LocationViewController: UIViewController {
         if let location = self.location, weather = location.currentDayWeather {
             todayLabel.hidden = isTheSameDay(weather.unixTime)
             day.text = location.currentDayWeather?.day
-            temperatureMax.text = weather.temperatureMax
-            temperatureMin.text = weather.temperatureMin
-            temperature.text = location.currentWeather?.temperature
+            temperatureMax.text = weather.temperatureMaxString
+            temperatureMin.text = weather.temperatureMinString
+            temperature.text = location.currentWeather?.temperatureString
             weatherDescripion.text = location.currentWeather?.summary
             degreeSymbol.hidden = false
             collectionView.reloadData()
@@ -115,6 +115,7 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.CurrentDayCell) as! CurrentDayWeatherTableViewCell
             if let currentDay = location?.currentDayWeather {
                 cell.currentDayWeather = currentDay
+                cell.feelsLike.text = location?.currentWeather?.apparentTemperatureString
             }
             return cell
         }

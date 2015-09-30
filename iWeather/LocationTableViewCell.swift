@@ -25,7 +25,7 @@ class LocationTableViewCell: UITableViewCell {
     private func updateUI() {
         if let location = self.location {
             locationName.text = location.name
-            locationTemperatureDegree.text = location.currentWeather?.temperature
+            locationTemperatureDegree.text = location.currentWeather?.temperatureString
             locationTime.text = location.currentTime
             degreeSymbol.hidden = false
             timer?.invalidate()
@@ -35,7 +35,7 @@ class LocationTableViewCell: UITableViewCell {
     
     func updateTime() {
         locationTime.text = location?.currentTime
-        locationTemperatureDegree.text = location?.currentWeather?.temperature
+        locationTemperatureDegree.text = location?.currentWeather?.temperatureString
     }
 
     override func awakeFromNib() {

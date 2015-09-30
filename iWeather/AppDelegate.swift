@@ -13,8 +13,8 @@ import GoogleMaps
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    let locationManager = LocationManager.sharedInstance
     let dataModel = DataModel.sharedInstance
+    let locationManager = LocationManager.sharedInstance
     var reachability: Reachability! = Reachability.reachabilityForInternetConnection()
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -41,14 +41,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         } else {
             locationManager.stopMonitoringLocationChanges()
-            window?.rootViewController?.presentViewController(noInternetNetworkAlert(), animated: false, completion: nil)
+            let title = "Cellular Data is Turned Off"
+            let message = "Turn on cellular data or use Wi-Fi to access data."
+            let alert = Alert.createWithSettinsURL(title, message: message)
+            window?.rootViewController?.presentViewController(alert, animated: false, completion: nil)
         }
     }
     
     func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+        application.backgroundRefreshStatus == .Available ? locationManager.startMonitoringLocationChanges() : locationManager.stopMonitoringLocationChanges()
         let group = dispatch_group_create()
         var updated = false
-        
         for location in dataModel.locations {
             if reachability.isReachable() {
                 dispatch_group_enter(group)
@@ -58,7 +61,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             }
         }
-        
         dispatch_group_notify(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
             updated ? completionHandler(.NewData) : completionHandler(.Failed)
         }
@@ -94,6 +96,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         dataModel.saveLocations()
+        locationManager.setAccuracyToHundredMeters()
     }
     
 }

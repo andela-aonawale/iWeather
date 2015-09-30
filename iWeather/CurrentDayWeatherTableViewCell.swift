@@ -33,9 +33,10 @@ class CurrentDayWeatherTableViewCell: UITableViewCell {
             sunsetTime.text = weather.sunsetTime
             chanceOfRain.text = weather.precipProbability
             humidity.text = weather.humidity
-            wind.text = weather.windSpeed
-            pressure.text = weather.pressure
-            visibility.text = weather.visibility
+            wind.text = weather.windSpeedString
+            pressure.text = weather.pressureString
+            visibility.text = weather.visibilityString
+            precipitation.text = weather.precipIntensityString
         }
     }
 
