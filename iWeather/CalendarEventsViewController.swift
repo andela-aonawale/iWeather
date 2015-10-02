@@ -155,14 +155,17 @@ extension CalendarEventsViewController: UIPopoverPresentationControllerDelegate 
         if let identifier = segue.identifier {
             switch identifier {
                 case Segue.ShowEventWeather:
-                    if let vc = segue.destinationViewController as? EventWeatherPopoverViewController {
-                        if let indexPath = tableView.indexPathForCell(swipedCell!) {
-                            vc.event = dataModel.events[indexPath.row]
-                        }
-                        if let ppc = vc.popoverPresentationController {
-                            ppc.delegate = self
-                        }
+                    guard let vc = segue.destinationViewController as? EventWeatherPopoverViewController else {
+                        return
                     }
+                    guard let indexPath = tableView.indexPathForCell(swipedCell!) else {
+                        return
+                    }
+                    vc.event = dataModel.events[indexPath.row]
+                    guard let ppc = vc.popoverPresentationController else {
+                        return
+                    }
+                    ppc.delegate = self
                 default:
                     break
             }
@@ -174,20 +177,25 @@ extension CalendarEventsViewController: UIPopoverPresentationControllerDelegate 
     }
     
     private func repositionCell() {
-        if let swipedCell = swipedCell {
-            UIView.animateWithDuration(0.15, animations: {
-                swipedCell.center = swipedCell.initialCenterPoint
-            })
+        guard let swipedCell = swipedCell else {
+            return
         }
+        UIView.animateWithDuration(0.15,
+            animations: {
+                swipedCell.center = swipedCell.initialCenterPoint
+            }
+        )
     }
     
     @IBAction func closePopover(segue:UIStoryboardSegue) {
-        if !segue.sourceViewController.isBeingDismissed() {
-            if let popover = segue.sourceViewController as? EventWeatherPopoverViewController {
-                popover.dismissViewControllerAnimated(true) { [unowned self] in
-                    self.repositionCell()
-                }
-            }
+        guard !segue.sourceViewController.isBeingDismissed() else {
+            return
+        }
+        guard let popover = segue.sourceViewController as? EventWeatherPopoverViewController else {
+            return
+        }
+        popover.dismissViewControllerAnimated(true) { [unowned self] in
+            self.repositionCell()
         }
     }
     

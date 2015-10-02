@@ -26,10 +26,11 @@ class TravelToLocationViewController: UIViewController {
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         dispatch_once(&onceToken) { [unowned self] in
             if keyPath == Notification.MyLocation {
-                if let coordinate = object?.myLocation?.coordinate {
-                    self.mapView.camera = GMSCameraPosition.cameraWithTarget(coordinate, zoom: 15, bearing: 30, viewingAngle: 40)
-                    self.mapView.settings.myLocationButton = true
+                guard let coordinate = object?.myLocation?.coordinate else {
+                    return
                 }
+                self.mapView.camera = GMSCameraPosition.cameraWithTarget(coordinate, zoom: 15, bearing: 30, viewingAngle: 40)
+                self.mapView.settings.myLocationButton = true
             }
         }
     }
@@ -153,8 +154,6 @@ extension TravelToLocationViewController: GMSMapViewDelegate {
             displayedInfoWindow.locationCoordinate = destination
             getDirectionsFrom(origin, to: destination)
             return true
-        } else {
-            print("location access disabled")
         }
         return false
     }

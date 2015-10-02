@@ -11,8 +11,8 @@ import UIKit
 
 class DataModel: NSObject {
     
-    var events: [Event]
-    var locations: [Location]
+    var events = [Event]()
+    var locations = [Location]()
     
     var unit: String {
         return NSUserDefaults.standardUserDefaults().stringForKey("unit")!
@@ -56,9 +56,15 @@ class DataModel: NSObject {
     private func loadLocations() {
         let path = dataFilePath()
         if NSFileManager.defaultManager().fileExistsAtPath(path) {
-            if let data = NSData(contentsOfFile: path) {
-                let unarchiver = NSKeyedUnarchiver(forReadingWithData: data)
-                locations = unarchiver.decodeObjectForKey(Key.Locations) as! Array<Location>
+            guard let data = NSData(contentsOfFile: path) else {
+                return
+            }
+            let unarchiver = NSKeyedUnarchiver(forReadingWithData: data)
+            guard let locations = unarchiver.decodeObjectForKey(Key.Locations) as? [Location] else {
+                return
+            }
+            self.locations = locations
+            defer {
                 unarchiver.finishDecoding()
             }
         }
@@ -73,27 +79,34 @@ class DataModel: NSObject {
         let center = NSNotificationCenter.defaultCenter()
         let queue = NSOperationQueue.mainQueue()
         center.addObserverForName(Notification.UserCurrentLocation, object: nil, queue: queue) { [unowned self] notification in
-            if let userLocation = notification.userInfo?[Notification.UserLocation] as? Location {
-                if let _ = self.locations[safe: 0] {
-                    self.locations[0] = userLocation
-                } else {
-                    self.locations.insert(userLocation, atIndex: 0)
-                }
-                UIApplication.sharedApplication().cancelAllLocalNotifications()
-                self.requestNotificationPermission()
-                //self.getSignificantWeatherChangeTime()
+            UIApplication.sharedApplication().cancelAllLocalNotifications()
+            guard let userLocation = notification.userInfo?[Notification.UserLocation] as? Location else {
+                return
             }
+            if let location = self.locations.first {
+                switch location.type {
+                    case LocationType.Current:
+                        self.locations[0] = userLocation
+                    case LocationType.Other:
+                        self.locations.insert(userLocation, atIndex: 0)
+                }
+            } else {
+                self.locations.insert(userLocation, atIndex: 0)
+            }
+            self.requestNotificationPermission()
+            //self.getSignificantWeatherChangeTime()
         }
     }
     
     private func getSignificantWeatherChangeTime() {
-        if let hourlyWeather = locations.first?.hourlyWeather {
-            for index in 2..<hourlyWeather.count {
-                let next = hourlyWeather[index], previous = hourlyWeather[index-1]
-                if next.imageName! != previous.imageName! {
-                    let message = ("\(getAlertMessageFrom(next.imageName!)!) \(next.hour)")
-                    scheduleNotification(previous.unixTime!, alertBody: message)
-                }
+        guard let hourlyWeather = locations.first?.hourlyWeather else {
+            return
+        }
+        for index in 2..<hourlyWeather.count {
+            let next = hourlyWeather[index], previous = hourlyWeather[index-1]
+            if next.imageName! != previous.imageName! {
+                let message = ("\(getAlertMessageFrom(next.imageName!)!) \(next.hour)")
+                scheduleNotification(previous.unixTime!, alertBody: message)
             }
         }
     }
@@ -144,8 +157,8 @@ class DataModel: NSObject {
     
     class var sharedInstance : DataModel {
         struct Static {
-            static var onceToken : dispatch_once_t = 0
-            static var instance : DataModel? = nil
+            static var onceToken: dispatch_once_t = 0
+            static var instance: DataModel? = nil
         }
         dispatch_once(&Static.onceToken) {
             Static.instance = DataModel()
@@ -155,8 +168,6 @@ class DataModel: NSObject {
     
     override init() {
         NSUserDefaults.standardUserDefaults().registerDefaults(["unit": "si"])
-        events = [Event]()
-        locations = [Location]()
         super.init()
         loadLocations()
         listenForNewLocation()

@@ -171,10 +171,8 @@ extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource 
         
         footerView.addConstraint(NSLayoutConstraint(item: celciusButton, attribute: .CenterY, relatedBy: .Equal, toItem: footerView, attribute: .CenterY, multiplier: 1, constant: 0))
         footerView.addConstraint(NSLayoutConstraint(item: celciusButton, attribute: .Trailing, relatedBy: .Equal, toItem: footerView, attribute: .Trailing, multiplier: 1, constant: -8))
-        
         footerView.addConstraint(NSLayoutConstraint(item: slashLabel, attribute: .CenterY, relatedBy: .Equal, toItem: footerView, attribute: .CenterY, multiplier: 1, constant: 0))
         footerView.addConstraint(NSLayoutConstraint(item: slashLabel, attribute: .Trailing, relatedBy: .Equal, toItem: celciusButton, attribute: .Leading, multiplier: 1, constant: 0))
-        
         footerView.addConstraint(NSLayoutConstraint(item: fahrenheitButton, attribute: .CenterY, relatedBy: .Equal, toItem: footerView, attribute: .CenterY, multiplier: 1, constant: 0))
         footerView.addConstraint(NSLayoutConstraint(item: fahrenheitButton, attribute: .Trailing, relatedBy: .Equal, toItem: slashLabel, attribute: .Leading, multiplier: 1, constant: 0))
         

@@ -121,7 +121,7 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.DaysCell) as! DailyWeatherTableViewCell
-        if let dayWeather = location?.dailyWeather[safe: indexPath.row] {
+        if let dayWeather = location?.dailyWeather?[safe: indexPath.row] {
             cell.dayWeather = dayWeather
         }
         return cell
@@ -155,7 +155,7 @@ extension LocationViewController: UIScrollViewDelegate, UICollectionViewDelegate
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellIdentifier.CollectionViewCell, forIndexPath: indexPath) as! WeatherCollectionViewCell
-        if let hourWeather = location?.hourlyWeather[indexPath.row] as Weather? {
+        if let hourWeather = location?.hourlyWeather?[indexPath.row] as Weather? {
             cell.hourWeather = hourWeather
             if indexPath.row == 0 {
                 cell.time?.text = "Now"

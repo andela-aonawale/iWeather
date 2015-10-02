@@ -51,17 +51,17 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
     }
     
     func createLocation() {
-        if let event = self.event where event.location == nil {
-            if let coordinate = event.eventLocationCoordinate {
-                let coordinate = Coordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
-                event.location = Location(name: event.eventLocationName!, coordinate: coordinate)
-            } else {
-                getEventPlacemarkFromLocationName(event.eventLocationName!) {
-                    if let coordinate = $0.location?.coordinate {
-                        let coordinate = Coordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
-                        event.location = Location(name: $0.name!, coordinate: coordinate)
-                    }
-                    
+        guard let event = self.event where event.location == nil else {
+            return
+        }
+        if let coordinate = event.eventLocationCoordinate {
+            let coordinate = Coordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            event.location = Location(name: event.eventLocationName!, coordinate: coordinate)
+        } else {
+            getEventPlacemarkFromLocationName(event.eventLocationName!) {
+                if let coordinate = $0.location?.coordinate {
+                    let coordinate = Coordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
+                    event.location = Location(name: $0.name!, coordinate: coordinate)
                 }
             }
         }
@@ -132,14 +132,14 @@ extension EventWeatherPopoverViewController: UICollectionViewDelegateFlowLayout,
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellIdentifier.CollectionViewCell, forIndexPath: indexPath) as! WeatherCollectionViewCell
-        if let hourWeather = event?.location?.hourlyWeather[indexPath.row] as Weather? {
+        if let hourWeather = event?.location?.hourlyWeather?[indexPath.row] as Weather? {
             cell.hourWeather = hourWeather
         }
         return cell
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return event?.location?.hourlyWeather.count ?? 0
+        return event?.location?.hourlyWeather?.count ?? 0
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {

@@ -21,8 +21,8 @@ class APIController {
     
     class var sharedInstance : APIController {
         struct Static {
-            static var onceToken : dispatch_once_t = 0
-            static var instance : APIController? = nil
+            static var onceToken: dispatch_once_t = 0
+            static var instance: APIController? = nil
         }
         dispatch_once(&Static.onceToken) {
             Static.instance = APIController()
@@ -40,17 +40,16 @@ class APIController {
                 print(error!.localizedDescription)
                 completionHandler(weatherObject: nil, error: error)
             }
-            if let HTTPresponse = response as? NSHTTPURLResponse {
-                if HTTPresponse.statusCode == 200 {
-                    do {
-                        let weatherObject = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
-                        dispatch_async(dispatch_get_main_queue()) {
-                            completionHandler(weatherObject: weatherObject as? NSDictionary, error: nil)
-                        }
-                    } catch {
-                        print("JSON Error \(error)")
-                    }
+            guard let HTTPresponse = response as? NSHTTPURLResponse where HTTPresponse.statusCode == 200 else {
+                return
+            }
+            do {
+                let weatherObject = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
+                dispatch_async(dispatch_get_main_queue()) {
+                    completionHandler(weatherObject: weatherObject as? NSDictionary, error: nil)
                 }
+            } catch {
+                print("JSON Error \(error)")
             }
         }
         task.resume()
@@ -65,19 +64,17 @@ class APIController {
                 print(error!.localizedDescription)
                 completionHandler(weatherObject: nil, error: error)
             }
-            if let HTTPresponse = response as? NSHTTPURLResponse {
-                if HTTPresponse.statusCode == 200 {
-                    do {
-                        let weatherObject = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
-                        dispatch_async(dispatch_get_main_queue()) {
-                            completionHandler(weatherObject: weatherObject as? NSDictionary, error: nil)
-                        }
-                    } catch {
-                        print("JSON Error \(error)")
-                    }
-                } 
+            guard let HTTPresponse = response as? NSHTTPURLResponse where HTTPresponse.statusCode == 200 else {
+                return
             }
-            
+            do {
+                let weatherObject = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
+                dispatch_async(dispatch_get_main_queue()) {
+                    completionHandler(weatherObject: weatherObject as? NSDictionary, error: nil)
+                }
+            } catch {
+                print("JSON Error \(error)")
+            }
         }
         task.resume()
     }

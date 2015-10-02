@@ -76,14 +76,14 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     private func createLocationWithPlacemark(placemark: CLPlacemark) {
         let coord = (placemark.location?.coordinate)!
         let coordinate = Coordinate(latitude: coord.latitude, longitude: coord.longitude)
-        let location = Location(name: placemark.name!, coordinate: coordinate)
+        let location = Location(name: placemark.name!, coordinate: coordinate, type: LocationType(rawValue: 0)!)
         postUserLocation(location)
     }
     
     class var sharedInstance : LocationManager {
         struct Static {
-            static var onceToken : dispatch_once_t = 0
-            static var instance : LocationManager? = nil
+            static var onceToken: dispatch_once_t = 0
+            static var instance: LocationManager? = nil
         }
         dispatch_once(&Static.onceToken) {
             Static.instance = LocationManager()

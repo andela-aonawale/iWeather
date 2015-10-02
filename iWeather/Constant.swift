@@ -95,6 +95,7 @@ struct Key {
     static let HourlyWeather = "hourlyWeather"
     static let Locations = "locations"
     static let HasWeatherData = "hasWeatherData"
+    static let Type = "type"
 }
 
 struct Path {

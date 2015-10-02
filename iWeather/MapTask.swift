@@ -37,31 +37,31 @@ class MapTask {
         directionsURL?.query = "origin=\(origin)&destination=\(destination)"
         let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
         dispatch_async(dispatch_get_global_queue(qos, 0)) {
-            if let directionsData = NSData(contentsOfURL: (directionsURL?.URL)!) {
-                do {
-                    let dictionary = try NSJSONSerialization.JSONObjectWithData(directionsData, options: NSJSONReadingOptions.MutableContainers) as! Dictionary<NSObject, AnyObject>
-                    if let statusString = dictionary["status"] as! String?, status = Status(rawValue: statusString) {
-                        switch status {
-                            case .OK:
-                                if let route = (dictionary["routes"] as! Array<Dictionary<NSObject, AnyObject>>).first {
-                                    self.overviewPolyline = route["overview_polyline"] as! Dictionary<NSObject, AnyObject>
-                                    let legs = route["legs"] as! Array<Dictionary<NSObject, AnyObject>>
-                                    self.calculateTotalDistanceAndDuration(legs)
-                                    dispatch_async(dispatch_get_main_queue()) {
-                                        completion(status: status, success: true)
-                                    }
-                                }
-                            default:
-                                dispatch_async(dispatch_get_main_queue()) {
-                                    completion(status: status, success: false)
-                                }
+            guard let directionsData = NSData(contentsOfURL: (directionsURL?.URL)!) else {
+                return
+            }
+            do {
+                let dictionary = try NSJSONSerialization.JSONObjectWithData(directionsData, options: NSJSONReadingOptions.MutableContainers) as! Dictionary<NSObject, AnyObject>
+                if let statusString = dictionary["status"] as! String?, status = Status(rawValue: statusString) {
+                    switch status {
+                        case .OK:
+                            guard let route = (dictionary["routes"] as! Array<Dictionary<NSObject, AnyObject>>).first else {
+                                return
+                            }
+                            self.overviewPolyline = route["overview_polyline"] as! Dictionary<NSObject, AnyObject>
+                            let legs = route["legs"] as! Array<Dictionary<NSObject, AnyObject>>
+                            self.calculateTotalDistanceAndDuration(legs)
+                            dispatch_async(dispatch_get_main_queue()) {
+                                completion(status: status, success: true)
+                            }
+                        default:
+                            dispatch_async(dispatch_get_main_queue()) {
+                                completion(status: status, success: false)
                             }
                     }
-                } catch {
-                    
                 }
-            } else {
-                print("no internet")
+            } catch {
+                
             }
         }
     }

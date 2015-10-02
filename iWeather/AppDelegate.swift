@@ -33,18 +33,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func reachabilityChanged(notification: NSNotification) {
         if reachability.isReachable() {
+            fetchForLocationsWithoutWeatherData()
             locationManager.startMonitoringLocationChanges()
-            for location in dataModel.locations {
-                if !location.hasWeatherData {
-                    location.fetchWeatherData()
-                }
-            }
         } else {
             locationManager.stopMonitoringLocationChanges()
             let title = "Cellular Data is Turned Off"
             let message = "Turn on cellular data or use Wi-Fi to access data."
             let alert = Alert.createWithSettinsURL(title, message: message)
             window?.rootViewController?.presentViewController(alert, animated: false, completion: nil)
+        }
+    }
+    
+    func fetchForLocationsWithoutWeatherData() {
+        for location in dataModel.locations {
+            if !location.hasWeatherData {
+                location.fetchWeatherData()
+            }
         }
     }
     
@@ -83,6 +87,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+        fetchForLocationsWithoutWeatherData()
         locationManager.setAccuracyToBest()
     }
 
