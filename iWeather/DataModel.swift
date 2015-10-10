@@ -7,9 +7,8 @@
 //
 
 import Foundation
-import UIKit
 
-class DataModel: NSObject {
+class DataModel {
     
     var events = [Event]()
     var locations = [Location]()
@@ -18,21 +17,23 @@ class DataModel: NSObject {
         return NSUserDefaults.standardUserDefaults().stringForKey("unit")!
     }
     
-    func convertUnitsToCelcius() {
+    @objc func convertUnitsToCelcius() {
         if unit != "si" {
             for location in locations {
                 location.convertWeatherUnitsToSI()
             }
             NSUserDefaults.standardUserDefaults().setObject("si", forKey: "unit")
+            NSUserDefaults.standardUserDefaults().synchronize()
         }
     }
     
-    func convetUnitsToFarenheit() {
+    @objc func convetUnitsToFarenheit() {
         if unit != "us" {
             for location in locations {
                 location.convertWeatherUnitsToUS()
             }
             NSUserDefaults.standardUserDefaults().setObject("us", forKey: "unit")
+            NSUserDefaults.standardUserDefaults().synchronize()
         }
     }
     
@@ -70,89 +71,8 @@ class DataModel: NSObject {
         }
     }
     
-    private func requestNotificationPermission() {
-        let notificationSettings = UIUserNotificationSettings( forTypes: [.Alert, .Sound], categories: nil)
-        UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
-    }
-    
-    private func listenForNewLocation(){
-        let center = NSNotificationCenter.defaultCenter()
-        let queue = NSOperationQueue.mainQueue()
-        center.addObserverForName(Notification.UserCurrentLocation, object: nil, queue: queue) { [unowned self] notification in
-            UIApplication.sharedApplication().cancelAllLocalNotifications()
-            guard let userLocation = notification.userInfo?[Notification.UserLocation] as? Location else {
-                return
-            }
-            if let location = self.locations.first {
-                switch location.type {
-                    case LocationType.Current:
-                        self.locations[0] = userLocation
-                    case LocationType.Other:
-                        self.locations.insert(userLocation, atIndex: 0)
-                }
-            } else {
-                self.locations.insert(userLocation, atIndex: 0)
-            }
-            self.requestNotificationPermission()
-            //self.getSignificantWeatherChangeTime()
-        }
-    }
-    
-    private func getSignificantWeatherChangeTime() {
-        guard let hourlyWeather = locations.first?.hourlyWeather else {
-            return
-        }
-        for index in 2..<hourlyWeather.count {
-            let next = hourlyWeather[index], previous = hourlyWeather[index-1]
-            if next.imageName! != previous.imageName! {
-                let message = ("\(getAlertMessageFrom(next.imageName!)!) \(next.hour)")
-                scheduleNotification(previous.unixTime!, alertBody: message)
-            }
-        }
-    }
-    
-    private func getAlertMessageFrom(imageName: String) -> String? {
-        if let icon = Icon(rawValue: imageName) {
-            switch icon {
-                case .ClearDay, .ClearNight:
-                    return Message.Clear
-                case .Rain:
-                    return Message.Rain
-                case .Snow:
-                    return Message.Snow
-                case .Sleet:
-                    return Message.Sleet
-                case .Wind:
-                    return Message.Wind
-                case .Fog:
-                    return Message.Fog
-                case .Cloudy, .PartlyCloudyDay, .PartlyCloudyNight:
-                    return Message.Cloudy
-            }
-        }
-        return nil
-    }
-    
-    private enum Icon: String {
-        case ClearDay = "clear-day"
-        case ClearNight = "clear-night"
-        case Rain = "rain"
-        case Snow = "snow"
-        case Sleet = "sleet"
-        case Wind = "wind"
-        case Fog = "fog"
-        case Cloudy = "cloudy"
-        case PartlyCloudyDay = "partly-cloudy-day"
-        case PartlyCloudyNight = "partly-cloudy-night"
-    }
-    
-    private func scheduleNotification(unixTime: Int, alertBody: String) {
-        let notification = UILocalNotification()
-        notification.fireDate = NSDate(timeIntervalSince1970: NSTimeInterval(unixTime))
-        notification.timeZone = NSTimeZone.defaultTimeZone()
-        notification.alertBody = alertBody
-        notification.soundName = UILocalNotificationDefaultSoundName
-        UIApplication.sharedApplication().scheduleLocalNotification(notification)
+    private func registerDefaults() {
+        NSUserDefaults.standardUserDefaults().registerDefaults(["unit": "si"])
     }
     
     class var sharedInstance : DataModel {
@@ -166,14 +86,9 @@ class DataModel: NSObject {
         return Static.instance!
     }
     
-    override init() {
-        NSUserDefaults.standardUserDefaults().registerDefaults(["unit": "si"])
-        super.init()
+    init() {
+        registerDefaults()
         loadLocations()
-        listenForNewLocation()
     }
-    
-    deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
-    }
+
 }

@@ -15,19 +15,19 @@ class LocationTableViewCell: UITableViewCell {
     @IBOutlet weak var locationTemperatureDegree: UILabel!
     @IBOutlet weak var degreeSymbol: UILabel!
     
+    var timer: NSTimer!
     var location: Location? {
         didSet {
             updateUI()
         }
     }
-    var timer: NSTimer!
     
     private func updateUI() {
         if let location = self.location {
             locationName.text = location.name
             locationTemperatureDegree.text = location.currentWeather?.temperatureString
             locationTime.text = location.currentTime
-            degreeSymbol.hidden = false
+            degreeSymbol.hidden = !location.hasWeatherData
             timer?.invalidate()
             timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateTime", userInfo: nil, repeats: true)
         }
@@ -35,6 +35,7 @@ class LocationTableViewCell: UITableViewCell {
     
     func updateTime() {
         locationTime.text = location?.currentTime
+        degreeSymbol.hidden = !(location?.hasWeatherData)!
         locationTemperatureDegree.text = location?.currentWeather?.temperatureString
     }
 

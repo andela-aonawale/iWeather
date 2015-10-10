@@ -8,6 +8,7 @@
 
 import UIKit
 import Foundation
+import ChameleonFramework
 
 class LocationViewController: UIViewController {
 
@@ -49,31 +50,69 @@ class LocationViewController: UIViewController {
             degreeSymbol.hidden = false
             collectionView.reloadData()
             tableView.reloadData()
+            //view.backgroundColor = weatherColorFromImageName(weather.imageName!)
         }
     }
     
-    private func listenForHourWeatherRemoval(){
+    func weatherColorFromImageName(imageName: String) -> UIColor? {
+        guard let icon = Icon(rawValue: imageName) else {
+            return nil
+        }
+        switch icon {
+            case .ClearDay:
+                return FlatOrange()
+            case .ClearNight:
+                return FlatOrangeDark()
+            case .Rain:
+                return FlatBlue()
+            case .Snow:
+                return FlatGrayDark()
+            case .Sleet:
+                return FlatGrayDark()
+            case .Wind:
+                return FlatPowderBlueDark()
+            case .Fog:
+                return FlatPowderBlueDark()
+            case .Cloudy:
+                return FlatSkyBlue()
+            case .PartlyCloudyDay:
+                return FlatSkyBlue()
+            case .PartlyCloudyNight:
+                return FlatSkyBlueDark()
+        }
+    }
+    
+    private func listenForLocationWeatherChanges(){
         let center = NSNotificationCenter.defaultCenter()
         let queue = NSOperationQueue.mainQueue()
         center.addObserverForName(Notification.LocationDataUpdated, object: location, queue: queue) { [weak self] notification in
-            if self?.index == 0 {
-                if let pageViewController = self?.tabBarController?.selectedViewController as? PageViewController {
-                    pageViewController.moveToPage((self?.index)!)
-                }
-            }
             self?.updateUI()
+            guard let location = notification.userInfo?[Notification.Location] as? Location else {
+                return
+            }
+            switch location.type {
+                case .Current:
+                    guard let pageViewController = self?.tabBarController?.selectedViewController as? PageViewController else {
+                        return
+                    }
+                    pageViewController.moveToPage((self?.index)!)
+                    //Chameleon.setGlobalThemeUsingPrimaryColor(self?.view.backgroundColor, withContentStyle: UIContentStyle.Contrast)
+                default:
+                    break
+            }
         }
     }
     
-    // MARK: - VC life cycle
+    // MARK: - View Controller life cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.backgroundColor = UIColor.clearColor()
         tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         tableView.allowsSelection = false
         collectionView.backgroundColor = .clearColor()
+        listenForLocationWeatherChanges()
         updateUI()
-        listenForHourWeatherRemoval()
     }
     
     override func viewDidLayoutSubviews() {
@@ -93,6 +132,8 @@ class LocationViewController: UIViewController {
 }
 
 extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    // MARK: - UITableView Delegate & UITableView DataSource Methods
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let count = location?.dailyWeather?.count {
@@ -133,7 +174,7 @@ extension LocationViewController: UITableViewDelegate, UITableViewDataSource {
             case 7:
                 return tableHeight / 2.5
             case 8:
-                return tableHeight * 1.6
+                return tableHeight * 1.5
             default:
                 return tableHeight / 7
         }

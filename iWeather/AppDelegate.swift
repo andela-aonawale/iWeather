@@ -21,39 +21,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         GMSServices.provideAPIKey("AIzaSyC4sIc6LDwrS1atwdN2FV98lDQbG32HMWo")
         if (launchOptions?[UIApplicationLaunchOptionsLocationKey] != nil) && reachability.isReachable() {
-            locationManager.startMonitoringLocationChanges()
+            locationManager.startMonitoringSignificantLocationChanges()
         } else if reachability.isReachable() {
-            locationManager.startMonitoringLocationChanges()
+            locationManager.startUpdatingLocation()
         }
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "reachabilityChanged:", name: kReachabilityChangedNotification, object: nil)
         reachability.startNotifier()
-        application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
+        application.setMinimumBackgroundFetchInterval(NSTimeInterval(3600 * 6))
         return true
     }
     
     func reachabilityChanged(notification: NSNotification) {
         if reachability.isReachable() {
             fetchForLocationsWithoutWeatherData()
-            locationManager.startMonitoringLocationChanges()
         } else {
-            locationManager.stopMonitoringLocationChanges()
-            let title = "Cellular Data is Turned Off"
-            let message = "Turn on cellular data or use Wi-Fi to access data."
-            let alert = Alert.createWithSettinsURL(title, message: message)
-            window?.rootViewController?.presentViewController(alert, animated: false, completion: nil)
+            if UIApplication.sharedApplication().applicationState == UIApplicationState.Active {
+                let title = "Cellular Data is Turned Off"
+                let message = "Turn on cellular data or use Wi-Fi to access data."
+                let alert = Alert.createWithSettinsURL(title, message: message)
+                window?.rootViewController?.presentViewController(alert, animated: false, completion: nil)
+            }
         }
     }
     
     func fetchForLocationsWithoutWeatherData() {
-        for location in dataModel.locations {
-            if !location.hasWeatherData {
-                location.fetchWeatherData()
+        for location in dataModel.locations where !location.hasWeatherData {
+            location.updateWeatherData() { success in
+                if success && UIApplication.sharedApplication().applicationState == UIApplicationState.Active {
+                    location.postWeatherUpdateNotification()
+                }
             }
         }
     }
     
     func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-        application.backgroundRefreshStatus == .Available ? locationManager.startMonitoringLocationChanges() : locationManager.stopMonitoringLocationChanges()
         let group = dispatch_group_create()
         var updated = false
         for location in dataModel.locations {
@@ -82,13 +83,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         dataModel.saveLocations()
-        locationManager.setAccuracyToHundredMeters()
+        locationManager.stopUpdatingLocation()
+        locationManager.startMonitoringSignificantLocationChanges()
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
         fetchForLocationsWithoutWeatherData()
-        locationManager.setAccuracyToBest()
+        locationManager.stopMonitoringSignificantLocationChanges()
+        locationManager.startUpdatingLocation()
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
@@ -101,7 +104,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         dataModel.saveLocations()
-        locationManager.setAccuracyToHundredMeters()
     }
     
 }

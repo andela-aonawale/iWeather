@@ -158,7 +158,6 @@ class Weather: NSObject, NSCoding {
         visibility = aDecoder.decodeDoubleForKey(WeatherConstant.Visibility)
         apparentTemperature = aDecoder.decodeDoubleForKey(WeatherConstant.ApparentTemperature)
         timeZone = aDecoder.decodeObjectForKey(WeatherConstant.TimeZone) as? String
-        super.init()
     }
     
     init(weatherDictionary: NSDictionary, timeZone: String) {

@@ -12,7 +12,7 @@ class Alert {
     
     class func createWithSettinsURL(title: String, message: String) -> UIAlertController {
         let alert = UIAlertController(title: title, message: message , preferredStyle: .Alert)
-        let okAction = UIAlertAction(title: "OK", style: .Default) { action in
+        let okAction = UIAlertAction(title: "Cancel", style: .Default) { action in
             alert.dismissViewControllerAnimated(true, completion: nil)
         }
         let settingsAction = UIAlertAction(title: "Settings", style: .Default) { action in
@@ -52,7 +52,7 @@ class TabBarController: UITabBarController, LocationManagerDelegate {
     
     func locationAccessRestricted() {
         let title = "Location Services Resticted"
-        let message = "Your device's location services has been restricted."
+        let message = "Your device's location services have been restricted."
         let alert = Alert.createWithCancelAction(title, message: message)
         presentViewController(alert, animated: false, completion: nil)
     }
@@ -68,7 +68,7 @@ class TabBarController: UITabBarController, LocationManagerDelegate {
         LocationManager.sharedInstance.delegate = self
         NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationBackgroundRefreshStatusDidChangeNotification, object: UIApplication.sharedApplication(), queue: NSOperationQueue.mainQueue()) { notification in
             if UIApplication.sharedApplication().backgroundRefreshStatus == .Available {
-                LocationManager.sharedInstance.startMonitoringLocationChanges()
+                LocationManager.sharedInstance.startMonitoringSignificantLocationChanges()
             } else if UIApplication.sharedApplication().backgroundRefreshStatus == .Denied {
                 let title = "Background App Refresh Disabled"
                 let message = "In order to be able to update weather data in the background and automatically update your location, please press settings and enable 'Background App Refresh'."
@@ -83,7 +83,7 @@ class TabBarController: UITabBarController, LocationManagerDelegate {
         if !Reachability.reachabilityForInternetConnection().isReachable() {
             let title = "Cellular Data is Turned Off"
             let message = "Turn on cellular data or use Wi-Fi to access data."
-            let alert = Alert.createWithSettinsURL(title, message: message)
+            let alert = Alert.createWithCancelAction(title, message: message)
             presentViewController(alert, animated: false, completion: nil)
         }
     }

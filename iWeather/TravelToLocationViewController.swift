@@ -22,7 +22,7 @@ class TravelToLocationViewController: UIViewController {
         configureSearchController()
     }
     
-    var onceToken : dispatch_once_t = 0
+    var onceToken: dispatch_once_t = 0
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         dispatch_once(&onceToken) { [unowned self] in
             if keyPath == Notification.MyLocation {

@@ -228,7 +228,7 @@ extension CalendarEventsViewController {
             self.swipedCell!.center = point }) { finished in
             switch action {
                 case .Delete where finished:
-                    self.deleteCellAtIndexPath()
+                    self.confirmDeletion()
                 case .ShowWeather where finished:
                     self.showEventWeather()
                 default:
@@ -267,7 +267,20 @@ extension CalendarEventsViewController {
         }
     }
     
-    private func deleteCellAtIndexPath() {
+    private func confirmDeletion() {
+        let alert = UIAlertController(title: nil, message: "Are you sure you want to delete this event?" , preferredStyle: .Alert)
+        let deleteAction = UIAlertAction(title: "Delete", style: .Default) { action in
+            self.deleteSwipedCell()
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { action in
+            self.repositionCell()
+        }
+        alert.addAction(deleteAction)
+        alert.addAction(cancelAction)
+        presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    private func deleteSwipedCell() {
         if let swipedCell = swipedCell, indexPath = tableView.indexPathForCell(swipedCell) {
             let event = dataModel.events[indexPath.row].event
             do {

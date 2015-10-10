@@ -7,11 +7,25 @@
 //
 
 import Foundation
+import UIKit
 
 typealias Coordinate = (latitude: Double, longitude: Double)
 
 enum LocationType: Int {
     case Current, Other
+}
+
+enum Icon: String {
+    case ClearDay = "clear-day"
+    case ClearNight = "clear-night"
+    case Rain = "rain"
+    case Snow = "snow"
+    case Sleet = "sleet"
+    case Wind = "wind"
+    case Fog = "fog"
+    case Cloudy = "cloudy"
+    case PartlyCloudyDay = "partly-cloudy-day"
+    case PartlyCloudyNight = "partly-cloudy-night"
 }
 
 final class Location: NSObject, NSCoding {
@@ -57,21 +71,16 @@ final class Location: NSObject, NSCoding {
         }
     }
     
-    func fetchWeatherData() {
-        updateWeatherData { [weak self] success in
-            self?.postWeatherUpdateNotification()
-        }
-    }
-    
     func updateWeatherData(completionHandler: (success: Bool) -> ()) {
         clearWeatherData()
-        APIController.sharedInstance.getWeatherData(self.coordinateString) { [weak self] result, error in
+        APIController.sharedInstance.getWeatherData(coordinateString) { [weak self] result, error in
             if error != nil {
                 self?.hasWeatherData = false
                 completionHandler(success: false)
             } else if let result = result {
                 self?.hasWeatherData = true
                 self?.weatherDictionary = result
+                self?.scheduleNotifications()
                 completionHandler(success: true)
             }
         }
@@ -150,7 +159,7 @@ final class Location: NSObject, NSCoding {
         }
     }
     
-    private func postWeatherUpdateNotification() {
+    func postWeatherUpdateNotification() {
         let notification = NSNotification(name: Notification.LocationDataUpdated, object: self, userInfo: [Notification.Location : self])
         NSNotificationCenter.defaultCenter().postNotification(notification)
     }
@@ -182,8 +191,6 @@ final class Location: NSObject, NSCoding {
         dailyWeather = aDecoder.decodeObjectForKey(Key.DailyWeather) as? [DailyWeathear]
         hourlyWeather = aDecoder.decodeObjectForKey(Key.HourlyWeather) as? [Weather]
         hasWeatherData = aDecoder.decodeBoolForKey(Key.HasWeatherData)
-        super.init()
-        fetchWeatherData()
     }
     
     var weatherDictionary: NSDictionary! {
@@ -240,17 +247,84 @@ final class Location: NSObject, NSCoding {
         self.hasWeatherData = false
         self.type = type
         super.init()
-        self.fetchWeatherData()
+        updateWeatherData { [weak self] success in
+            if success {
+                self?.postWeatherUpdateNotification()
+            }
+        }
     }
     
     convenience init(name: String, coordinate: Coordinate) {
-        let type = LocationType(rawValue: 1)!
-        self.init(name: name, coordinate: coordinate, type: type)
+        self.init(name: name, coordinate: coordinate, type: LocationType(rawValue: 1)!)
     }
     
     deinit {
         nextHourTimer?.invalidate()
         subsequentHourTimer?.invalidate()
+        UIApplication.sharedApplication().cancelAllLocalNotifications()
+    }
+    
+}
+
+extension Location {
+    
+    // MARK: - Notification methods
+    
+    private func scheduleNotifications() {
+        if type == .Current {
+            requestNotificationPermission()
+            UIApplication.sharedApplication().cancelAllLocalNotifications()
+            getSignificantWeatherChangeTime(hourlyWeather)
+        }
+    }
+    
+    private func requestNotificationPermission() {
+        let notificationSettings = UIUserNotificationSettings( forTypes: [.Alert, .Sound], categories: nil)
+        UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
+    }
+    
+    private func getSignificantWeatherChangeTime(hourlyWeather: [Weather]?) {
+        guard let hourlyWeather = hourlyWeather where hourlyWeather.count > 2 else {
+            return
+        }
+        for index in 2..<hourlyWeather.count {
+            let next = hourlyWeather[index], previous = hourlyWeather[index-1]
+            if next.imageName! != previous.imageName! {
+                let message = ("\(getAlertMessageFrom(next.imageName!)!) \(next.hour)")
+                scheduleNotification(previous.unixTime!, alertBody: message)
+            }
+        }
+    }
+    
+    private func scheduleNotification(unixTime: Int, alertBody: String) {
+        let notification = UILocalNotification()
+        notification.fireDate = NSDate(timeIntervalSince1970: NSTimeInterval(unixTime))
+        notification.timeZone = NSTimeZone.defaultTimeZone()
+        notification.alertBody = alertBody
+        notification.soundName = UILocalNotificationDefaultSoundName
+        UIApplication.sharedApplication().scheduleLocalNotification(notification)
+    }
+    
+    private func getAlertMessageFrom(imageName: String) -> String? {
+        guard let icon = Icon(rawValue: imageName) else {
+            return nil
+        }
+        switch icon {
+            case .ClearDay, .ClearNight:
+                return Message.Clear
+            case .Rain:
+                return Message.Rain
+            case .Snow:
+                return Message.Snow
+            case .Sleet:
+                return Message.Sleet
+            case .Wind:
+                return Message.Wind
+            case .Fog:
+                return Message.Fog
+            case .Cloudy, .PartlyCloudyDay, .PartlyCloudyNight:
+                return Message.Cloudy
+        }
     }
     
 }

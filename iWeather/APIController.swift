@@ -30,15 +30,15 @@ class APIController {
         return Static.instance!
     }
     
-    private let session = NSURLSession.sharedSession()
-    
     func getWeatherData(coordinate: String, completionHandler: (weatherObject: NSDictionary?, error: NSError?) -> Void) {
         let forecastURL = NSURLComponents(string: "\(API.ForecastURL)\(API.ForcastKEY)/\(coordinate)?")
         forecastURL?.query = API.ForecastQuery
-        let task = session.dataTaskWithURL(forecastURL!.URL!) { data, response, error in
+        let task = NSURLSession.sharedSession().dataTaskWithURL(forecastURL!.URL!) { data, response, error in
             if error != nil {
                 print(error!.localizedDescription)
-                completionHandler(weatherObject: nil, error: error)
+                dispatch_async(dispatch_get_main_queue()) {
+                    completionHandler(weatherObject: nil, error: error)
+                }
             }
             guard let HTTPresponse = response as? NSHTTPURLResponse where HTTPresponse.statusCode == 200 else {
                 return
@@ -59,10 +59,12 @@ class APIController {
         let unixTime = Int(date.timeIntervalSince1970)
         let forecastURL = NSURLComponents(string: "\(API.ForecastURL)\(API.ForcastKEY)/\(coordinate),\(unixTime)?")
         forecastURL?.query = API.ForecastQuery
-        let task = session.dataTaskWithURL(forecastURL!.URL!) { data, response, error in
+        let task = NSURLSession.sharedSession().dataTaskWithURL(forecastURL!.URL!) { data, response, error in
             if error != nil {
                 print(error!.localizedDescription)
-                completionHandler(weatherObject: nil, error: error)
+                dispatch_async(dispatch_get_main_queue()) {
+                    completionHandler(weatherObject: nil, error: error)
+                }
             }
             guard let HTTPresponse = response as? NSHTTPURLResponse where HTTPresponse.statusCode == 200 else {
                 return

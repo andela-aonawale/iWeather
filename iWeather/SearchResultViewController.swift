@@ -93,7 +93,6 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
         dismissViewControllerAnimated(true) { [unowned self] in
             let placeID = self.predictions[indexPath.row].id
             self.placesClient?.lookUpPlaceID(placeID) { place, error in
@@ -103,6 +102,7 @@ class SearchResultViewController: UITableViewController, UISearchResultsUpdating
                 if let error = error {
                     print("error \(error.localizedDescription)")
                 }
+                tableView.deselectRowAtIndexPath(indexPath, animated: true)
             }
         }
     }

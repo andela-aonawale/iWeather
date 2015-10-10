@@ -20,37 +20,44 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     
     private lazy var locationManager: CLLocationManager! = {
         let manager = CLLocationManager()
-        manager.desiredAccuracy = kCLLocationAccuracyBest
         manager.delegate = self
         return manager
     }()
     weak var delegate: LocationManagerDelegate?
     private let geocoder = CLGeocoder()
     
-    func geocodeAddressFromString(address: String, completed: (placemarks: [AnyObject]!, error: NSError!) -> Void) {
-        geocoder.geocodeAddressString(address) { (placemarks, error) in
-            completed(placemarks: placemarks, error: error)
-        }
+    func startUpdatingLocation() {
+        locationManager.startUpdatingLocation()
     }
     
-    func setAccuracyToHundredMeters() {
-        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+    func stopUpdatingLocation() {
+        locationManager.stopUpdatingLocation()
     }
     
-    func setAccuracyToBest() {
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-    }
-    
-    func startMonitoringLocationChanges() {
+    func startMonitoringSignificantLocationChanges() {
         locationManager.startMonitoringSignificantLocationChanges()
     }
     
-    func stopMonitoringLocationChanges() {
+    func stopMonitoringSignificantLocationChanges() {
         locationManager.stopMonitoringSignificantLocationChanges()
     }
     
     class func locationServicesEnabled() -> Bool {
         return CLLocationManager.locationServicesEnabled()
+    }
+    
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.first else {
+            return
+        }
+        locationManager.stopUpdatingLocation()
+        geocoder.reverseGeocodeLocation(location) { [unowned self] (placemarks, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+            } else if let placemark = placemarks?.first {
+                self.createLocationWithPlacemark(placemark)
+            }
+        }
     }
 
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
@@ -58,26 +65,49 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             case .NotDetermined:
                 locationManager.requestAlwaysAuthorization()
             case .Denied, .AuthorizedWhenInUse:
+                locationManager.stopUpdatingLocation()
                 locationManager.stopMonitoringSignificantLocationChanges()
                 delegate?.locationAccessDenied()
             case .Restricted:
+                locationManager.stopUpdatingLocation()
                 locationManager.stopMonitoringSignificantLocationChanges()
                 delegate?.locationAccessRestricted()
             case .AuthorizedAlways:
-                locationManager.startMonitoringSignificantLocationChanges()
+                locationManager.startUpdatingLocation()
         }
     }
     
-    private func postUserLocation(location: Location) {
-        let notification = NSNotification(name: Notification.UserCurrentLocation, object: nil, userInfo: [Notification.UserLocation : location])
+    func geocodeAddressFromString(address: String, completed: (placemarks: [AnyObject]!, error: NSError!) -> Void) {
+        geocoder.geocodeAddressString(address) { (placemarks, error) in
+            completed(placemarks: placemarks, error: error)
+        }
+    }
+    
+    private func postUserLocation() {
+        let notification = NSNotification(name: Notification.UserCurrentLocation, object: nil, userInfo: nil)
         NSNotificationCenter.defaultCenter().postNotification(notification)
     }
     
     private func createLocationWithPlacemark(placemark: CLPlacemark) {
         let coord = (placemark.location?.coordinate)!
         let coordinate = Coordinate(latitude: coord.latitude, longitude: coord.longitude)
-        let location = Location(name: placemark.name!, coordinate: coordinate, type: LocationType(rawValue: 0)!)
-        postUserLocation(location)
+        let userLocation = Location(name: placemark.name!, coordinate: coordinate, type: LocationType(rawValue: 0)!)
+        saveUserLocationToDataModel(userLocation)
+        postUserLocation()
+    }
+    
+    private func saveUserLocationToDataModel(userLocation: Location) {
+        let dataModel = DataModel.sharedInstance
+        if let location = dataModel.locations.first {
+            switch location.type {
+                case .Current:
+                    dataModel.locations[0] = userLocation
+                case .Other:
+                    dataModel.locations.insert(userLocation, atIndex: 0)
+            }
+        } else {
+            dataModel.locations.append(userLocation)
+        }
     }
     
     class var sharedInstance : LocationManager {
@@ -91,30 +121,19 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         return Static.instance!
     }
     
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = manager.location {
-            geocoder.reverseGeocodeLocation(location) { [unowned self] (placemarks, error) in
-                if error != nil {
-                    print(error!.localizedDescription)
-                } else if let placemark = placemarks?.first {
-                    self.createLocationWithPlacemark(placemark)
-                }
-            }
-        }
-    }
-    
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
         switch error {
             case CLError.LocationUnknown.rawValue:
                 print("The location manager was unable to obtain a location value right now.")
             case CLError.Denied.rawValue:
+                locationManager.stopUpdatingLocation()
                 locationManager.stopMonitoringSignificantLocationChanges()
                 delegate?.locationAccessDenied()
             case CLError.Network.rawValue:
-                locationManager.stopMonitoringSignificantLocationChanges()
+                locationManager.stopUpdatingLocation()
                 delegate?.networkUnavailable()
-                print("The network was unavailable or a network error occurred")
             default:
+                locationManager.stopUpdatingLocation()
                 locationManager.stopMonitoringSignificantLocationChanges()
                 break
         }
