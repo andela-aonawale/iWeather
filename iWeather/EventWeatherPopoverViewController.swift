@@ -12,7 +12,6 @@ import CoreLocation
 class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentationControllerDelegate {
     
     @IBOutlet weak var eventName: UILabel!
-    @IBOutlet weak var eventWeatherImage: UIImageView!
     @IBOutlet weak var eventWeatherTemperature: UILabel!
     @IBOutlet weak var eventWeatherDescription: UILabel!
     @IBOutlet weak var eventTime: UILabel!
@@ -41,11 +40,11 @@ class EventWeatherPopoverViewController: UIViewController, UIPopoverPresentation
     
     private func updateUI() {
         if let weather = event?.location?.currentWeather {
-            eventWeatherImage.image = weather.weatherImage
             eventWeatherTemperature.text = weather.temperatureString
             eventWeatherDescription.text = weather.summary
             eventTime.text = weather.time
             degreeSymbol.hidden = false
+            view.backgroundColor = weatherColorFromImageName(weather.imageName!, frame: view.frame)
             activityIndicator.stopAnimating()
         }
     }

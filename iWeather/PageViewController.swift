@@ -13,15 +13,19 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
     var dataModel = DataModel.sharedInstance
     
     func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
-        var index = (viewController as! LocationViewController).index
+        let vc = (viewController as! LocationViewController)
+        view.backgroundColor = vc.view.backgroundColor
+        var index = vc.index
         index++
-        return self.viewControllerAtIndex(index)
+        return viewControllerAtIndex(index)
     }
     
     func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
-        var index = (viewController as! LocationViewController).index
+        let vc = (viewController as! LocationViewController)
+        view.backgroundColor = vc.view.backgroundColor
+        var index = vc.index
         index--
-        return self.viewControllerAtIndex(index)
+        return viewControllerAtIndex(index)
     }
     
     func viewControllerAtIndex(index: Int) -> LocationViewController? {

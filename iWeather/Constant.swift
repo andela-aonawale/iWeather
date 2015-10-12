@@ -40,19 +40,6 @@ struct WeatherConstant {
     static let ApparentTemperature = "apparentTemperature"
 }
 
-//struct IconName {
-//    static let ClearDay = "clear-day"
-//    static let ClearNight = "clear-night"
-//    static let Rain = "rain"
-//    static let Snow = "snow"
-//    static let Sleet = "sleet"
-//    static let Wind = "wind"
-//    static let Fog = "fog"
-//    static let Cloudy = "cloudy"
-//    static let PartlyCloudyDay = "partly-cloudy-day"
-//    static let PartlyCloudyNight = "partly-cloudy-night"
-//}
-
 struct CellIdentifier {
     static let SummaryCell = "SummaryCell"
     static let CurrentDayCell = "CurrentDayCell"

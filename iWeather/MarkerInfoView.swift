@@ -95,6 +95,7 @@ class MarkerInfoView: UIView {
             arrivalSummary.text = weather.summary
             arrivalTime.text = weather.date
             arrivalDegreeSymbol.hidden = false
+            backgroundColor = weatherColorFromImageName(weather.imageName!, frame: frame)
         }
     }
     
@@ -105,6 +106,7 @@ class MarkerInfoView: UIView {
             currentSummary.text = weather.summary
             currentTime.text = weather.date
             currentDegreeSymbol.hidden = false
+            backgroundColor = weatherColorFromImageName(weather.imageName!, frame: frame)
         }
     }
     

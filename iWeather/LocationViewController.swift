@@ -50,35 +50,7 @@ class LocationViewController: UIViewController {
             degreeSymbol.hidden = false
             collectionView.reloadData()
             tableView.reloadData()
-            //view.backgroundColor = weatherColorFromImageName(weather.imageName!)
-        }
-    }
-    
-    func weatherColorFromImageName(imageName: String) -> UIColor? {
-        guard let icon = Icon(rawValue: imageName) else {
-            return nil
-        }
-        switch icon {
-            case .ClearDay:
-                return FlatOrange()
-            case .ClearNight:
-                return FlatOrangeDark()
-            case .Rain:
-                return FlatBlue()
-            case .Snow:
-                return FlatGrayDark()
-            case .Sleet:
-                return FlatGrayDark()
-            case .Wind:
-                return FlatPowderBlueDark()
-            case .Fog:
-                return FlatPowderBlueDark()
-            case .Cloudy:
-                return FlatSkyBlue()
-            case .PartlyCloudyDay:
-                return FlatSkyBlue()
-            case .PartlyCloudyNight:
-                return FlatSkyBlueDark()
+            view.backgroundColor = weatherColorFromImageName(weather.imageName!, frame: view.frame)
         }
     }
     
@@ -96,7 +68,6 @@ class LocationViewController: UIViewController {
                         return
                     }
                     pageViewController.moveToPage((self?.index)!)
-                    //Chameleon.setGlobalThemeUsingPrimaryColor(self?.view.backgroundColor, withContentStyle: UIContentStyle.Contrast)
                 default:
                     break
             }
@@ -213,6 +184,34 @@ extension LocationViewController: UIScrollViewDelegate, UICollectionViewDelegate
         return CGSizeMake(view.frame.size.width / 6 , collectionView.frame.size.height)
     }
     
+}
+
+func weatherColorFromImageName(imageName: String, frame: CGRect) -> UIColor? {
+    guard let icon = Icon(rawValue: imageName) else {
+        return nil
+    }
+    switch icon {
+    case .ClearDay:
+        return UIColor(gradientStyle: UIGradientStyle.TopToBottom, withFrame: frame, andColors: [FlatOrange(), FlatSkyBlue()])
+    case .ClearNight:
+        return UIColor(gradientStyle: UIGradientStyle.TopToBottom, withFrame: frame, andColors: [FlatYellowDark(), FlatSkyBlue()])
+    case .Rain:
+        return FlatSkyBlue()
+    case .Snow:
+        return UIColor(gradientStyle: UIGradientStyle.TopToBottom, withFrame: frame, andColors: [FlatWhiteDark(), FlatGrayDark()])
+    case .Sleet:
+        return UIColor(gradientStyle: UIGradientStyle.TopToBottom, withFrame: frame, andColors: [FlatSandDark(), FlatGrayDark()])
+    case .Wind:
+        return UIColor(gradientStyle: UIGradientStyle.TopToBottom, withFrame: frame, andColors: [FlatPowderBlueDark(), FlatBlue()])
+    case .Fog:
+        return UIColor(gradientStyle: UIGradientStyle.TopToBottom, withFrame: frame, andColors: [FlatSandDark(), FlatGray()])
+    case .Cloudy:
+        return UIColor(gradientStyle: UIGradientStyle.TopToBottom, withFrame: frame, andColors: [FlatWhiteDark(), FlatSkyBlue()])
+    case .PartlyCloudyDay:
+        return UIColor(gradientStyle: UIGradientStyle.TopToBottom, withFrame: frame, andColors: [FlatOrange(), FlatSkyBlue()])
+    case .PartlyCloudyNight:
+        return UIColor(gradientStyle: UIGradientStyle.TopToBottom, withFrame: frame, andColors: [FlatOrangeDark(), FlatSkyBlueDark()])
+    }
 }
 
 extension Weather {

@@ -43,7 +43,13 @@ class CalendarEventsViewController: UIViewController {
                 self.createEvent(event)
             }
         }
-        tableView.reloadData()
+        if NSThread.isMainThread() {
+            tableView.reloadData()
+        } else {
+            dispatch_async(dispatch_get_main_queue()) { Void in
+                self.tableView.reloadData()
+            }
+        }
     }
     
     private func fetchEventsFromCalendars(calendars: [EKCalendar], completed: ([EKEvent]) -> Void) {
@@ -55,12 +61,13 @@ class CalendarEventsViewController: UIViewController {
     }
     
     private func createEvent(event: EKEvent) {
-        if let location = event.valueForKey(DictionaryConstant.StructuredLocation) as? EKStructuredLocation {
-            if let coordinate = location.geoLocation?.coordinate {
-                createEvent(event, coordinate: coordinate)
-            } else if !event.location!.isEmpty && (event.startDate != nil ?? false) {
-                createEvent(event: event)
-            }
+        guard let location = event.valueForKey(DictionaryConstant.StructuredLocation) as? EKStructuredLocation else {
+            return
+        }
+        if let coordinate = location.geoLocation?.coordinate {
+            createEvent(event, coordinate: coordinate)
+        } else if !event.location!.isEmpty && (event.startDate != nil ?? false) {
+            createEvent(event: event)
         }
     }
     
@@ -75,9 +82,19 @@ class CalendarEventsViewController: UIViewController {
         dataModel.events.append(event)
     }
     
-    private func enableCalendarAccess() {
-        let openSettingsUrl = NSURL(string: UIApplicationOpenSettingsURLString)
-        UIApplication.sharedApplication().openURL(openSettingsUrl!)
+    private func addRefreshControl() {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: .ValueChanged)
+        tableView.addSubview(refreshControl)
+    }
+    
+    func handleRefresh(refreshControl: UIRefreshControl) {
+        calendarIsAuthorized() ? fetchCalendars() : tableView.reloadData()
+        refreshControl.endRefreshing()
+    }
+    
+    func calendarIsAuthorized() -> Bool {
+        return EKEventStore.authorizationStatusForEntityType(EKEntityType.Event) == .Authorized
     }
     
     private func checkCalendarAuthorizationStatus() {
@@ -87,15 +104,14 @@ class CalendarEventsViewController: UIViewController {
                 requestAccessToCalendar()
             case .Authorized:
                 fetchCalendars()
-            case .Denied:
-                showNeedPermissionView()
-            case .Restricted:
-                showRestrictedView()
+            case .Denied, .Restricted:
+                tableView.reloadData()
         }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        addRefreshControl()
         checkCalendarAuthorizationStatus()
         tableView.tableFooterView = UIView(frame: CGRectZero)
     }
@@ -135,6 +151,48 @@ extension CalendarEventsViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
         return nil
+    }
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        if dataModel.events.count > 0 {
+            return 1
+        } else {
+            displayEmptyEventMessage()
+            return 0
+        }
+    }
+    
+    func displayEmptyEventMessage() {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.height))
+        label.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "handleLabelTap"))
+        label.font = UIFont(name: "Palatino-Italic", size: 20)
+        label.textColor = UIColor.blackColor()
+        label.userInteractionEnabled = !(EKEventStore.authorizationStatusForEntityType(EKEntityType.Event) == .Restricted)
+        label.textAlignment = .Center
+        label.text = textForLabel()
+        label.numberOfLines = 0;
+        label.sizeToFit()
+        tableView.backgroundView = label
+    }
+    
+    func handleLabelTap() {
+        if let openSettingsUrl = NSURL(string: UIApplicationOpenSettingsURLString) {
+            UIApplication.sharedApplication().openURL(openSettingsUrl)
+        }
+    }
+    
+    func textForLabel() -> String? {
+        let status = EKEventStore.authorizationStatusForEntityType(EKEntityType.Event)
+        switch status {
+            case .Authorized:
+                return "No data is currently available. Please pull down to refresh."
+            case .Denied:
+                return "Calendar permission access denied. Please click here to enable access."
+            case .Restricted:
+                return "Calendar permission access restricted."
+            default:
+                return nil
+        }
     }
     
 }
