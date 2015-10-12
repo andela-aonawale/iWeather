@@ -640,7 +640,7 @@
         <scene sceneID="NwZ-ZF-aBb">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="SjQ-5C-ZJ6" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Map" image="map" id="jrI-oT-aYk"/>
+                    <tabBarItem key="tabBarItem" title="Map" image="map" selectedImage="map" id="jrI-oT-aYk"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="mN6-nE-vr1">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>

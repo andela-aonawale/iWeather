@@ -124,7 +124,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
         switch error {
             case CLError.LocationUnknown.rawValue:
-                print("The location manager was unable to obtain a location value right now.")
+                locationManager.stopUpdatingLocation()
             case CLError.Denied.rawValue:
                 locationManager.stopUpdatingLocation()
                 locationManager.stopMonitoringSignificantLocationChanges()

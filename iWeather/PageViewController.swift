@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ChameleonFramework
 
 class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
 
@@ -54,7 +55,7 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(red: 19/255, green: 111/255, blue: 153/255, alpha: 1)
+        view.backgroundColor = FlatSkyBlue()
         dataSource = self
         if let currentLocationViewController = viewControllerAtIndex(0) {
             setViewControllers([currentLocationViewController], direction: .Forward, animated: false, completion: nil)

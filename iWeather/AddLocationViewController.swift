@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import ChameleonFramework
 
 class AddLocationViewController: UIViewController, UISearchBarDelegate {
     
@@ -87,7 +88,8 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
         celciusButton = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         celciusButton.selected = (unit == "si")
         celciusButton.setTitle("\u{00B0}C", forState: .Normal)
-        celciusButton.setTitleColor(UIColor.blackColor(), forState: .Selected)
+        celciusButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
+        celciusButton.setTitleColor(navigationController?.navigationBar.tintColor, forState: .Selected)
         celciusButton.addTarget(dataModel, action: "convertUnitsToCelcius", forControlEvents: .TouchUpInside)
         celciusButton.addTarget(self, action: "changeCelciusButtonSelectedState:", forControlEvents: .TouchUpInside)
     }
@@ -96,7 +98,8 @@ class AddLocationViewController: UIViewController, UISearchBarDelegate {
         fahrenheitButton = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         fahrenheitButton.selected = (unit == "us")
         fahrenheitButton.setTitle("\u{00B0}F", forState: .Normal)
-        fahrenheitButton.setTitleColor(UIColor.blackColor(), forState: .Selected)
+        fahrenheitButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
+        fahrenheitButton.setTitleColor(navigationController?.navigationBar.tintColor, forState: .Selected)
         fahrenheitButton.addTarget(dataModel, action: "convetUnitsToFarenheit", forControlEvents: .TouchUpInside)
         fahrenheitButton.addTarget(self, action: "changefahrenheitButtonSelectedState:", forControlEvents: .TouchUpInside)
     }
@@ -164,11 +167,11 @@ extension AddLocationViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 44))
-        footerView.backgroundColor = UIColor(red: 19/255, green: 111/255, blue: 153/255, alpha: 1)
+        footerView.backgroundColor = FlatWhite()
 
         let slashLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         slashLabel.text = "/"
-        slashLabel.textColor = UIColor.lightGrayColor()
+        slashLabel.textColor = UIColor.darkGrayColor()
 
         celciusButton.translatesAutoresizingMaskIntoConstraints = false
         slashLabel.translatesAutoresizingMaskIntoConstraints = false

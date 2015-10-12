@@ -24,16 +24,8 @@ class CalendarEventsViewController: UIViewController {
     
     private func requestAccessToCalendar() {
         eventStore.requestAccessToEntityType(EKEntityType.Event) { [unowned self] in
-            ($0 && $1 == nil) ? self.fetchCalendars() : self.showNeedPermissionView()
+            ($0 && $1 == nil) ? self.fetchCalendars() : self.tableView.reloadData()
         }
-    }
-    
-    private func showNeedPermissionView() {
-        
-    }
-    
-    private func showRestrictedView() {
-        
     }
     
     private func fetchCalendars() {
@@ -54,7 +46,7 @@ class CalendarEventsViewController: UIViewController {
     
     private func fetchEventsFromCalendars(calendars: [EKCalendar], completed: ([EKEvent]) -> Void) {
         let startDate = NSDate()
-        let endDate = NSDate(timeIntervalSinceNow: 604800*10)
+        let endDate = NSDate(timeIntervalSinceNow: 604800*48)
         let predicate = eventStore.predicateForEventsWithStartDate(startDate, endDate: endDate, calendars: calendars)
         let eventsArray = eventStore.eventsMatchingPredicate(predicate)
         completed(eventsArray)
@@ -167,7 +159,8 @@ extension CalendarEventsViewController: UITableViewDelegate, UITableViewDataSour
         label.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "handleLabelTap"))
         label.font = UIFont(name: "Palatino-Italic", size: 20)
         label.textColor = UIColor.blackColor()
-        label.userInteractionEnabled = !(EKEventStore.authorizationStatusForEntityType(EKEntityType.Event) == .Restricted)
+        let status = EKEventStore.authorizationStatusForEntityType(EKEntityType.Event)
+        label.userInteractionEnabled = !(status == .Restricted || status == .Authorized)
         label.textAlignment = .Center
         label.text = textForLabel()
         label.numberOfLines = 0;
