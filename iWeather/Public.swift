@@ -1,8 +1,8 @@
 //
-//  PanDirectionGestureRecognizer.swift
+//  String.swift
 //  iWeather
 //
-//  Created by Ahmed Onawale on 8/23/15.
+//  Created by Ahmed Onawale on 9/12/15.
 //  Copyright © 2015 Ahmed Onawale. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,34 +23,37 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-import UIKit.UIGestureRecognizerSubclass
+import Foundation
 
-enum PanDirection {
-    case Vertical
-    case Horizontal
+extension String {
+    
+    func stringByAppendingPathComponent(path: String) -> String {
+        let nsSt = self as NSString
+        return nsSt.stringByAppendingPathComponent(path)
+    }
+    
 }
 
-class PanDirectionGestureRecognizer: UIPanGestureRecognizer {
-    
-    let direction: PanDirection
-    
-    init(direction: PanDirection, target: AnyObject, action: Selector) {
-        self.direction = direction
-        super.init(target: target, action: action)
+extension Array {
+    subscript (safe index: Int) -> Element? {
+        return indices ~= index ? self[index] : nil
     }
-    
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent) {
-        super.touchesMoved(touches, withEvent: event)
-        if state == .Began {
-            let velocity = velocityInView(self.view!)
-            switch direction {
-                case .Horizontal where fabs(velocity.y) > fabs(velocity.x):
-                    state = .Cancelled
-                case .Vertical where fabs(velocity.x) > fabs(velocity.y):
-                    state = .Cancelled
-                default:
-                    break
-            }
-        }
-    }
+}
+
+public func <=(lhs: NSDate, rhs: NSDate) -> Bool {
+    let res = lhs.compare(rhs)
+    return res == .OrderedAscending || res == .OrderedSame
+}
+public func >=(lhs: NSDate, rhs: NSDate) -> Bool {
+    let res = lhs.compare(rhs)
+    return res == .OrderedDescending || res == .OrderedSame
+}
+public func >(lhs: NSDate, rhs: NSDate) -> Bool {
+    return lhs.compare(rhs) == .OrderedDescending
+}
+public func <(lhs: NSDate, rhs: NSDate) -> Bool {
+    return lhs.compare(rhs) == .OrderedAscending
+}
+public func ==(lhs: NSDate, rhs: NSDate) -> Bool {
+    return lhs.compare(rhs) == .OrderedSame
 }

@@ -1,1768 +1,714 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>archiveVersion</key>
-	<string>1</string>
-	<key>classes</key>
-	<dict/>
-	<key>objectVersion</key>
-	<string>46</string>
-	<key>objects</key>
-	<dict>
-		<key>479965F62656E71A43A4DDCA</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>48789107602CAFDB71883972</string>
-				<string>E26D7685462E41B81640B1CC</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Pods</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>48789107602CAFDB71883972</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.xcconfig</string>
-			<key>name</key>
-			<string>Pods-iWeather.debug.xcconfig</string>
-			<key>path</key>
-			<string>Pods/Target Support Files/Pods-iWeather/Pods-iWeather.debug.xcconfig</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>6339ADE97B6155D3423E532A</key>
-		<dict>
-			<key>fileRef</key>
-			<string>ED5E4C93A7B686989099C2F8</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>6C2582A52BD6059DD474255F</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array/>
-			<key>inputPaths</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXShellScriptBuildPhase</string>
-			<key>name</key>
-			<string>Copy Pods Resources</string>
-			<key>outputPaths</key>
-			<array/>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-			<key>shellPath</key>
-			<string>/bin/sh</string>
-			<key>shellScript</key>
-			<string>"${SRCROOT}/Pods/Target Support Files/Pods-iWeather/Pods-iWeather-resources.sh"
-</string>
-			<key>showEnvVarsInLog</key>
-			<string>0</string>
-		</dict>
-		<key>850272E41BB087BC0045C434</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>Constant.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>850272E51BB087BC0045C434</key>
-		<dict>
-			<key>fileRef</key>
-			<string>850272E41BB087BC0045C434</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>8505B0AC1B88E6D300141D66</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>85E49B6F1B7808F200525666</string>
-				<string>855235A71B69002A0092AEEE</string>
-				<string>85E1638A1BA47985009BC8CA</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Extension</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>850A40A61B88A78E00756860</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>MapTask.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>850A40A71B88A78E00756860</key>
-		<dict>
-			<key>fileRef</key>
-			<string>850A40A61B88A78E00756860</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>8511116D1B8CCD9200F1D2CD</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>857FB1221B5C902D000C107A</string>
-				<string>853F798D1B8BDE0F00346437</string>
-				<string>857FB1271B5C902D000C107A</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>View</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85125DDC1B78FBF700670920</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>EventTableViewCell.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85125DDD1B78FBF700670920</key>
-		<dict>
-			<key>fileRef</key>
-			<string>85125DDC1B78FBF700670920</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>853F798D1B8BDE0F00346437</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>file.xib</string>
-			<key>path</key>
-			<string>MarkerInfoView.xib</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>853F798E1B8BDE0F00346437</key>
-		<dict>
-			<key>fileRef</key>
-			<string>853F798D1B8BDE0F00346437</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>855235A71B69002A0092AEEE</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>NSDateExtension.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>855235A81B69002A0092AEEE</key>
-		<dict>
-			<key>fileRef</key>
-			<string>855235A71B69002A0092AEEE</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>8554FC7A1B5F928E00FC6530</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>TravelToLocationViewController.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>8554FC7B1B5F928E00FC6530</key>
-		<dict>
-			<key>fileRef</key>
-			<string>8554FC7A1B5F928E00FC6530</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>8554FC7C1B5F971700FC6530</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>SearchResultViewController.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>8554FC7D1B5F971700FC6530</key>
-		<dict>
-			<key>fileRef</key>
-			<string>8554FC7C1B5F971700FC6530</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>8554FCDE1B63E26F00FC6530</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>WeatherCollectionViewCell.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>8554FCDF1B63E26F00FC6530</key>
-		<dict>
-			<key>fileRef</key>
-			<string>8554FCDE1B63E26F00FC6530</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>85769FC61B6BCB64006495E5</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>DailyWeatherTableViewCell.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85769FC71B6BCB64006495E5</key>
-		<dict>
-			<key>fileRef</key>
-			<string>85769FC61B6BCB64006495E5</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>85769FC81B6BD53D006495E5</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>CurrentDayWeatherTableViewCell.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85769FC91B6BD53D006495E5</key>
-		<dict>
-			<key>fileRef</key>
-			<string>85769FC81B6BD53D006495E5</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>85769FCC1B6FFDDA006495E5</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>Event.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85769FCD1B6FFDDA006495E5</key>
-		<dict>
-			<key>fileRef</key>
-			<string>85769FCC1B6FFDDA006495E5</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>857FB1101B5C902D000C107A</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>857FB11B1B5C902D000C107A</string>
-				<string>857FB1311B5C902D000C107A</string>
-				<string>857FB11A1B5C902D000C107A</string>
-				<string>CBCD76C088192BEBEBAB60D3</string>
-				<string>479965F62656E71A43A4DDCA</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB1111B5C902D000C107A</key>
-		<dict>
-			<key>attributes</key>
-			<dict>
-				<key>LastSwiftMigration</key>
-				<string>0700</string>
-				<key>LastSwiftUpdateCheck</key>
-				<string>0710</string>
-				<key>LastUpgradeCheck</key>
-				<string>0700</string>
-				<key>ORGANIZATIONNAME</key>
-				<string>Ahmed Onawale</string>
-				<key>TargetAttributes</key>
-				<dict>
-					<key>857FB1181B5C902D000C107A</key>
-					<dict>
-						<key>CreatedOnToolsVersion</key>
-						<string>6.4</string>
-						<key>DevelopmentTeam</key>
-						<string>GB49K2TKQH</string>
-						<key>SystemCapabilities</key>
-						<dict>
-							<key>com.apple.BackgroundModes</key>
-							<dict>
-								<key>enabled</key>
-								<string>1</string>
-							</dict>
-						</dict>
-					</dict>
-					<key>857FB12D1B5C902D000C107A</key>
-					<dict>
-						<key>CreatedOnToolsVersion</key>
-						<string>6.4</string>
-						<key>TestTargetID</key>
-						<string>857FB1181B5C902D000C107A</string>
-					</dict>
-				</dict>
-			</dict>
-			<key>buildConfigurationList</key>
-			<string>857FB1141B5C902D000C107A</string>
-			<key>compatibilityVersion</key>
-			<string>Xcode 3.2</string>
-			<key>developmentRegion</key>
-			<string>English</string>
-			<key>hasScannedForEncodings</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>PBXProject</string>
-			<key>knownRegions</key>
-			<array>
-				<string>en</string>
-				<string>Base</string>
-			</array>
-			<key>mainGroup</key>
-			<string>857FB1101B5C902D000C107A</string>
-			<key>productRefGroup</key>
-			<string>857FB11A1B5C902D000C107A</string>
-			<key>projectDirPath</key>
-			<string></string>
-			<key>projectReferences</key>
-			<array/>
-			<key>projectRoot</key>
-			<string></string>
-			<key>targets</key>
-			<array>
-				<string>857FB1181B5C902D000C107A</string>
-				<string>857FB12D1B5C902D000C107A</string>
-			</array>
-		</dict>
-		<key>857FB1141B5C902D000C107A</key>
-		<dict>
-			<key>buildConfigurations</key>
-			<array>
-				<string>857FB1361B5C902D000C107A</string>
-				<string>857FB1371B5C902D000C107A</string>
-			</array>
-			<key>defaultConfigurationIsVisible</key>
-			<string>0</string>
-			<key>defaultConfigurationName</key>
-			<string>Release</string>
-			<key>isa</key>
-			<string>XCConfigurationList</string>
-		</dict>
-		<key>857FB1151B5C902D000C107A</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>85125DDD1B78FBF700670920</string>
-				<string>857FB1471B5C9090000C107A</string>
-				<string>857FB14A1B5C9090000C107A</string>
-				<string>8581BE431B8A128A00B30ECD</string>
-				<string>85E49B701B7808F200525666</string>
-				<string>850272E51BB087BC0045C434</string>
-				<string>85E40B791B653A4C00263851</string>
-				<string>85769FC91B6BD53D006495E5</string>
-				<string>85E2F5361B6B96E1008B4824</string>
-				<string>857FB11F1B5C902D000C107A</string>
-				<string>85E40B7B1B663E7400263851</string>
-				<string>85E40B751B64D2E100263851</string>
-				<string>857FB14B1B5C9090000C107A</string>
-				<string>85E1638B1BA47985009BC8CA</string>
-				<string>85769FC71B6BCB64006495E5</string>
-				<string>857FB14D1B5D9040000C107A</string>
-				<string>85769FCD1B6FFDDA006495E5</string>
-				<string>85D8B38E1B7ABCF70037725E</string>
-				<string>857FB14F1B5D9391000C107A</string>
-				<string>850A40A71B88A78E00756860</string>
-				<string>855235A81B69002A0092AEEE</string>
-				<string>8554FC7B1B5F928E00FC6530</string>
-				<string>857FB1451B5C9090000C107A</string>
-				<string>857FB1481B5C9090000C107A</string>
-				<string>85D900BE1BAD7EB200438854</string>
-				<string>8554FC7D1B5F971700FC6530</string>
-				<string>85D900C21BAD868000438854</string>
-				<string>8554FCDF1B63E26F00FC6530</string>
-				<string>85DE12EC1B8B92B100C9B4FF</string>
-			</array>
-			<key>isa</key>
-			<string>PBXSourcesBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>857FB1161B5C902D000C107A</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>85D900B71BAD7E3000438854</string>
-				<string>6339ADE97B6155D3423E532A</string>
-			</array>
-			<key>isa</key>
-			<string>PBXFrameworksBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>857FB1171B5C902D000C107A</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>853F798E1B8BDE0F00346437</string>
-				<string>857FB1241B5C902D000C107A</string>
-				<string>857FB1291B5C902D000C107A</string>
-				<string>857FB1261B5C902D000C107A</string>
-			</array>
-			<key>isa</key>
-			<string>PBXResourcesBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>857FB1181B5C902D000C107A</key>
-		<dict>
-			<key>buildConfigurationList</key>
-			<string>857FB1381B5C902D000C107A</string>
-			<key>buildPhases</key>
-			<array>
-				<string>994E6FBA33ADDD03340D46CE</string>
-				<string>857FB1151B5C902D000C107A</string>
-				<string>857FB1161B5C902D000C107A</string>
-				<string>857FB1171B5C902D000C107A</string>
-				<string>967BA4B0975C5D9A6C6D4715</string>
-				<string>6C2582A52BD6059DD474255F</string>
-			</array>
-			<key>buildRules</key>
-			<array/>
-			<key>dependencies</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXNativeTarget</string>
-			<key>name</key>
-			<string>iWeather</string>
-			<key>productName</key>
-			<string>iWeather</string>
-			<key>productReference</key>
-			<string>857FB1191B5C902D000C107A</string>
-			<key>productType</key>
-			<string>com.apple.product-type.application</string>
-		</dict>
-		<key>857FB1191B5C902D000C107A</key>
-		<dict>
-			<key>explicitFileType</key>
-			<string>wrapper.application</string>
-			<key>includeInIndex</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>path</key>
-			<string>iWeather.app</string>
-			<key>sourceTree</key>
-			<string>BUILT_PRODUCTS_DIR</string>
-		</dict>
-		<key>857FB11A1B5C902D000C107A</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>857FB1191B5C902D000C107A</string>
-				<string>857FB12E1B5C902D000C107A</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Products</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB11B1B5C902D000C107A</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>85DF3F881BC96166007A1C78</string>
-				<string>8505B0AC1B88E6D300141D66</string>
-				<string>85C5DB551B693024008E482F</string>
-				<string>85EE37181B666B2100BC584D</string>
-				<string>85EE37171B666B1600BC584D</string>
-				<string>85EE37161B666B0700BC584D</string>
-				<string>85EE37151B666AF900BC584D</string>
-				<string>8511116D1B8CCD9200F1D2CD</string>
-				<string>857FB11C1B5C902D000C107A</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>path</key>
-			<string>iWeather</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB11C1B5C902D000C107A</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>857FB1251B5C902D000C107A</string>
-				<string>857FB11E1B5C902D000C107A</string>
-				<string>857FB11D1B5C902D000C107A</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Supporting Files</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB11D1B5C902D000C107A</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.plist.xml</string>
-			<key>path</key>
-			<string>Info.plist</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB11E1B5C902D000C107A</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>AppDelegate.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB11F1B5C902D000C107A</key>
-		<dict>
-			<key>fileRef</key>
-			<string>857FB11E1B5C902D000C107A</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>857FB1221B5C902D000C107A</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>857FB1231B5C902D000C107A</string>
-			</array>
-			<key>isa</key>
-			<string>PBXVariantGroup</string>
-			<key>name</key>
-			<string>Main.storyboard</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB1231B5C902D000C107A</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>file.storyboard</string>
-			<key>name</key>
-			<string>Base</string>
-			<key>path</key>
-			<string>Base.lproj/Main.storyboard</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB1241B5C902D000C107A</key>
-		<dict>
-			<key>fileRef</key>
-			<string>857FB1221B5C902D000C107A</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>857FB1251B5C902D000C107A</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>folder.assetcatalog</string>
-			<key>path</key>
-			<string>Images.xcassets</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB1261B5C902D000C107A</key>
-		<dict>
-			<key>fileRef</key>
-			<string>857FB1251B5C902D000C107A</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>857FB1271B5C902D000C107A</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>857FB1281B5C902D000C107A</string>
-			</array>
-			<key>isa</key>
-			<string>PBXVariantGroup</string>
-			<key>name</key>
-			<string>LaunchScreen.xib</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB1281B5C902D000C107A</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>file.xib</string>
-			<key>name</key>
-			<string>Base</string>
-			<key>path</key>
-			<string>Base.lproj/LaunchScreen.xib</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB1291B5C902D000C107A</key>
-		<dict>
-			<key>fileRef</key>
-			<string>857FB1271B5C902D000C107A</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>857FB12A1B5C902D000C107A</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>857FB1351B5C902D000C107A</string>
-			</array>
-			<key>isa</key>
-			<string>PBXSourcesBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>857FB12B1B5C902D000C107A</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXFrameworksBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>857FB12C1B5C902D000C107A</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXResourcesBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>857FB12D1B5C902D000C107A</key>
-		<dict>
-			<key>buildConfigurationList</key>
-			<string>857FB13B1B5C902D000C107A</string>
-			<key>buildPhases</key>
-			<array>
-				<string>857FB12A1B5C902D000C107A</string>
-				<string>857FB12B1B5C902D000C107A</string>
-				<string>857FB12C1B5C902D000C107A</string>
-			</array>
-			<key>buildRules</key>
-			<array/>
-			<key>dependencies</key>
-			<array>
-				<string>857FB1301B5C902D000C107A</string>
-			</array>
-			<key>isa</key>
-			<string>PBXNativeTarget</string>
-			<key>name</key>
-			<string>iWeatherTests</string>
-			<key>productName</key>
-			<string>iWeatherTests</string>
-			<key>productReference</key>
-			<string>857FB12E1B5C902D000C107A</string>
-			<key>productType</key>
-			<string>com.apple.product-type.bundle.unit-test</string>
-		</dict>
-		<key>857FB12E1B5C902D000C107A</key>
-		<dict>
-			<key>explicitFileType</key>
-			<string>wrapper.cfbundle</string>
-			<key>includeInIndex</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>path</key>
-			<string>iWeatherTests.xctest</string>
-			<key>sourceTree</key>
-			<string>BUILT_PRODUCTS_DIR</string>
-		</dict>
-		<key>857FB12F1B5C902D000C107A</key>
-		<dict>
-			<key>containerPortal</key>
-			<string>857FB1111B5C902D000C107A</string>
-			<key>isa</key>
-			<string>PBXContainerItemProxy</string>
-			<key>proxyType</key>
-			<string>1</string>
-			<key>remoteGlobalIDString</key>
-			<string>857FB1181B5C902D000C107A</string>
-			<key>remoteInfo</key>
-			<string>iWeather</string>
-		</dict>
-		<key>857FB1301B5C902D000C107A</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXTargetDependency</string>
-			<key>target</key>
-			<string>857FB1181B5C902D000C107A</string>
-			<key>targetProxy</key>
-			<string>857FB12F1B5C902D000C107A</string>
-		</dict>
-		<key>857FB1311B5C902D000C107A</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>857FB1341B5C902D000C107A</string>
-				<string>857FB1321B5C902D000C107A</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>path</key>
-			<string>iWeatherTests</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB1321B5C902D000C107A</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>857FB1331B5C902D000C107A</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Supporting Files</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB1331B5C902D000C107A</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.plist.xml</string>
-			<key>path</key>
-			<string>Info.plist</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB1341B5C902D000C107A</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>iWeatherTests.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB1351B5C902D000C107A</key>
-		<dict>
-			<key>fileRef</key>
-			<string>857FB1341B5C902D000C107A</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>857FB1361B5C902D000C107A</key>
-		<dict>
-			<key>buildSettings</key>
-			<dict>
-				<key>ALWAYS_SEARCH_USER_PATHS</key>
-				<string>NO</string>
-				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
-				<string>gnu++0x</string>
-				<key>CLANG_CXX_LIBRARY</key>
-				<string>libc++</string>
-				<key>CLANG_ENABLE_MODULES</key>
-				<string>YES</string>
-				<key>CLANG_ENABLE_OBJC_ARC</key>
-				<string>YES</string>
-				<key>CLANG_WARN_BOOL_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
-				<string>YES_ERROR</string>
-				<key>CLANG_WARN_EMPTY_BODY</key>
-				<string>YES</string>
-				<key>CLANG_WARN_ENUM_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_INT_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
-				<string>YES_ERROR</string>
-				<key>CLANG_WARN_UNREACHABLE_CODE</key>
-				<string>YES</string>
-				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
-				<string>YES</string>
-				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
-				<string>iPhone Developer</string>
-				<key>COPY_PHASE_STRIP</key>
-				<string>NO</string>
-				<key>DEBUG_INFORMATION_FORMAT</key>
-				<string>dwarf-with-dsym</string>
-				<key>ENABLE_BITCODE</key>
-				<string>NO</string>
-				<key>ENABLE_STRICT_OBJC_MSGSEND</key>
-				<string>YES</string>
-				<key>ENABLE_TESTABILITY</key>
-				<string>YES</string>
-				<key>GCC_C_LANGUAGE_STANDARD</key>
-				<string>gnu99</string>
-				<key>GCC_DYNAMIC_NO_PIC</key>
-				<string>NO</string>
-				<key>GCC_NO_COMMON_BLOCKS</key>
-				<string>YES</string>
-				<key>GCC_OPTIMIZATION_LEVEL</key>
-				<string>0</string>
-				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
-				<array>
-					<string>DEBUG=1</string>
-					<string>$(inherited)</string>
-				</array>
-				<key>GCC_SYMBOLS_PRIVATE_EXTERN</key>
-				<string>NO</string>
-				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
-				<string>YES</string>
-				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
-				<string>YES_ERROR</string>
-				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
-				<string>YES_AGGRESSIVE</string>
-				<key>GCC_WARN_UNUSED_FUNCTION</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNUSED_VARIABLE</key>
-				<string>YES</string>
-				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
-				<string>8.4</string>
-				<key>MTL_ENABLE_DEBUG_INFO</key>
-				<string>YES</string>
-				<key>ONLY_ACTIVE_ARCH</key>
-				<string>YES</string>
-				<key>SDKROOT</key>
-				<string>iphoneos</string>
-				<key>SWIFT_OPTIMIZATION_LEVEL</key>
-				<string>-Onone</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Debug</string>
-		</dict>
-		<key>857FB1371B5C902D000C107A</key>
-		<dict>
-			<key>buildSettings</key>
-			<dict>
-				<key>ALWAYS_SEARCH_USER_PATHS</key>
-				<string>NO</string>
-				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
-				<string>gnu++0x</string>
-				<key>CLANG_CXX_LIBRARY</key>
-				<string>libc++</string>
-				<key>CLANG_ENABLE_MODULES</key>
-				<string>YES</string>
-				<key>CLANG_ENABLE_OBJC_ARC</key>
-				<string>YES</string>
-				<key>CLANG_WARN_BOOL_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
-				<string>YES_ERROR</string>
-				<key>CLANG_WARN_EMPTY_BODY</key>
-				<string>YES</string>
-				<key>CLANG_WARN_ENUM_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_INT_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
-				<string>YES_ERROR</string>
-				<key>CLANG_WARN_UNREACHABLE_CODE</key>
-				<string>YES</string>
-				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
-				<string>YES</string>
-				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
-				<string>iPhone Developer</string>
-				<key>COPY_PHASE_STRIP</key>
-				<string>NO</string>
-				<key>DEBUG_INFORMATION_FORMAT</key>
-				<string>dwarf-with-dsym</string>
-				<key>ENABLE_NS_ASSERTIONS</key>
-				<string>NO</string>
-				<key>ENABLE_STRICT_OBJC_MSGSEND</key>
-				<string>YES</string>
-				<key>GCC_C_LANGUAGE_STANDARD</key>
-				<string>gnu99</string>
-				<key>GCC_NO_COMMON_BLOCKS</key>
-				<string>YES</string>
-				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
-				<string>YES</string>
-				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
-				<string>YES_ERROR</string>
-				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
-				<string>YES_AGGRESSIVE</string>
-				<key>GCC_WARN_UNUSED_FUNCTION</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNUSED_VARIABLE</key>
-				<string>YES</string>
-				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
-				<string>8.4</string>
-				<key>MTL_ENABLE_DEBUG_INFO</key>
-				<string>NO</string>
-				<key>SDKROOT</key>
-				<string>iphoneos</string>
-				<key>VALIDATE_PRODUCT</key>
-				<string>YES</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Release</string>
-		</dict>
-		<key>857FB1381B5C902D000C107A</key>
-		<dict>
-			<key>buildConfigurations</key>
-			<array>
-				<string>857FB1391B5C902D000C107A</string>
-				<string>857FB13A1B5C902D000C107A</string>
-			</array>
-			<key>defaultConfigurationIsVisible</key>
-			<string>0</string>
-			<key>defaultConfigurationName</key>
-			<string>Release</string>
-			<key>isa</key>
-			<string>XCConfigurationList</string>
-		</dict>
-		<key>857FB1391B5C902D000C107A</key>
-		<dict>
-			<key>baseConfigurationReference</key>
-			<string>48789107602CAFDB71883972</string>
-			<key>buildSettings</key>
-			<dict>
-				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
-				<string>AppIcon</string>
-				<key>CLANG_ENABLE_MODULES</key>
-				<string>YES</string>
-				<key>CODE_SIGN_IDENTITY</key>
-				<string>iPhone Developer</string>
-				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
-				<string>iPhone Developer</string>
-				<key>INFOPLIST_FILE</key>
-				<string>iWeather/Info.plist</string>
-				<key>LD_RUNPATH_SEARCH_PATHS</key>
-				<string>$(inherited) @executable_path/Frameworks</string>
-				<key>MTL_ENABLE_DEBUG_INFO</key>
-				<string>YES</string>
-				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
-				<string>com.ahmedonawale.$(PRODUCT_NAME:rfc1034identifier)</string>
-				<key>PRODUCT_NAME</key>
-				<string>$(TARGET_NAME)</string>
-				<key>PROVISIONING_PROFILE</key>
-				<string></string>
-				<key>SWIFT_OBJC_BRIDGING_HEADER</key>
-				<string>iWeather-Bridging-Header.h</string>
-				<key>SWIFT_OPTIMIZATION_LEVEL</key>
-				<string>-Onone</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Debug</string>
-		</dict>
-		<key>857FB13A1B5C902D000C107A</key>
-		<dict>
-			<key>baseConfigurationReference</key>
-			<string>E26D7685462E41B81640B1CC</string>
-			<key>buildSettings</key>
-			<dict>
-				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
-				<string>AppIcon</string>
-				<key>CLANG_ENABLE_MODULES</key>
-				<string>YES</string>
-				<key>CODE_SIGN_IDENTITY</key>
-				<string>iPhone Developer</string>
-				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
-				<string>iPhone Developer</string>
-				<key>INFOPLIST_FILE</key>
-				<string>iWeather/Info.plist</string>
-				<key>LD_RUNPATH_SEARCH_PATHS</key>
-				<string>$(inherited) @executable_path/Frameworks</string>
-				<key>MTL_ENABLE_DEBUG_INFO</key>
-				<string>NO</string>
-				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
-				<string>com.ahmedonawale.$(PRODUCT_NAME:rfc1034identifier)</string>
-				<key>PRODUCT_NAME</key>
-				<string>$(TARGET_NAME)</string>
-				<key>PROVISIONING_PROFILE</key>
-				<string></string>
-				<key>SWIFT_OBJC_BRIDGING_HEADER</key>
-				<string>iWeather-Bridging-Header.h</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Release</string>
-		</dict>
-		<key>857FB13B1B5C902D000C107A</key>
-		<dict>
-			<key>buildConfigurations</key>
-			<array>
-				<string>857FB13C1B5C902D000C107A</string>
-				<string>857FB13D1B5C902D000C107A</string>
-			</array>
-			<key>defaultConfigurationIsVisible</key>
-			<string>0</string>
-			<key>defaultConfigurationName</key>
-			<string>Release</string>
-			<key>isa</key>
-			<string>XCConfigurationList</string>
-		</dict>
-		<key>857FB13C1B5C902D000C107A</key>
-		<dict>
-			<key>buildSettings</key>
-			<dict>
-				<key>BUNDLE_LOADER</key>
-				<string>$(TEST_HOST)</string>
-				<key>FRAMEWORK_SEARCH_PATHS</key>
-				<array>
-					<string>$(SDKROOT)/Developer/Library/Frameworks</string>
-					<string>$(inherited)</string>
-				</array>
-				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
-				<array>
-					<string>DEBUG=1</string>
-					<string>$(inherited)</string>
-				</array>
-				<key>INFOPLIST_FILE</key>
-				<string>iWeatherTests/Info.plist</string>
-				<key>LD_RUNPATH_SEARCH_PATHS</key>
-				<string>$(inherited) @executable_path/Frameworks @loader_path/Frameworks</string>
-				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
-				<string>com.ahmedonawale.$(PRODUCT_NAME:rfc1034identifier)</string>
-				<key>PRODUCT_NAME</key>
-				<string>$(TARGET_NAME)</string>
-				<key>TEST_HOST</key>
-				<string>$(BUILT_PRODUCTS_DIR)/iWeather.app/iWeather</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Debug</string>
-		</dict>
-		<key>857FB13D1B5C902D000C107A</key>
-		<dict>
-			<key>buildSettings</key>
-			<dict>
-				<key>BUNDLE_LOADER</key>
-				<string>$(TEST_HOST)</string>
-				<key>FRAMEWORK_SEARCH_PATHS</key>
-				<array>
-					<string>$(SDKROOT)/Developer/Library/Frameworks</string>
-					<string>$(inherited)</string>
-				</array>
-				<key>INFOPLIST_FILE</key>
-				<string>iWeatherTests/Info.plist</string>
-				<key>LD_RUNPATH_SEARCH_PATHS</key>
-				<string>$(inherited) @executable_path/Frameworks @loader_path/Frameworks</string>
-				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
-				<string>com.ahmedonawale.$(PRODUCT_NAME:rfc1034identifier)</string>
-				<key>PRODUCT_NAME</key>
-				<string>$(TARGET_NAME)</string>
-				<key>TEST_HOST</key>
-				<string>$(BUILT_PRODUCTS_DIR)/iWeather.app/iWeather</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Release</string>
-		</dict>
-		<key>857FB13E1B5C9090000C107A</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>APIController.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB1401B5C9090000C107A</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>DailyWeather.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB1411B5C9090000C107A</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>LocationViewController.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB1431B5C9090000C107A</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>Location.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB1441B5C9090000C107A</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>Weather.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB1451B5C9090000C107A</key>
-		<dict>
-			<key>fileRef</key>
-			<string>857FB13E1B5C9090000C107A</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>857FB1471B5C9090000C107A</key>
-		<dict>
-			<key>fileRef</key>
-			<string>857FB1401B5C9090000C107A</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>857FB1481B5C9090000C107A</key>
-		<dict>
-			<key>fileRef</key>
-			<string>857FB1411B5C9090000C107A</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>857FB14A1B5C9090000C107A</key>
-		<dict>
-			<key>fileRef</key>
-			<string>857FB1431B5C9090000C107A</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>857FB14B1B5C9090000C107A</key>
-		<dict>
-			<key>fileRef</key>
-			<string>857FB1441B5C9090000C107A</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>857FB14C1B5D9040000C107A</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>AddLocationViewController.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB14D1B5D9040000C107A</key>
-		<dict>
-			<key>fileRef</key>
-			<string>857FB14C1B5D9040000C107A</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>857FB14E1B5D9391000C107A</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>DataModel.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>857FB14F1B5D9391000C107A</key>
-		<dict>
-			<key>fileRef</key>
-			<string>857FB14E1B5D9391000C107A</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>8581BE421B8A128A00B30ECD</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>PanDirectionGestureRecognizer.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>8581BE431B8A128A00B30ECD</key>
-		<dict>
-			<key>fileRef</key>
-			<string>8581BE421B8A128A00B30ECD</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>85C5DB551B693024008E482F</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>85125DDC1B78FBF700670920</string>
-				<string>8554FCDE1B63E26F00FC6530</string>
-				<string>85769FC61B6BCB64006495E5</string>
-				<string>85E40B781B653A4C00263851</string>
-				<string>85769FC81B6BD53D006495E5</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>CustomCell</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85D8B38D1B7ABCF70037725E</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>EventWeatherPopoverViewController.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85D8B38E1B7ABCF70037725E</key>
-		<dict>
-			<key>fileRef</key>
-			<string>85D8B38D1B7ABCF70037725E</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>85D900B61BAD7E3000438854</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.framework</string>
-			<key>name</key>
-			<string>SystemConfiguration.framework</string>
-			<key>path</key>
-			<string>System/Library/Frameworks/SystemConfiguration.framework</string>
-			<key>sourceTree</key>
-			<string>SDKROOT</string>
-		</dict>
-		<key>85D900B71BAD7E3000438854</key>
-		<dict>
-			<key>fileRef</key>
-			<string>85D900B61BAD7E3000438854</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>85D900B81BAD7E4400438854</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>path</key>
-			<string>iWeather-Bridging-Header.h</string>
-			<key>sourceTree</key>
-			<string>SOURCE_ROOT</string>
-		</dict>
-		<key>85D900BC1BAD7EB200438854</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>path</key>
-			<string>Reachability.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85D900BD1BAD7EB200438854</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>path</key>
-			<string>Reachability.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85D900BE1BAD7EB200438854</key>
-		<dict>
-			<key>fileRef</key>
-			<string>85D900BD1BAD7EB200438854</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>85D900C11BAD868000438854</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>TabBarController.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85D900C21BAD868000438854</key>
-		<dict>
-			<key>fileRef</key>
-			<string>85D900C11BAD868000438854</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>85DE12EB1B8B92B100C9B4FF</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>MarkerInfoView.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85DE12EC1B8B92B100C9B4FF</key>
-		<dict>
-			<key>fileRef</key>
-			<string>85DE12EB1B8B92B100C9B4FF</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>85DF3F881BC96166007A1C78</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>850A40A61B88A78E00756860</string>
-				<string>8581BE421B8A128A00B30ECD</string>
-				<string>850272E41BB087BC0045C434</string>
-				<string>85D900B81BAD7E4400438854</string>
-				<string>85D900BC1BAD7EB200438854</string>
-				<string>85D900BD1BAD7EB200438854</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Utilities</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85E1638A1BA47985009BC8CA</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>String_Array.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85E1638B1BA47985009BC8CA</key>
-		<dict>
-			<key>fileRef</key>
-			<string>85E1638A1BA47985009BC8CA</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>85E2F5351B6B96E1008B4824</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>CalendarEventsViewController.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85E2F5361B6B96E1008B4824</key>
-		<dict>
-			<key>fileRef</key>
-			<string>85E2F5351B6B96E1008B4824</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>85E40B741B64D2E100263851</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>PageViewController.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85E40B751B64D2E100263851</key>
-		<dict>
-			<key>fileRef</key>
-			<string>85E40B741B64D2E100263851</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>85E40B781B653A4C00263851</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>LocationTableViewCell.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85E40B791B653A4C00263851</key>
-		<dict>
-			<key>fileRef</key>
-			<string>85E40B781B653A4C00263851</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>85E40B7A1B663E7400263851</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>LocationManager.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85E40B7B1B663E7400263851</key>
-		<dict>
-			<key>fileRef</key>
-			<string>85E40B7A1B663E7400263851</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>85E49B6F1B7808F200525666</key>
-		<dict>
-			<key>fileEncoding</key>
-			<string>4</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.swift</string>
-			<key>path</key>
-			<string>UIViewExtension.swift</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85E49B701B7808F200525666</key>
-		<dict>
-			<key>fileRef</key>
-			<string>85E49B6F1B7808F200525666</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>85EE37151B666AF900BC584D</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>857FB13E1B5C9090000C107A</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>API</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85EE37161B666B0700BC584D</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>85E40B7A1B663E7400263851</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Manager</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85EE37171B666B1600BC584D</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>85D900C11BAD868000438854</string>
-				<string>857FB1411B5C9090000C107A</string>
-				<string>857FB14C1B5D9040000C107A</string>
-				<string>8554FC7A1B5F928E00FC6530</string>
-				<string>8554FC7C1B5F971700FC6530</string>
-				<string>85E40B741B64D2E100263851</string>
-				<string>85E2F5351B6B96E1008B4824</string>
-				<string>85D8B38D1B7ABCF70037725E</string>
-				<string>85DE12EB1B8B92B100C9B4FF</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>ViewController</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>85EE37181B666B2100BC584D</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>857FB1401B5C9090000C107A</string>
-				<string>857FB1441B5C9090000C107A</string>
-				<string>857FB1431B5C9090000C107A</string>
-				<string>857FB14E1B5D9391000C107A</string>
-				<string>85769FCC1B6FFDDA006495E5</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Model</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>967BA4B0975C5D9A6C6D4715</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array/>
-			<key>inputPaths</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXShellScriptBuildPhase</string>
-			<key>name</key>
-			<string>Embed Pods Frameworks</string>
-			<key>outputPaths</key>
-			<array/>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-			<key>shellPath</key>
-			<string>/bin/sh</string>
-			<key>shellScript</key>
-			<string>"${SRCROOT}/Pods/Target Support Files/Pods-iWeather/Pods-iWeather-frameworks.sh"
-</string>
-			<key>showEnvVarsInLog</key>
-			<string>0</string>
-		</dict>
-		<key>994E6FBA33ADDD03340D46CE</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array/>
-			<key>inputPaths</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXShellScriptBuildPhase</string>
-			<key>name</key>
-			<string>Check Pods Manifest.lock</string>
-			<key>outputPaths</key>
-			<array/>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-			<key>shellPath</key>
-			<string>/bin/sh</string>
-			<key>shellScript</key>
-			<string>diff "${PODS_ROOT}/../Podfile.lock" "${PODS_ROOT}/Manifest.lock" &gt; /dev/null
-if [[ $? != 0 ]] ; then
-    cat &lt;&lt; EOM
-error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.
-EOM
-    exit 1
-fi
-</string>
-			<key>showEnvVarsInLog</key>
-			<string>0</string>
-		</dict>
-		<key>CBCD76C088192BEBEBAB60D3</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>85D900B61BAD7E3000438854</string>
-				<string>ED5E4C93A7B686989099C2F8</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Frameworks</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>E26D7685462E41B81640B1CC</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.xcconfig</string>
-			<key>name</key>
-			<string>Pods-iWeather.release.xcconfig</string>
-			<key>path</key>
-			<string>Pods/Target Support Files/Pods-iWeather/Pods-iWeather.release.xcconfig</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>ED5E4C93A7B686989099C2F8</key>
-		<dict>
-			<key>explicitFileType</key>
-			<string>wrapper.framework</string>
-			<key>includeInIndex</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>path</key>
-			<string>Pods_iWeather.framework</string>
-			<key>sourceTree</key>
-			<string>BUILT_PRODUCTS_DIR</string>
-		</dict>
-	</dict>
-	<key>rootObject</key>
-	<string>857FB1111B5C902D000C107A</string>
-</dict>
-</plist>
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6339ADE97B6155D3423E532A /* Pods_iWeather.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED5E4C93A7B686989099C2F8 /* Pods_iWeather.framework */; };
+		850272E51BB087BC0045C434 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850272E41BB087BC0045C434 /* Constant.swift */; };
+		850A40A71B88A78E00756860 /* MapTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850A40A61B88A78E00756860 /* MapTask.swift */; };
+		85125DDD1B78FBF700670920 /* EventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85125DDC1B78FBF700670920 /* EventTableViewCell.swift */; };
+		853F798E1B8BDE0F00346437 /* MarkerInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 853F798D1B8BDE0F00346437 /* MarkerInfoView.xib */; };
+		855235A81B69002A0092AEEE /* NSDateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855235A71B69002A0092AEEE /* NSDateExtension.swift */; };
+		8554FC7B1B5F928E00FC6530 /* TravelToLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8554FC7A1B5F928E00FC6530 /* TravelToLocationViewController.swift */; };
+		8554FC7D1B5F971700FC6530 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8554FC7C1B5F971700FC6530 /* SearchResultViewController.swift */; };
+		8554FCDF1B63E26F00FC6530 /* WeatherCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8554FCDE1B63E26F00FC6530 /* WeatherCollectionViewCell.swift */; };
+		85769FC71B6BCB64006495E5 /* DailyWeatherTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85769FC61B6BCB64006495E5 /* DailyWeatherTableViewCell.swift */; };
+		85769FC91B6BD53D006495E5 /* CurrentDayWeatherTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85769FC81B6BD53D006495E5 /* CurrentDayWeatherTableViewCell.swift */; };
+		85769FCD1B6FFDDA006495E5 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85769FCC1B6FFDDA006495E5 /* Event.swift */; };
+		857FB11F1B5C902D000C107A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB11E1B5C902D000C107A /* AppDelegate.swift */; };
+		857FB1241B5C902D000C107A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 857FB1221B5C902D000C107A /* Main.storyboard */; };
+		857FB1261B5C902D000C107A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 857FB1251B5C902D000C107A /* Images.xcassets */; };
+		857FB1291B5C902D000C107A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 857FB1271B5C902D000C107A /* LaunchScreen.xib */; };
+		857FB1351B5C902D000C107A /* iWeatherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1341B5C902D000C107A /* iWeatherTests.swift */; };
+		857FB1451B5C9090000C107A /* APIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB13E1B5C9090000C107A /* APIController.swift */; };
+		857FB1471B5C9090000C107A /* DailyWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1401B5C9090000C107A /* DailyWeather.swift */; };
+		857FB1481B5C9090000C107A /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1411B5C9090000C107A /* LocationViewController.swift */; };
+		857FB14A1B5C9090000C107A /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1431B5C9090000C107A /* Location.swift */; };
+		857FB14B1B5C9090000C107A /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB1441B5C9090000C107A /* Weather.swift */; };
+		857FB14D1B5D9040000C107A /* AddLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB14C1B5D9040000C107A /* AddLocationViewController.swift */; };
+		857FB14F1B5D9391000C107A /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857FB14E1B5D9391000C107A /* DataModel.swift */; };
+		8581BE431B8A128A00B30ECD /* PanDirectionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8581BE421B8A128A00B30ECD /* PanDirectionGestureRecognizer.swift */; };
+		85D8B38E1B7ABCF70037725E /* EventWeatherPopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D8B38D1B7ABCF70037725E /* EventWeatherPopoverViewController.swift */; };
+		85D900B71BAD7E3000438854 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85D900B61BAD7E3000438854 /* SystemConfiguration.framework */; };
+		85D900BE1BAD7EB200438854 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 85D900BD1BAD7EB200438854 /* Reachability.m */; };
+		85D900C21BAD868000438854 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D900C11BAD868000438854 /* TabBarController.swift */; };
+		85DE12EC1B8B92B100C9B4FF /* MarkerInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DE12EB1B8B92B100C9B4FF /* MarkerInfoView.swift */; };
+		85E1638B1BA47985009BC8CA /* Public.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E1638A1BA47985009BC8CA /* Public.swift */; };
+		85E2F5361B6B96E1008B4824 /* CalendarEventsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2F5351B6B96E1008B4824 /* CalendarEventsViewController.swift */; };
+		85E40B751B64D2E100263851 /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E40B741B64D2E100263851 /* PageViewController.swift */; };
+		85E40B791B653A4C00263851 /* LocationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E40B781B653A4C00263851 /* LocationTableViewCell.swift */; };
+		85E40B7B1B663E7400263851 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E40B7A1B663E7400263851 /* LocationManager.swift */; };
+		85E49B701B7808F200525666 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E49B6F1B7808F200525666 /* UIViewExtension.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		857FB12F1B5C902D000C107A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 857FB1111B5C902D000C107A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 857FB1181B5C902D000C107A;
+			remoteInfo = iWeather;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		48789107602CAFDB71883972 /* Pods-iWeather.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iWeather.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iWeather/Pods-iWeather.debug.xcconfig"; sourceTree = "<group>"; };
+		850272E41BB087BC0045C434 /* Constant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		850A40A61B88A78E00756860 /* MapTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapTask.swift; sourceTree = "<group>"; };
+		85125DDC1B78FBF700670920 /* EventTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTableViewCell.swift; sourceTree = "<group>"; };
+		853F798D1B8BDE0F00346437 /* MarkerInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MarkerInfoView.xib; sourceTree = "<group>"; };
+		855235A71B69002A0092AEEE /* NSDateExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDateExtension.swift; sourceTree = "<group>"; };
+		8554FC7A1B5F928E00FC6530 /* TravelToLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TravelToLocationViewController.swift; sourceTree = "<group>"; };
+		8554FC7C1B5F971700FC6530 /* SearchResultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
+		8554FCDE1B63E26F00FC6530 /* WeatherCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherCollectionViewCell.swift; sourceTree = "<group>"; };
+		85769FC61B6BCB64006495E5 /* DailyWeatherTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DailyWeatherTableViewCell.swift; sourceTree = "<group>"; };
+		85769FC81B6BD53D006495E5 /* CurrentDayWeatherTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentDayWeatherTableViewCell.swift; sourceTree = "<group>"; };
+		85769FCC1B6FFDDA006495E5 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		857FB1191B5C902D000C107A /* iWeather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iWeather.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		857FB11D1B5C902D000C107A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		857FB11E1B5C902D000C107A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		857FB1231B5C902D000C107A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		857FB1251B5C902D000C107A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		857FB1281B5C902D000C107A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		857FB12E1B5C902D000C107A /* iWeatherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iWeatherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		857FB1331B5C902D000C107A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		857FB1341B5C902D000C107A /* iWeatherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iWeatherTests.swift; sourceTree = "<group>"; };
+		857FB13E1B5C9090000C107A /* APIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIController.swift; sourceTree = "<group>"; };
+		857FB1401B5C9090000C107A /* DailyWeather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DailyWeather.swift; sourceTree = "<group>"; };
+		857FB1411B5C9090000C107A /* LocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
+		857FB1431B5C9090000C107A /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		857FB1441B5C9090000C107A /* Weather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
+		857FB14C1B5D9040000C107A /* AddLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddLocationViewController.swift; sourceTree = "<group>"; };
+		857FB14E1B5D9391000C107A /* DataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
+		8581BE421B8A128A00B30ECD /* PanDirectionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanDirectionGestureRecognizer.swift; sourceTree = "<group>"; };
+		85D8B38D1B7ABCF70037725E /* EventWeatherPopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventWeatherPopoverViewController.swift; sourceTree = "<group>"; };
+		85D900B61BAD7E3000438854 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		85D900B81BAD7E4400438854 /* iWeather-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iWeather-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		85D900BC1BAD7EB200438854 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		85D900BD1BAD7EB200438854 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		85D900C11BAD868000438854 /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		85DE12EB1B8B92B100C9B4FF /* MarkerInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerInfoView.swift; sourceTree = "<group>"; };
+		85E1638A1BA47985009BC8CA /* Public.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Public.swift; sourceTree = "<group>"; };
+		85E2F5351B6B96E1008B4824 /* CalendarEventsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarEventsViewController.swift; sourceTree = "<group>"; };
+		85E40B741B64D2E100263851 /* PageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
+		85E40B781B653A4C00263851 /* LocationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTableViewCell.swift; sourceTree = "<group>"; };
+		85E40B7A1B663E7400263851 /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		85E49B6F1B7808F200525666 /* UIViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
+		E26D7685462E41B81640B1CC /* Pods-iWeather.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iWeather.release.xcconfig"; path = "Pods/Target Support Files/Pods-iWeather/Pods-iWeather.release.xcconfig"; sourceTree = "<group>"; };
+		ED5E4C93A7B686989099C2F8 /* Pods_iWeather.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iWeather.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		857FB1161B5C902D000C107A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85D900B71BAD7E3000438854 /* SystemConfiguration.framework in Frameworks */,
+				6339ADE97B6155D3423E532A /* Pods_iWeather.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		857FB12B1B5C902D000C107A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		479965F62656E71A43A4DDCA /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				48789107602CAFDB71883972 /* Pods-iWeather.debug.xcconfig */,
+				E26D7685462E41B81640B1CC /* Pods-iWeather.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		8505B0AC1B88E6D300141D66 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				85E49B6F1B7808F200525666 /* UIViewExtension.swift */,
+				855235A71B69002A0092AEEE /* NSDateExtension.swift */,
+				85E1638A1BA47985009BC8CA /* Public.swift */,
+			);
+			name = Extension;
+			sourceTree = "<group>";
+		};
+		8511116D1B8CCD9200F1D2CD /* View */ = {
+			isa = PBXGroup;
+			children = (
+				857FB1221B5C902D000C107A /* Main.storyboard */,
+				853F798D1B8BDE0F00346437 /* MarkerInfoView.xib */,
+				857FB1271B5C902D000C107A /* LaunchScreen.xib */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		857FB1101B5C902D000C107A = {
+			isa = PBXGroup;
+			children = (
+				857FB11B1B5C902D000C107A /* iWeather */,
+				857FB1311B5C902D000C107A /* iWeatherTests */,
+				857FB11A1B5C902D000C107A /* Products */,
+				CBCD76C088192BEBEBAB60D3 /* Frameworks */,
+				479965F62656E71A43A4DDCA /* Pods */,
+			);
+			sourceTree = "<group>";
+		};
+		857FB11A1B5C902D000C107A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				857FB1191B5C902D000C107A /* iWeather.app */,
+				857FB12E1B5C902D000C107A /* iWeatherTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		857FB11B1B5C902D000C107A /* iWeather */ = {
+			isa = PBXGroup;
+			children = (
+				85DF3F881BC96166007A1C78 /* Utilities */,
+				8505B0AC1B88E6D300141D66 /* Extension */,
+				85C5DB551B693024008E482F /* CustomCell */,
+				85EE37181B666B2100BC584D /* Model */,
+				85EE37171B666B1600BC584D /* ViewController */,
+				85EE37161B666B0700BC584D /* Manager */,
+				85EE37151B666AF900BC584D /* API */,
+				8511116D1B8CCD9200F1D2CD /* View */,
+				857FB11C1B5C902D000C107A /* Supporting Files */,
+			);
+			path = iWeather;
+			sourceTree = "<group>";
+		};
+		857FB11C1B5C902D000C107A /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				857FB1251B5C902D000C107A /* Images.xcassets */,
+				857FB11E1B5C902D000C107A /* AppDelegate.swift */,
+				857FB11D1B5C902D000C107A /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		857FB1311B5C902D000C107A /* iWeatherTests */ = {
+			isa = PBXGroup;
+			children = (
+				857FB1341B5C902D000C107A /* iWeatherTests.swift */,
+				857FB1321B5C902D000C107A /* Supporting Files */,
+			);
+			path = iWeatherTests;
+			sourceTree = "<group>";
+		};
+		857FB1321B5C902D000C107A /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				857FB1331B5C902D000C107A /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		85C5DB551B693024008E482F /* CustomCell */ = {
+			isa = PBXGroup;
+			children = (
+				85125DDC1B78FBF700670920 /* EventTableViewCell.swift */,
+				8554FCDE1B63E26F00FC6530 /* WeatherCollectionViewCell.swift */,
+				85769FC61B6BCB64006495E5 /* DailyWeatherTableViewCell.swift */,
+				85E40B781B653A4C00263851 /* LocationTableViewCell.swift */,
+				85769FC81B6BD53D006495E5 /* CurrentDayWeatherTableViewCell.swift */,
+			);
+			name = CustomCell;
+			sourceTree = "<group>";
+		};
+		85DF3F881BC96166007A1C78 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				850A40A61B88A78E00756860 /* MapTask.swift */,
+				8581BE421B8A128A00B30ECD /* PanDirectionGestureRecognizer.swift */,
+				850272E41BB087BC0045C434 /* Constant.swift */,
+				85D900B81BAD7E4400438854 /* iWeather-Bridging-Header.h */,
+				85D900BC1BAD7EB200438854 /* Reachability.h */,
+				85D900BD1BAD7EB200438854 /* Reachability.m */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
+		85EE37151B666AF900BC584D /* API */ = {
+			isa = PBXGroup;
+			children = (
+				857FB13E1B5C9090000C107A /* APIController.swift */,
+			);
+			name = API;
+			sourceTree = "<group>";
+		};
+		85EE37161B666B0700BC584D /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				85E40B7A1B663E7400263851 /* LocationManager.swift */,
+			);
+			name = Manager;
+			sourceTree = "<group>";
+		};
+		85EE37171B666B1600BC584D /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				85D900C11BAD868000438854 /* TabBarController.swift */,
+				857FB1411B5C9090000C107A /* LocationViewController.swift */,
+				857FB14C1B5D9040000C107A /* AddLocationViewController.swift */,
+				8554FC7A1B5F928E00FC6530 /* TravelToLocationViewController.swift */,
+				8554FC7C1B5F971700FC6530 /* SearchResultViewController.swift */,
+				85E40B741B64D2E100263851 /* PageViewController.swift */,
+				85E2F5351B6B96E1008B4824 /* CalendarEventsViewController.swift */,
+				85D8B38D1B7ABCF70037725E /* EventWeatherPopoverViewController.swift */,
+				85DE12EB1B8B92B100C9B4FF /* MarkerInfoView.swift */,
+			);
+			name = ViewController;
+			sourceTree = "<group>";
+		};
+		85EE37181B666B2100BC584D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				857FB1401B5C9090000C107A /* DailyWeather.swift */,
+				857FB1441B5C9090000C107A /* Weather.swift */,
+				857FB1431B5C9090000C107A /* Location.swift */,
+				857FB14E1B5D9391000C107A /* DataModel.swift */,
+				85769FCC1B6FFDDA006495E5 /* Event.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		CBCD76C088192BEBEBAB60D3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				85D900B61BAD7E3000438854 /* SystemConfiguration.framework */,
+				ED5E4C93A7B686989099C2F8 /* Pods_iWeather.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		857FB1181B5C902D000C107A /* iWeather */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 857FB1381B5C902D000C107A /* Build configuration list for PBXNativeTarget "iWeather" */;
+			buildPhases = (
+				994E6FBA33ADDD03340D46CE /* Check Pods Manifest.lock */,
+				857FB1151B5C902D000C107A /* Sources */,
+				857FB1161B5C902D000C107A /* Frameworks */,
+				857FB1171B5C902D000C107A /* Resources */,
+				967BA4B0975C5D9A6C6D4715 /* Embed Pods Frameworks */,
+				6C2582A52BD6059DD474255F /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iWeather;
+			productName = iWeather;
+			productReference = 857FB1191B5C902D000C107A /* iWeather.app */;
+			productType = "com.apple.product-type.application";
+		};
+		857FB12D1B5C902D000C107A /* iWeatherTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 857FB13B1B5C902D000C107A /* Build configuration list for PBXNativeTarget "iWeatherTests" */;
+			buildPhases = (
+				857FB12A1B5C902D000C107A /* Sources */,
+				857FB12B1B5C902D000C107A /* Frameworks */,
+				857FB12C1B5C902D000C107A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				857FB1301B5C902D000C107A /* PBXTargetDependency */,
+			);
+			name = iWeatherTests;
+			productName = iWeatherTests;
+			productReference = 857FB12E1B5C902D000C107A /* iWeatherTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		857FB1111B5C902D000C107A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0710;
+				LastUpgradeCheck = 0700;
+				ORGANIZATIONNAME = "Ahmed Onawale";
+				TargetAttributes = {
+					857FB1181B5C902D000C107A = {
+						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = GB49K2TKQH;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
+					857FB12D1B5C902D000C107A = {
+						CreatedOnToolsVersion = 6.4;
+						TestTargetID = 857FB1181B5C902D000C107A;
+					};
+				};
+			};
+			buildConfigurationList = 857FB1141B5C902D000C107A /* Build configuration list for PBXProject "iWeather" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 857FB1101B5C902D000C107A;
+			productRefGroup = 857FB11A1B5C902D000C107A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				857FB1181B5C902D000C107A /* iWeather */,
+				857FB12D1B5C902D000C107A /* iWeatherTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		857FB1171B5C902D000C107A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				853F798E1B8BDE0F00346437 /* MarkerInfoView.xib in Resources */,
+				857FB1241B5C902D000C107A /* Main.storyboard in Resources */,
+				857FB1291B5C902D000C107A /* LaunchScreen.xib in Resources */,
+				857FB1261B5C902D000C107A /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		857FB12C1B5C902D000C107A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6C2582A52BD6059DD474255F /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iWeather/Pods-iWeather-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		967BA4B0975C5D9A6C6D4715 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iWeather/Pods-iWeather-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		994E6FBA33ADDD03340D46CE /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		857FB1151B5C902D000C107A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85125DDD1B78FBF700670920 /* EventTableViewCell.swift in Sources */,
+				857FB1471B5C9090000C107A /* DailyWeather.swift in Sources */,
+				857FB14A1B5C9090000C107A /* Location.swift in Sources */,
+				8581BE431B8A128A00B30ECD /* PanDirectionGestureRecognizer.swift in Sources */,
+				85E49B701B7808F200525666 /* UIViewExtension.swift in Sources */,
+				850272E51BB087BC0045C434 /* Constant.swift in Sources */,
+				85E40B791B653A4C00263851 /* LocationTableViewCell.swift in Sources */,
+				85769FC91B6BD53D006495E5 /* CurrentDayWeatherTableViewCell.swift in Sources */,
+				85E2F5361B6B96E1008B4824 /* CalendarEventsViewController.swift in Sources */,
+				857FB11F1B5C902D000C107A /* AppDelegate.swift in Sources */,
+				85E40B7B1B663E7400263851 /* LocationManager.swift in Sources */,
+				85E40B751B64D2E100263851 /* PageViewController.swift in Sources */,
+				857FB14B1B5C9090000C107A /* Weather.swift in Sources */,
+				85E1638B1BA47985009BC8CA /* Public.swift in Sources */,
+				85769FC71B6BCB64006495E5 /* DailyWeatherTableViewCell.swift in Sources */,
+				857FB14D1B5D9040000C107A /* AddLocationViewController.swift in Sources */,
+				85769FCD1B6FFDDA006495E5 /* Event.swift in Sources */,
+				85D8B38E1B7ABCF70037725E /* EventWeatherPopoverViewController.swift in Sources */,
+				857FB14F1B5D9391000C107A /* DataModel.swift in Sources */,
+				850A40A71B88A78E00756860 /* MapTask.swift in Sources */,
+				855235A81B69002A0092AEEE /* NSDateExtension.swift in Sources */,
+				8554FC7B1B5F928E00FC6530 /* TravelToLocationViewController.swift in Sources */,
+				857FB1451B5C9090000C107A /* APIController.swift in Sources */,
+				857FB1481B5C9090000C107A /* LocationViewController.swift in Sources */,
+				85D900BE1BAD7EB200438854 /* Reachability.m in Sources */,
+				8554FC7D1B5F971700FC6530 /* SearchResultViewController.swift in Sources */,
+				85D900C21BAD868000438854 /* TabBarController.swift in Sources */,
+				8554FCDF1B63E26F00FC6530 /* WeatherCollectionViewCell.swift in Sources */,
+				85DE12EC1B8B92B100C9B4FF /* MarkerInfoView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		857FB12A1B5C902D000C107A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				857FB1351B5C902D000C107A /* iWeatherTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		857FB1301B5C902D000C107A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 857FB1181B5C902D000C107A /* iWeather */;
+			targetProxy = 857FB12F1B5C902D000C107A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		857FB1221B5C902D000C107A /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				857FB1231B5C902D000C107A /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		857FB1271B5C902D000C107A /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				857FB1281B5C902D000C107A /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		857FB1361B5C902D000C107A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		857FB1371B5C902D000C107A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		857FB1391B5C902D000C107A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 48789107602CAFDB71883972 /* Pods-iWeather.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = iWeather/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ahmedonawale.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "iWeather-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		857FB13A1B5C902D000C107A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E26D7685462E41B81640B1CC /* Pods-iWeather.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = iWeather/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ahmedonawale.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "iWeather-Bridging-Header.h";
+			};
+			name = Release;
+		};
+		857FB13C1B5C902D000C107A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = iWeatherTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ahmedonawale.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iWeather.app/iWeather";
+			};
+			name = Debug;
+		};
+		857FB13D1B5C902D000C107A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = iWeatherTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ahmedonawale.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iWeather.app/iWeather";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		857FB1141B5C902D000C107A /* Build configuration list for PBXProject "iWeather" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				857FB1361B5C902D000C107A /* Debug */,
+				857FB1371B5C902D000C107A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		857FB1381B5C902D000C107A /* Build configuration list for PBXNativeTarget "iWeather" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				857FB1391B5C902D000C107A /* Debug */,
+				857FB13A1B5C902D000C107A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		857FB13B1B5C902D000C107A /* Build configuration list for PBXNativeTarget "iWeatherTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				857FB13C1B5C902D000C107A /* Debug */,
+				857FB13D1B5C902D000C107A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 857FB1111B5C902D000C107A /* Project object */;
+}
